@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/247/trunk/jade/util/datatype
+END
+Direction.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/245/trunk/jade/util/datatype/Direction.java
+END
+MutableCoordinate.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/247/trunk/jade/util/datatype/MutableCoordinate.java
+END
+ColoredChar.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/247/trunk/jade/util/datatype/ColoredChar.java
+END
+Coordinate.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/247/trunk/jade/util/datatype/Coordinate.java
+END
