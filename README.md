@@ -1,4 +1,4 @@
-Prorogue
+swp-rogue
 ========
 
 Rogue-like game
