@@ -28,6 +28,7 @@ public class Player extends Creature implements Camera
         {
             char key;
             key = term.getKey();
+            System.out.println("Gesamtproduktgüte");
             switch(key)
             {
                 case 'q':
