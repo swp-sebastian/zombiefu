@@ -1,4 +1,4 @@
 swp-2013
 ========
 
-Rogue-like game. Heute nur ein Prototyp, morgen schon ein Drachentöter.
+Rogue-like game, written in Java. Heute nur ein Prototyp, morgen schon ein Drachentöter.
