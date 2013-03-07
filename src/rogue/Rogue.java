@@ -32,6 +32,7 @@ public class Rogue {
                 if (!monsters.isEmpty()) {
                         Screen.showImage(term, world, "src/rogue/screen/endscreen.txt");
                         player.expire();
+                        continue;
                 }
                 // nun wird der Screen neu gebildet
                 term.clearBuffer();
