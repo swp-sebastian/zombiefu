@@ -9,6 +9,7 @@ import rogue.creature.Dragon;
 
 import rogue.creature.Monster;
 import rogue.creature.Player;
+import rogue.creature.Zombie;
 import rogue.level.Level;
 import rogue.screen.Screen;
 
@@ -24,16 +25,12 @@ public class Rogue {
         World world = new Level(70, 30, player);
         // Der Drache kommt hinzu
         world.addActor(new Dragon());
+        for(int i = 0; i <= 20; i++)
+            world.addActor(new Zombie());
 
         Screen.showImage(term,world,"src/rogue/screen/startscreen.txt");
 
-        while(!player.expired()) {       
-                // prüft ob der Drache mich berührt.
-                Collection<Monster> monsters = world.getActorsAt(Monster.class, player.pos());
-                if (!monsters.isEmpty()) {
-                        player.expire();
-                        continue;
-                }
+        while(!player.expired()) {
                 term.rebuildFromWorld(world);
                 world.tick();
         }
