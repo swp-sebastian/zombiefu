@@ -1,6 +1,7 @@
 package rogue.creature;
 
 import jade.core.Actor;
+import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
@@ -15,9 +16,10 @@ public abstract class Creature extends Actor
     private int defenseValue;
     private Weapon activeWeapon;
     
-    public Creature(ColoredChar face, int h, int a, int d, Weapon w)
+    public Creature(ColoredChar face, String n, int h, int a, int d, Weapon w)
     {
         super(face);
+        name = n;
         healthPoints = h;
         attackValue = a;
         defenseValue = d;
@@ -26,7 +28,7 @@ public abstract class Creature extends Actor
     
     public Creature(ColoredChar face)
     {
-        this(face,1,1,1,new Weapon("Faust",1));
+        this(face,"Zombie",1,1,1,new Weapon("Faust",1));
     }
 
     @Override
@@ -41,7 +43,10 @@ public abstract class Creature extends Actor
         Guard.validateArgument(!this.equals(cr));     
         if(activeWeapon == null)
             return;
-        cr.hurt(activeWeapon.getDamage() * ( attackValue / cr.defenseValue ));
+        System.out.println(getName() + " attacks " + cr.getName() + " with " + activeWeapon.getName() + " (Damage: " + activeWeapon.getDamage() + "). Attack value: " + attackValue + ", Defense Value: " + cr.defenseValue);
+        int damage = activeWeapon.getDamage() * ( attackValue / cr.defenseValue ) * Dice.global.nextInt(20, 40) / 30;
+        System.out.println("Berechneter Schaden: " + damage);
+        cr.hurt(damage);
     }
     
     public void attack(int x, int y) 
@@ -55,8 +60,16 @@ public abstract class Creature extends Actor
     public void attack(Coordinate coord) {
         attack(coord.x(),coord.y());
     }
+    
+    public void roundHouseKick() {
+        attack(x(),y()-1);
+        attack(x(),y()+1);
+        attack(x()-1,y());
+        attack(x()+1,y());
+    }
 
     private void hurt(int i) {
+        
         if(i >= healthPoints) {
             expire();
         } else {
