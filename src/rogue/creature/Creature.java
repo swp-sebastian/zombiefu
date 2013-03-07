@@ -69,11 +69,13 @@ public abstract class Creature extends Actor
     }
 
     private void hurt(int i) {
-        
+        System.out.print(getName() + " hat " + i + " HP verloren. ");
         if(i >= healthPoints) {
+            System.out.println("Tot.");
             expire();
         } else {
             healthPoints -= i;
+            System.out.println("HP: " + healthPoints);
         }    
     }
     
