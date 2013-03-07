@@ -13,6 +13,7 @@ public class ColoredChar
 {
     private final char ch;
     private final Color color;
+    private final boolean passable;
 
     private static Map<ColoredChar, ColoredChar> interned = new HashMap<ColoredChar, ColoredChar>();
 
@@ -23,12 +24,22 @@ public class ColoredChar
      * @param color the {@code Color} value of the {@code ColoredChar}
      * @return the interned {@code ColoredChar} with the specified values
      */
-    public static ColoredChar create(char ch, Color color)
+    public static ColoredChar create(char ch, Color color,boolean passable)
     {
-        ColoredChar instance = new ColoredChar(ch, color);
+        ColoredChar instance = new ColoredChar(ch, color,passable);
         if(!interned.containsKey(instance))
             interned.put(instance, instance);
         return interned.get(instance);
+    }
+    
+    public static ColoredChar create(char ch, Color color)
+    {
+    	return create(ch,color,false);
+    }
+    
+    public static ColoredChar create(char ch, boolean passable)
+    {
+    	return create(ch,Color.white,passable);
     }
 
     /**
@@ -45,10 +56,16 @@ public class ColoredChar
 
     private ColoredChar(char ch, Color color)
     {
+        this(ch,color,false);
+    }
+    
+    private ColoredChar(char ch, Color color, boolean passable)
+    {
         Guard.argumentIsNotNull(color);
 
         this.ch = ch;
         this.color = color;
+        this.passable = passable;
     }
 
     /**
@@ -67,6 +84,11 @@ public class ColoredChar
     public Color color()
     {
         return color;
+    }
+    
+    public boolean passable()
+    {
+    	return passable;
     }
 
     @Override
