@@ -22,20 +22,21 @@ public class Rogue {
         // Der neue Spieler
         Player player = new Player(term);
         // Die neue Welt, in der sich nun der neue Spieler befindet
-        World world = new Level(70, 30, player);
+        World world = new Level(68, 21, player);
+        Screen.showImage(term,world,"src/sources/startscreen.txt");
         // Der Drache kommt hinzu
         world.addActor(new Dragon());
         for(int i = 0; i <= 20; i++)
             world.addActor(new Zombie());
 
-        Screen.showImage(term,world,"src/rogue/screen/startscreen.txt");
+        
 
         while(!player.expired()) {
                 term.rebuildFromWorld(world);
                 world.tick();
         }
         
-        Screen.showImage(term, world, "src/rogue/screen/endscreen.txt");
+        Screen.showImage(term, world, "src/sources/endscreen.txt");
         term.getKey();
         System.exit(0);
     }
