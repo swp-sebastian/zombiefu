@@ -7,8 +7,10 @@ import jade.util.datatype.ColoredChar;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 public class Screen {
@@ -54,5 +56,22 @@ public class Screen {
         } catch (IOException e) {
             System.out.println("Datei nicht gefunden.");
         }
+    }
+    
+    public static String[] getStrings(String input){
+    	LinkedList<String> lines = new LinkedList<String>();
+		try {
+			InputStreamReader  reader = new InputStreamReader(new FileInputStream(input),"UTF-16");
+			BufferedReader text = new BufferedReader(reader);
+	        String temp;
+	        while((temp = text.readLine())!=null) 
+	                lines.add(temp);
+	        text.close();
+	        reader.close();
+		} catch (Exception e) {}
+		String[] erg = new String[lines.size()];
+        for (int i = 0;i<lines.size();i++)
+        	erg[i] = lines.get(i);
+        return erg;
     }
 }
