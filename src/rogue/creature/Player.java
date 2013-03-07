@@ -13,6 +13,8 @@ public class Player extends Creature implements Camera
 {
     private Terminal term;
     private ViewField fov;
+    private int intelligenceValue;
+    private int maximalHealthPoints;
 
     public Player(Terminal term)
     {
@@ -32,6 +34,12 @@ public class Player extends Creature implements Camera
             {
                 case 'q':
                     expire();
+                    break;
+                case 'x':
+                    attack(x()+1,y());
+                    attack(x(),y()+1);
+                    attack(x()-1,y());
+                    attack(x(),y()-1);
                     break;
                 default:
                     Direction dir = Direction.keyToDir(key);
