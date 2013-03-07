@@ -10,6 +10,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import rogue.screen.Screen;
+import rogue.weapon.Weapon;
 
 public class Player extends Creature implements Camera
 {
@@ -23,8 +24,7 @@ public class Player extends Creature implements Camera
 
     public Player(Terminal term)
     {
-        super(ColoredChar.create('@'));
-        this.name = "Player";
+        super(ColoredChar.create('@'),"Player", 10,1,1,new Weapon("Kettensäge",1));
         this.term = term;
         fov = new RayCaster();
     }
