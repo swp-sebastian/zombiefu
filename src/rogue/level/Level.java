@@ -4,6 +4,7 @@ import jade.core.World;
 import jade.gen.Generator;
 import jade.gen.map.Cellular;
 import jade.gen.map.Maze;
+import jade.gen.map.RoomBuilder;
 import jade.gen.map.Rooms;
 import jade.gen.map.Terrain;
 import jade.gen.map.Traditional;
@@ -22,6 +23,8 @@ public class Level extends World
 
     private static Generator getLevelGenerator()
     {
-        return new Rooms();
+    	RoomBuilder.setCharSet("src/sources/CharSet.txt");
+    	return new RoomBuilder("src/sources/Testraum.txt");
+        //return new Rooms();
     }
 }
