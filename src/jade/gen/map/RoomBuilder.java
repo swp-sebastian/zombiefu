@@ -1,4 +1,4 @@
-﻿package jade.gen.map;
+package jade.gen.map;
 
 import java.awt.Color;
 import java.io.IOException;
