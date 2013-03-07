@@ -8,8 +8,7 @@
   </target>
 
   <target name="compile" depends="init" description="compile the source">
-    <javac srcdir="${src}/jade"  destdir="${build}" />
-    <javac srcdir="${src}/rogue" destdir="${build}" />
+    <javac srcdir="${src}" excludes="test/"  destdir="${build}" />
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
