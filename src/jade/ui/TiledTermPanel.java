@@ -99,6 +99,17 @@ public class TiledTermPanel extends TermPanel
         screen().setTileBuffer(tileBuffer);
         super.refreshScreen();
     }
+    
+    public void rebuildFromWorld(World world) {
+                clearBuffer();
+                for(int x = 0; x < world.width(); x++) {
+                    for(int y = 0; y < world.height(); y++) {
+                        bufferChar(x/* + 11*/, y, world.look(x, y));
+		    }
+                }
+                bufferCameras();
+                refreshScreen();
+    }
 
     @Override
     public void bufferCamera(Camera camera)

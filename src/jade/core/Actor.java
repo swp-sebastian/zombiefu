@@ -23,6 +23,7 @@ public abstract class Actor extends Messenger
 {
     private ColoredChar face;
     private World world;
+    protected String name;
     private MutableCoordinate pos;
     private boolean expired;
     private Actor holder;
@@ -64,6 +65,10 @@ public abstract class Actor extends Messenger
     public World world()
     {
         return world;
+    }
+    
+    public String getName() {
+        return name;
     }
 
     /**
