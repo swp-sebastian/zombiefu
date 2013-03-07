@@ -412,6 +412,11 @@ public abstract class World extends Messenger
         grid[x][y].face = face;
         grid[x][y].passable = passable;
     }
+    
+    public void setTile(ColoredChar face, int x, int y)
+    {
+        setTile(face,face.passable(),x,y);
+    }
 
     /**
      * Sets the face and passable value of the tile at the specified {@code Coordinate}.
