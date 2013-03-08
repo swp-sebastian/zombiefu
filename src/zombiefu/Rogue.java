@@ -1,17 +1,12 @@
-package rogue;
+package zombiefu;
 
 import jade.core.World;
 import jade.ui.TiledTermPanel;
-import jade.util.datatype.ColoredChar;
-import java.awt.Color;
-import java.util.Collection;
-import rogue.creature.Dragon;
-
-import rogue.creature.Monster;
-import rogue.creature.Player;
-import rogue.creature.Zombie;
-import rogue.level.Level;
-import rogue.screen.Screen;
+import zombiefu.creature.Dragon;
+import zombiefu.creature.Player;
+import zombiefu.creature.Zombie;
+import zombiefu.level.Level;
+import zombiefu.screen.Screen;
 
 public class Rogue {
 
@@ -26,7 +21,7 @@ public class Rogue {
         Screen.showImage(term,world,"src/sources/startscreen.txt");
         // Der Drache kommt hinzu
         world.addActor(new Dragon());
-        for(int i = 0; i <= 20; i++)
+        for(int i = 0; i <= 5; i++)
             world.addActor(new Zombie());
 
         

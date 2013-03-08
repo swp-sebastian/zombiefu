@@ -1,4 +1,4 @@
-package rogue.screen;
+package zombiefu.screen;
 
 import jade.core.World;
 import jade.ui.TiledTermPanel;
