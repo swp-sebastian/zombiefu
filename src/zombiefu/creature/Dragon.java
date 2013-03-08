@@ -1,8 +1,8 @@
-package rogue.creature;
+package zombiefu.creature;
 
 import jade.util.datatype.ColoredChar;
 import java.awt.Color;
-import rogue.weapon.Weapon;
+import zombiefu.weapon.Weapon;
 
 public class Dragon extends Monster
 {
