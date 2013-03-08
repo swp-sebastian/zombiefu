@@ -1,10 +1,10 @@
-package rogue.creature;
+package zombiefu.creature;
 
 import java.util.Arrays;
 import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
-import rogue.weapon.Weapon;
+import zombiefu.weapon.Weapon;
 
 public class Monster extends Creature {
 
@@ -18,9 +18,6 @@ public class Monster extends Creature {
 
     @Override
     public void act() {
-        if(Dice.global.chance(70))
-            move(Dice.global.choose(Arrays.asList(Direction.values())));
-        else 
-            roundHouseKick();
+        tryToMove(Dice.global.choose(Arrays.asList(Direction.values())));
     }
 }
