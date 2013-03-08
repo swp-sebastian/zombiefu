@@ -3,7 +3,7 @@ package jade.gen.map;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.HashMap;
-import rogue.screen.Screen;
+import zombiefu.screen.Screen;
 import jade.core.World;
 import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
@@ -11,7 +11,7 @@ import jade.util.datatype.ColoredChar;
 public class RoomBuilder extends MapGenerator {
 	
 	private static HashMap<Character,ColoredChar> charSet; 	// Das CharSet
-	private String input;									// Eingabe-File des Geländes
+	private String input; // Eingabe-File des Geländes
 	
 	public static void setCharSet(String input){
 		charSet = new HashMap<Character,ColoredChar>();
@@ -28,6 +28,7 @@ public class RoomBuilder extends MapGenerator {
 		this.input = input;
 	}
 	
+        @Override
 	protected void generateStep(World world, Dice dice){
 		try {
 			ColoredChar[][] screen = Screen.readFile(input);
