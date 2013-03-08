@@ -1,16 +1,14 @@
-package rogue.creature;
+package zombiefu.creature;
 
 import java.util.Collection;
 import jade.fov.RayCaster;
 import jade.fov.ViewField;
 import jade.ui.Camera;
 import jade.ui.Terminal;
-import jade.ui.TiledTermPanel;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
-import rogue.screen.Screen;
-import rogue.weapon.Weapon;
+import zombiefu.weapon.Weapon;
 
 public class Player extends Creature implements Camera
 {
@@ -47,7 +45,7 @@ public class Player extends Creature implements Camera
                 default:
                     Direction dir = Direction.keyToDir(key);
                     if(dir != null)
-                        move(dir);
+                        tryToMove(dir);
                     break;
             }
         }
