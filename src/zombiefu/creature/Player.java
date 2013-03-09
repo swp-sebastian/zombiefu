@@ -1,6 +1,9 @@
 package zombiefu.creature;
 
+import java.awt.Color;
 import java.util.Collection;
+
+import zombiefu.items.Waffe;
 import jade.fov.RayCaster;
 import jade.fov.ViewField;
 import jade.ui.Camera;
@@ -8,21 +11,20 @@ import jade.ui.Terminal;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
-import zombiefu.weapon.Weapon;
 
 public class Player extends Creature implements Camera
 {
     private Terminal term;
     private ViewField fov;
-    private int intelligenceValue;
-    private int money;
-    private int ects;
-    private int semester;
-    private int maximalHealthPoints;
+    //private int intelligenceValue;
+    //private int money;
+    //private int ects;
+    //private int semester;
+    //private int maximalHealthPoints;
 
     public Player(Terminal term)
     {
-        super(ColoredChar.create('@'),"Player", 10,1,1,new Weapon("Kettens√§ge",1));
+        super(ColoredChar.create('\u263B',Color.decode("0x7D26CD")),"John Dorian", 10,1,1,new Waffe("Kettens‰ge",1,ColoredChar.create('|')));
         this.term = term;
         fov = new RayCaster();
     }
