@@ -1,5 +1,6 @@
 ﻿package zombiefu;
 
+import jade.core.Actor;
 import zombiefu.creature.Dragon;
 import zombiefu.creature.Player;
 import zombiefu.creature.Zombie;
@@ -32,6 +33,8 @@ public class ZombieFU {
                 }
                 world.tick();
         }
+        for (Actor a : world.getActors(Actor.class))
+        	world.removeActor(a);
         
         Screen.showImage(term, world, "src/sources/endscreen.txt");
         term.getKey();
