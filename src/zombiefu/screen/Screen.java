@@ -3,6 +3,7 @@ package zombiefu.screen;
 import jade.core.World;
 import jade.ui.TiledTermPanel;
 import jade.util.datatype.ColoredChar;
+import jade.util.datatype.Direction;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
+
+import zombiefu.creature.Player;
 
 public class Screen {
 
@@ -36,7 +39,7 @@ public class Screen {
         return chars;
     }
 
-    public static void showImage(TiledTermPanel term, World world, String input){
+    public static void showImage(TiledTermPanel term, World world, String input) throws InterruptedException{
         try {
             ColoredChar[][] start = readFile(input);
             term.clearBuffer();
@@ -51,8 +54,8 @@ public class Screen {
             }
             term.bufferCameras();
             term.refreshScreen();
-
-            world.tick();
+            
+            //world.tick(); //nur nötig, wenn Tasten nicht eingelesen werden.
         } catch (IOException e) {
             System.out.println("Datei nicht gefunden.");
         }
@@ -74,4 +77,5 @@ public class Screen {
         	erg[i] = lines.get(i);
         return erg;
     }
+    
 }

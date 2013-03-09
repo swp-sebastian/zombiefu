@@ -6,6 +6,7 @@ import zombiefu.creature.Dragon;
 import zombiefu.creature.Player;
 import zombiefu.creature.Zombie;
 import zombiefu.level.Level;
+import zombiefu.screen.KeyEdit;
 import zombiefu.screen.Screen;
 
 public class Rogue {
@@ -19,6 +20,8 @@ public class Rogue {
         // Die neue Welt, in der sich nun der neue Spieler befindet
         World world = new Level(68, 21, player);
         Screen.showImage(term,world,"src/sources/startscreen.txt");
+     // An diese Stelle Abfrage für Tastenbelegung und world.tick aus screen.showImage entfernen.
+        KeyEdit.getKeys(term); //Tastenbefehle einlesen
         // Der Drache kommt hinzu
         world.addActor(new Dragon());
         for(int i = 0; i <= 5; i++)
