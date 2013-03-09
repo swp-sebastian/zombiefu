@@ -17,7 +17,6 @@ public class Level extends World
     public Level(int width, int height, Player player)
     {
         super(width, height);
-        super.player = player;
         gen.generate(this);
         addActor(player);
     }
