@@ -79,23 +79,14 @@ public enum Direction
     {
         switch(key)
         {
-            case '6':
-            case 'l':
             case 'd':
                 return EAST;
-            case '4':
-            case 'h':
             case 'a':
                 return WEST;
-            case '8':
-            case 'k':
             case 'w':
                 return NORTH;
-            case '2':
-            case 'j':
             case 's':
                 return SOUTH;
-            case '5':
             case '.':
                 return ORIGIN;
             default:

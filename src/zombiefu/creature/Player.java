@@ -14,15 +14,15 @@ public class Player extends Creature implements Camera
 {
     private Terminal term;
     private ViewField fov;
-    private int intelligenceValue;
-    private int money;
-    private int ects;
-    private int semester;
-    private int maximalHealthPoints;
+    //private int intelligenceValue;
+    //private int money;
+    //private int ects;
+    //private int semester;
+    //private int maximalHealthPoints;
 
     public Player(Terminal term)
     {
-        super(ColoredChar.create('@'),"Player", 10,1,1,new Weapon("Kettens√§ge",1));
+        super(ColoredChar.create('@'),"Player", 10,1,1,new Weapon("Kettens‰ge",1));
         this.term = term;
         fov = new RayCaster();
     }

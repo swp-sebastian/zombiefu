@@ -8,6 +8,6 @@ public class Dragon extends Monster
 {
     public Dragon()
     {
-        super(ColoredChar.create('D', Color.RED,false),"Dragon",1,1,1,new Weapon("Feuriger Atem",100));
+        super(ColoredChar.create('D', Color.RED),"Dragon",1,1,1,new Weapon("Feuriger Atem",100));
     }
 }
