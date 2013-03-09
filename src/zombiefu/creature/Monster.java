@@ -1,14 +1,15 @@
 package zombiefu.creature;
 
 import java.util.Arrays;
+
+import zombiefu.items.Waffe;
 import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
-import zombiefu.weapon.Weapon;
 
 public class Monster extends Creature {
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Weapon w) {
+    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w) {
         super(face, n, h, a, d, w);
     }
 
