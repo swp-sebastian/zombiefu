@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
 
 public class TiledTermPanel extends TermPanel
 {
-    public static final int DEFAULT_TILESIZE = 14;
+    public static final int DEFAULT_TILESIZE = 16;
 
     private Map<Coordinate, List<ColoredChar>> tileBuffer;
     private Map<Coordinate, List<ColoredChar>> savedTile;
@@ -98,17 +98,6 @@ public class TiledTermPanel extends TermPanel
     {
         screen().setTileBuffer(tileBuffer);
         super.refreshScreen();
-    }
-    
-    public void rebuildFromWorld(World world) {
-                clearBuffer();
-                for(int x = 0; x < world.width(); x++) {
-                    for(int y = 0; y < world.height(); y++) {
-                        bufferChar(x/* + 11*/, y, world.look(x, y));
-		    }
-                }
-                bufferCameras();
-                refreshScreen();
     }
 
     @Override
