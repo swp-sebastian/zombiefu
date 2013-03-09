@@ -19,6 +19,9 @@ public class Player extends Creature implements Camera
     private int ects;
     private int semester;
     private int maximalHealthPoints;
+    public static char hit;
+    public static char change;
+    
 
     public Player(Terminal term)
     {
@@ -34,19 +37,28 @@ public class Player extends Creature implements Camera
         {
             char key;
             key = term.getKey();
+            while (key == change){
+            	nextItem(); //Durch das Item-Inventar zappen
+            	key = term.getKey();
+            }
+            if (key == hit){
+            	roundHouseKick(); //Mit gewähltem Item eine Aktion durchführen
+            }
+            else {
             switch(key)
             {
                 case 'q':
                     expire();
                     break;
                 case 'x':
-                    roundHouseKick();
+                    roundHouseKick(); //Mit gewähltem Item eine Aktion durchführen
                     break;
                 default:
                     Direction dir = Direction.keyToDir(key);
                     if(dir != null)
                         tryToMove(dir);
                     break;
+            }
             }
         }
         catch(InterruptedException e)
@@ -55,6 +67,10 @@ public class Player extends Creature implements Camera
         }
     }
 
+    public void nextItem(){ //Muss in die Item Klasse implementiert werden
+    	System.out.println("Schluss mit Kettensäge.");
+    }
+    
     @Override
     public Collection<Coordinate> getViewField()
     {

@@ -44,6 +44,10 @@ public enum Direction
 
     private int dx;
     private int dy;
+    public static char up;
+    public static char down;
+    public static char left;
+    public static char right;
 
     private Direction(int dx, int dy)
     {
@@ -77,22 +81,27 @@ public enum Direction
      */
     public static Direction keyToDir(char key)
     {
+    	if (key==right)
+    		return EAST;
+    	if (key==left)
+    		return WEST;
+    	if (key==up)
+    		return NORTH;
+    	if (key==down)
+    		return SOUTH;
+    	else {
         switch(key)
         {
             case '6':
-            case 'l':
             case 'd':
                 return EAST;
             case '4':
-            case 'h':
             case 'a':
                 return WEST;
             case '8':
-            case 'k':
             case 'w':
                 return NORTH;
             case '2':
-            case 'j':
             case 's':
                 return SOUTH;
             case '5':
@@ -101,5 +110,6 @@ public enum Direction
             default:
                 return null;
         }
+    	}
     }
 }
