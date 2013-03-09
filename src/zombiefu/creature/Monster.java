@@ -19,6 +19,7 @@ public class Monster extends Creature {
 
     @Override
     public void act() {
-        tryToMove(Dice.global.choose(Arrays.asList(Direction.values())));
+    	if (super.healthPoints==0) expire();
+    	else tryToMove(Dice.global.choose(Arrays.asList(Direction.values())));
     }
 }

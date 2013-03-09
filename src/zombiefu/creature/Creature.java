@@ -12,7 +12,7 @@ import zombiefu.items.Waffe;
 
 public abstract class Creature extends Actor {
 
-    private int healthPoints;
+    public int healthPoints;
     private int attackValue;
     private int defenseValue;
     private int dazed;

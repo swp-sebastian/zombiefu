@@ -13,7 +13,7 @@ public class RoomBuilder extends MapGenerator {
 	
 	private static HashMap<Character,Color> charSet; 	// Das CharSet
 	private static HashMap<Character,Boolean> passSet;	// Das Passable-Set
-	ColoredChar[][] screen;								// Das Gelände
+	private ColoredChar[][] screen;								// Das Gelände
 	
 	public static void setCharSet(String input){
 		charSet = new HashMap<Character,Color>();
@@ -29,6 +29,11 @@ public class RoomBuilder extends MapGenerator {
 	}
 	
 	public RoomBuilder(String input){
+		try {this.screen = Screen.readFile(input);}
+		catch (IOException e) {System.out.println("File not found!");}
+	}
+	
+	public void changeFile(String input){
 		try {this.screen = Screen.readFile(input);}
 		catch (IOException e) {System.out.println("File not found!");}
 	}

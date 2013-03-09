@@ -1,9 +1,6 @@
 ﻿package zombiefu;
 
-import jade.core.Actor;
-import zombiefu.creature.DozentZombie;
 import zombiefu.creature.Player;
-import zombiefu.creature.Zombie;
 import zombiefu.level.Level;
 import zombiefu.util.Screen;
 
@@ -17,25 +14,9 @@ public class ZombieFU {
         // Die neue Welt, in der sich nun der neue Spieler befindet
         Level world = new Level(68, 21,player);
         Screen.showImage(term,world,"src/sources/startscreen.txt");
-        // Der Drache kommt hinzu
-        world.addActor(new DozentZombie());
-        for(int i = 0; i <= 5; i++)
-            world.addActor(new Zombie());
-
-        while(!player.expired()) {
-                term.clearBuffer();
-                for(int x = 0; x < world.width(); x++) {
-                    for(int y = 0; y < world.height(); y++) {
-                        term.bufferChar(x, y, world.look(x, y));
-                    }
-                    term.bufferCameras();
-                    term.refreshScreen();
-                }
-                world.tick();
-        }
-        for (Actor a : world.getActors(Actor.class))
-        	world.removeActor(a);
-        
+        world.create();
+        while(!player.expired())
+        	world.refresh(term);
         Screen.showImage(term, world, "src/sources/endscreen.txt");
         term.getKey();
         System.exit(0);

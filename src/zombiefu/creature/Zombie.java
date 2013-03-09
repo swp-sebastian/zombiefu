@@ -17,9 +17,9 @@ public class Zombie extends Monster {
 
     @Override
     public void act() {
-        // TODO: Player suchen
-    	Player player = world().getActor(Player.class); 	
-    	Guard.argumentIsNotNull(player);
+    	if (world()==null) return;
+    	Player player = world().getActor(Player.class);
+    	if (player==null) return;
     	Coordinate playerPos = player.pos();
         double distance = playerPos.distance(pos());
         if(distance <= 5)
