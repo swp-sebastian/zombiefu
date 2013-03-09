@@ -15,8 +15,8 @@
     <mkdir dir="${dist}/" />
     <jar jarfile="${dist}/zombiefu.jar" basedir="${build}">
       <manifest>
-	<attribute name="Built-By" value="${user.name}" />
-	<attribute name="Main-Class" value="rogue.Rogue" />
+        <attribute name="Built-By" value="${user.name}" />
+        <attribute name="Main-Class" value="zombiefu.ZombieFU" />
       </manifest>
     </jar>
   </target>
