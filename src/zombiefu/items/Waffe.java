@@ -1,19 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package zombiefu.weapon;
+package zombiefu.items;
+
+import jade.util.datatype.ColoredChar;
 
 /**
  *
  * @author tomas
  */
-public class Weapon {
+public class Waffe extends Item {
 
     private String name;
     private int damage;
 
-    public Weapon(String n, int d) {
+    public Waffe(String n, int d, ColoredChar c) {
+    	super(c);
         name = n;
         damage = d;
     }
@@ -25,4 +24,7 @@ public class Weapon {
     public String getName() {
         return name;
     }
+
+	@Override
+	public void act() {}
 }

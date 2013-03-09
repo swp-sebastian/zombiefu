@@ -6,20 +6,20 @@ import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import zombiefu.weapon.Weapon;
+import zombiefu.items.Waffe;
 
 public abstract class Creature extends Actor {
 
-    private int healthPoints;
+    public int healthPoints;
     private int attackValue;
     private int defenseValue;
     private int dazed;
-    private Weapon activeWeapon;
+    private Waffe activeWeapon;
+    private String name;
 
-    public Creature(ColoredChar face, String n, int h, int a, int d, Weapon w) {
+    public Creature(ColoredChar face, String n, int h, int a, int d, Waffe w) {
         super(face);
         dazed = 0;
         name = n;
@@ -30,7 +30,7 @@ public abstract class Creature extends Actor {
     }
 
     public Creature(ColoredChar face) {
-        this(face, "Zombie", 1, 1, 1, new Weapon("Faust", 1));
+        this(face, "Zombie", 1, 1, 1, new Waffe("Faust", 1,ColoredChar.create('|')));
     }
 
     @Override
@@ -56,7 +56,11 @@ public abstract class Creature extends Actor {
         
         cr.hurt(damage);
     }
-
+    
+    public String getName() {
+        return name;
+    }
+    
     public void attack(int x, int y) {
         Collection<Creature> actors = world().getActorsAt(Creature.class, x, y);
         Iterator<Creature> it = actors.iterator();
