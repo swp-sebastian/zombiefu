@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import zombiefu.creature.Player;
 
 /**
  * Represents a game world on which {@code Actor} can interact.
@@ -63,7 +62,8 @@ public abstract class World extends Messenger
 
         removeExpired();
     }
-    
+
+
     /**
      * Returns the width of the {@code World}.
      * @return the width of the {@code World}
@@ -413,10 +413,10 @@ public abstract class World extends Messenger
         grid[x][y].face = face;
         grid[x][y].passable = passable;
     }
-    
+
     public void setTile(ColoredChar face, int x, int y)
     {
-        setTile(face,face.passable(),x,y);
+        setTile(face,false,x,y);
     }
 
     /**
