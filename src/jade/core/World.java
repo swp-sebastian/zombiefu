@@ -22,7 +22,6 @@ public abstract class World extends Messenger
     private int height;
     private Tile[][] grid;
     private Set<Actor> register;
-    protected Player player;
     private List<Class<? extends Actor>> drawOrder;
     private List<Class<? extends Actor>> actOrder;
 
@@ -65,10 +64,6 @@ public abstract class World extends Messenger
         removeExpired();
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-    
     /**
      * Returns the width of the {@code World}.
      * @return the width of the {@code World}

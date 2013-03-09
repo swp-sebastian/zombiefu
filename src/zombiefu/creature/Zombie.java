@@ -1,6 +1,7 @@
 package zombiefu.creature;
 
 import jade.util.Dice;
+import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
@@ -17,7 +18,9 @@ public class Zombie extends Monster {
     @Override
     public void act() {
         // TODO: Player suchen
-        Coordinate playerPos = world().getPlayer().pos();
+    	Player player = world().getActor(Player.class); 	
+    	Guard.argumentIsNotNull(player);
+    	Coordinate playerPos = player.pos();
         double distance = playerPos.distance(pos());
         if(distance <= 5)
             tryToMove(pos().directionTo(playerPos));
