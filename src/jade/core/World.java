@@ -22,7 +22,6 @@ public abstract class World extends Messenger
     private int height;
     private Tile[][] grid;
     private Set<Actor> register;
-    protected Player player;
     private List<Class<? extends Actor>> drawOrder;
     private List<Class<? extends Actor>> actOrder;
 
@@ -63,10 +62,6 @@ public abstract class World extends Messenger
                 actor.act();
 
         removeExpired();
-    }
-
-    public Player getPlayer() {
-        return player;
     }
     
     /**
