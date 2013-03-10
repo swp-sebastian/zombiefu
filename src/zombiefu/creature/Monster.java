@@ -1,5 +1,7 @@
 package zombiefu.creature;
 
+import jade.path.Bresenham;
+import jade.path.PathFinder;
 import java.util.Arrays;
 
 import zombiefu.items.Waffe;
@@ -10,28 +12,46 @@ import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 
 public class Monster extends Creature {
+    
+    private PathFinder pathfinder;
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w) {
         super(face, n, h, a, d, w);
+        pathfinder = new Bresenham();
     }
 
     public Monster(ColoredChar face) {
         super(face);
+        pathfinder = new Bresenham();
+    }
+
+    private void moveRandomly() {
+        tryToMove(Dice.global.choose(Arrays.asList(Direction.values())));
     }
 
     @Override
     public void act() {
-    	try {Guard.argumentIsNotNull(world());}
-    	catch (IllegalArgumentException e){return;}
+        Guard.argumentIsNotNull(world());
         Player player = world().getActor(Player.class);
-        try {Guard.argumentIsNotNull(player);}
-    	catch (IllegalArgumentException e){return;}
+
+        if (player == null) {
+            // Der Player ist in einer anderen Welt
+            moveRandomly();
+            return;
+        }
+        
+        // Player suchen
         Coordinate playerPos = player.pos();
-        // TODO: Player suchen
         double distance = playerPos.distance(pos());
-        if(distance <= 5)
-            tryToMove(pos().directionTo(playerPos));
-        else
-            tryToMove(Dice.global.choose(Arrays.asList(Direction.values())));
+        
+        if (distance <= 10) {
+            Direction toPlayer = pathfinder.getDirectionOfFirstStep(world(), pos(), playerPos);
+            if(toPlayer == null)
+                tryToMove(pos().directionTo(playerPos));
+            else
+                tryToMove(toPlayer);
+        } else {
+            moveRandomly();            
+        }
     }
 }
