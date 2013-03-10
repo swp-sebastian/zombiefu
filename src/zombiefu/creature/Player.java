@@ -1,5 +1,6 @@
 package zombiefu.creature;
 
+import jade.core.World;
 import java.awt.Color;
 import java.util.Collection;
 
@@ -7,14 +8,18 @@ import zombiefu.items.Waffe;
 import jade.fov.RayCaster;
 import jade.fov.ViewField;
 import jade.ui.Camera;
+import jade.ui.TermPanel;
 import jade.ui.Terminal;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import zombiefu.items.Teleporter;
+import zombiefu.level.Level;
+import zombiefu.map.RoomBuilder;
 
 public class Player extends Creature implements Camera
 {
-    private Terminal term;
+    private TermPanel term;
     private ViewField fov;
     //private int intelligenceValue;
     //private int money;
@@ -22,10 +27,11 @@ public class Player extends Creature implements Camera
     //private int semester;
     //private int maximalHealthPoints;
 
-    public Player(Terminal term)
+    public Player(TermPanel term)
     {
         super(ColoredChar.create('\u263B',Color.decode("0x7D26CD")),"John Dorian", 10,1,1,new Waffe("Kettensäge",1,ColoredChar.create('|')));
         this.term = term;
+        this.godMode = true;
         fov = new RayCaster();
     }
 
@@ -41,6 +47,9 @@ public class Player extends Creature implements Camera
                 case 'q':
                     expire();
                     break;
+                case 'g':
+                    changeWorld("src/sources/TestRaumZ.txt");
+                    break;                    
                 case 'x':
                     roundHouseKick();
                     break;
@@ -61,5 +70,13 @@ public class Player extends Creature implements Camera
     public Collection<Coordinate> getViewField()
     {
         return fov.getViewField(world(), pos(), 5);
+    }
+    
+    public void changeWorld(World world) {
+        world().removeActor(this);
+        world.addActor(this);
+    }
+    public void changeWorld(String level) {
+       changeWorld(new Level(68,21,level));
     }
 }
