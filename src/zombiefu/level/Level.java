@@ -3,7 +3,7 @@ package zombiefu.level;
 import jade.core.Actor;
 import jade.core.World;
 import jade.gen.Generator;
-import zombiefu.ui.ZombiePanel;
+import jade.ui.TermPanel;
 import zombiefu.creature.DozentZombie;
 import zombiefu.creature.Player;
 import zombiefu.creature.Zombie;
@@ -43,7 +43,7 @@ public class Level extends World {
         }
     }
 
-    public void refresh(ZombiePanel term) {
+    public void refresh(TermPanel term) {
         term.clearBuffer();
         for (int x = 0; x < width(); x++) {
             for (int y = 0; y < height(); y++) {
