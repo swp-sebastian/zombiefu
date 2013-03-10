@@ -77,6 +77,6 @@ public class Player extends Creature implements Camera
         world.addActor(this);
     }
     public void changeWorld(String level) {
-       changeWorld(new Level(68,21,level));
+       changeWorld(Level.levelFromFile(level));
     }
 }
