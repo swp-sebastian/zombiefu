@@ -16,13 +16,18 @@ import zombiefu.map.RoomBuilder;
 
 public class Level extends World
 {
-    private final static Generator gen = getLevelGenerator();
 
-    public Level(int width, int height, Player player)
-    {
+    public Level(int width, int height, Generator gen) {
         super(width, height);
         gen.generate(this);
-        addActor(player);
+        fillWithEnemies();
+    }
+
+    public Level(int width, int height, String level) {
+        this(width, height, new RoomBuilder(level, "src/sources/CharSet.txt"));
+    }
+    
+    public void fillWithEnemies() {
         Teleporter tele = new Teleporter(ColoredChar.create('\u25A0',Color.decode("0x8B4513")),"Testraum","TestraumZ",
     			new Coordinate(33,19),new Coordinate(33,1));
     	// Ein Teleporter kommt hinzu
@@ -31,30 +36,7 @@ public class Level extends World
         addActor(new DozentZombie());
         // 6 normale Zombies kommen hinzu
         for(int i = 0; i <= 5; i++)
-            addActor(new Zombie());
-    }
-
-    public void changeLevel(String input, Teleporter tele){
-    	Player player = getActor(Player.class);					// Den Spieler finden.
-    	for (Actor actor : getActors(Actor.class)){				// Alle anderen Actor werden gelöscht
-    		if (!actor.equals(player) && !actor.getClass().equals(Teleporter.class))
-    			actor.expire();									// außer der Spieler und die Teleporter
-    		removeActor(actor);
-    	}
-    	((RoomBuilder) gen).changeFile(input);					// Neue Datei einlesen
-    	gen.generate(this);										// Neue Welt erzeugen
-    	addActor(player,tele.newPos(this));						// Den Spieler neu setzen
-    	addActor(tele, tele.aktuell());							// Den Teleporter setzen
-        addActor(new DozentZombie());
-        for(int i = 0; i <= 5; i++)
-            addActor(new Zombie());
-    }
-
-    private static Generator getLevelGenerator()
-    {
-    	RoomBuilder.setCharSet("src/sources/CharSet.txt");
-    	return new RoomBuilder("src/sources/Testraum.txt");
-        //return new Rooms();
+            addActor(new Zombie());        
     }
 
     public void refresh(ZombiePanel term){
