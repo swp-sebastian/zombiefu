@@ -1,8 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package zombiefu.util;
+
+import java.util.HashMap;
 
 import jade.core.World;
 import jade.util.datatype.Coordinate;
@@ -10,28 +8,50 @@ import zombiefu.creature.Player;
 import zombiefu.items.Teleporter;
 import zombiefu.level.Level;
 
-/**
- *
- * @author tomas
- */
 public class ZombieTools {
-    
-    public static void createBidirectionalTeleporter(World world1, Coordinate coord1, World world2, Coordinate coord2) {
-        Teleporter tel1 = new Teleporter(world2, coord2);
-        Teleporter tel2 = new Teleporter(world1, coord1);
-        world1.addActor(tel1, coord1);
-        world2.addActor(tel2, coord2);
-    }
 
-    public static void createStoryForPlayer(Player player) {
-        
-        // Welten und Teleporter
-        Level world1 = Level.levelFromFile("src/sources/Testraum.txt");
-        Level world2 = Level.levelFromFile("src/sources/TestraumZ.txt");
-        createBidirectionalTeleporter(world1, new Coordinate(33, 19), world2, new Coordinate(33, 1));
-        
-        // Spieler auf erste Welt setzen
-        world1.addActor(player);
-        
-    }
+	public static void createStoryForPlayer(Player player) {
+		Level world = createWorld();
+		world.addActor(player);
+	}
+	
+	public static void createBidirectionalTeleporter(World world1,
+			Coordinate from1, Coordinate to2, World world2, Coordinate from2,
+			Coordinate to1) {
+		/*
+		 * fromi: Wo befindet sich der Teleporter in Welt i? toi: Wo soll der
+		 * Player in Welt i hinteleportiert werden?
+		 */
+		Teleporter tel1 = new Teleporter(world2, to2);
+		Teleporter tel2 = new Teleporter(world1, to1);
+		world1.addActor(tel1, from1);
+		world2.addActor(tel2, from2);
+	}
+	
+	private static Level createWorld(){
+		String srcs = "src/sources/";
+		String[] levels = Screen.getStrings(srcs + "levels.txt");
+		String[] teles = Screen.getStrings(srcs + "teleporters.txt");
+		HashMap<String, Level> nameOfLevels = new HashMap<String, Level>();
+		for (String s : levels)
+			nameOfLevels.put(s, Level.levelFromFile(srcs + s + ".txt"));
+		for (String s : teles) {
+			try {
+				String[] d = s.split(" ");
+				Level world1 = nameOfLevels.get(d[0]);
+				Coordinate from1 = new Coordinate(Integer.decode(d[1]),
+						Integer.decode(d[2]));
+				Coordinate to2 = new Coordinate(Integer.decode(d[3]),
+						Integer.decode(d[4]));
+				Level world2 = nameOfLevels.get(d[5]);
+				Coordinate from2 = new Coordinate(Integer.decode(d[6]),
+						Integer.decode(d[7]));
+				Coordinate to1 = new Coordinate(Integer.decode(d[8]),
+						Integer.decode(d[9]));
+				createBidirectionalTeleporter(world1, from1, to2, world2,
+						from2, to1);
+			} catch (Exception e) {}
+		}
+		return nameOfLevels.get(levels[0]);
+	}
 }
