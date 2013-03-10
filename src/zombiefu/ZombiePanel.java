@@ -1,9 +1,9 @@
 package zombiefu;
 
-import jade.ui.TiledTermPanel;
+import jade.ui.TermPanel;
 
-public class ZombiePanel extends TiledTermPanel {
-    
+public class ZombiePanel extends TermPanel {
+
     public ZombiePanel(int i, int j, int k) {
 		super(i,j,k);
 	}
