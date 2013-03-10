@@ -1,7 +1,7 @@
 package zombiefu.util;
 
 import jade.core.World;
-import jade.ui.TiledTermPanel;
+import jade.ui.TermPanel;
 import jade.util.datatype.ColoredChar;
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -33,7 +33,7 @@ public class Screen {
         return chars;
     }
 
-    public static void showImage(TiledTermPanel term, World world, String input){
+    public static void showImage(TermPanel term, World world, String input){
         try {
             ColoredChar[][] start = readFile(input);
             term.clearBuffer();
@@ -54,14 +54,14 @@ public class Screen {
             System.out.println("Datei nicht gefunden.");
         }
     }
-    
+
     public static String[] getStrings(String input){
     	LinkedList<String> lines = new LinkedList<String>();
 		try {
 			InputStreamReader  reader = new InputStreamReader(new FileInputStream(input),"UTF-16");
 			BufferedReader text = new BufferedReader(reader);
 	        String temp;
-	        while((temp = text.readLine())!=null) 
+	        while((temp = text.readLine())!=null)
 	                lines.add(temp);
 	        text.close();
 	        reader.close();
