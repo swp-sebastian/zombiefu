@@ -12,13 +12,11 @@ public class ZombieFU {
         // Der neue Spieler
         Player player = new Player(term);
         // Die neue Welt, in der sich nun der neue Spieler befindet
+        Screen.showImage(term,"src/sources/startscreen.txt");
         Level world = new Level(68, 21,player);
-        Screen.showImage(term,world,"src/sources/startscreen.txt");
-        world.create();
         while(!player.expired())
         	world.refresh(term);
-        Screen.showImage(term, world, "src/sources/endscreen.txt");
-        term.getKey();
+        Screen.showImage(term, "src/sources/endscreen.txt");
         System.exit(0);
     }
 }
