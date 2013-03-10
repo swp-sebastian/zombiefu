@@ -7,6 +7,7 @@ import zombiefu.creature.Player;
 import zombiefu.items.Teleporter;
 import zombiefu.level.Level;
 import zombiefu.util.Screen;
+import zombiefu.util.ZombieTools;
 
 public class ZombieFU {
 
@@ -23,8 +24,7 @@ public class ZombieFU {
         // Welten und Teleporter
         Level world1 = Level.levelFromFile("src/sources/Testraum.txt");
         Level world2 = Level.levelFromFile("src/sources/TestraumZ.txt");
-        world1.addActor(new Teleporter(world2, new Coordinate(33, 1)), new Coordinate(33, 19));
-        world2.addActor(new Teleporter(world1, new Coordinate(33, 19)), new Coordinate(33, 1));
+        ZombieTools.bidirektionalerTeleporter(world1, new Coordinate(33, 19), world2, new Coordinate(33, 1));
         
         // Spieler auf erste Welt setzen
         world1.addActor(player);
