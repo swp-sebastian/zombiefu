@@ -1,16 +1,16 @@
 package zombiefu;
 
+import jade.ui.TermPanel;
 import zombiefu.creature.Player;
 import zombiefu.level.Level;
 import zombiefu.util.Screen;
-import zombiefu.ui.ZombiePanel;
 import zombiefu.util.ZombieTools;
 
 public class ZombieFU {
 
     public static void main(String[] args) throws InterruptedException {
 
-        ZombiePanel term = ZombiePanel.getFramedTerminal("The Final Exam - Die Anwesenheitspflicht schlägt zurück");
+        TermPanel term = TermPanel.getFramedTerminal("The Final Exam - Die Anwesenheitspflicht schlägt zurück");
 
         // Der neue Spieler
         Player player = new Player(term);
