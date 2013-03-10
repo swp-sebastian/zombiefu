@@ -33,12 +33,12 @@ public class Level extends World
         for(int i = 0; i <= 5; i++)
             addActor(new Zombie());
     }
-    
+
     public void changeLevel(String input, Teleporter tele){
     	Player player = getActor(Player.class);					// Den Spieler finden.
-    	for (Actor actor : getActors(Actor.class)){				// Alle anderen Actor werden gelöscht
+    	for (Actor actor : getActors(Actor.class)){				// Alle anderen Actor werden gelÃ¶scht
     		if (!actor.equals(player) && !actor.getClass().equals(Teleporter.class))
-    			actor.expire();									// außer der Spieler und die Teleporter
+    			actor.expire();									// auÃŸer der Spieler und die Teleporter
     		removeActor(actor);
     	}
     	((RoomBuilder) gen).changeFile(input);					// Neue Datei einlesen
@@ -56,7 +56,7 @@ public class Level extends World
     	return new RoomBuilder("src/sources/Testraum.txt");
         //return new Rooms();
     }
-    
+
     public void refresh(ZombiePanel term){
     	term.clearBuffer();
         for(int x = 0; x < width(); x++) {
