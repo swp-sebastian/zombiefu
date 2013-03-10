@@ -5,12 +5,15 @@ import zombiefu.creature.Player;
 import zombiefu.level.Level;
 import zombiefu.util.Screen;
 import zombiefu.util.ZombieTools;
+import zombiefu.ui.ZombieFrame;
 
 public class ZombieFU {
 
     public static void main(String[] args) throws InterruptedException {
 
-        TermPanel term = TermPanel.getFramedTerminal("The Final Exam - Die Anwesenheitspflicht schlägt zurück");
+        // Der Frame, der drei TermPanels erzeugt, frame.{top, main, bottom}Term();
+        ZombieFrame frame = new ZombieFrame("The Final Exam - Die Anwesenheitspflicht schlägt zurück");
+        TermPanel term = frame.mainTerm();
 
         // Der neue Spieler
         Player player = new Player(term);
