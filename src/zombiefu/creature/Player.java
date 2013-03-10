@@ -9,13 +9,10 @@ import jade.fov.RayCaster;
 import jade.fov.ViewField;
 import jade.ui.Camera;
 import jade.ui.TermPanel;
-import jade.ui.Terminal;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
-import zombiefu.items.Teleporter;
 import zombiefu.level.Level;
-import zombiefu.map.RoomBuilder;
 
 public class Player extends Creature implements Camera
 {
