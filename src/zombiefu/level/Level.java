@@ -29,10 +29,6 @@ public class Level extends World {
     }
 
     public void fillWithEnemies() {
-        Teleporter tele = new Teleporter(ColoredChar.create('\u25A0', Color.decode("0x8B4513")), "Testraum", "TestraumZ",
-                new Coordinate(33, 19), new Coordinate(33, 1));
-        // Ein Teleporter kommt hinzu
-        addActor(tele, tele.aktuell());
         // Der Zombie-Dozent kommt hinzu.
         addActor(new DozentZombie());
         // 6 normale Zombies kommen hinzu
