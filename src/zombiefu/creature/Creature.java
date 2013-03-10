@@ -18,6 +18,7 @@ public abstract class Creature extends Actor {
     private int dazed;
     private Waffe activeWeapon;
     private String name;
+    protected boolean godMode;
 
     public Creature(ColoredChar face, String n, int h, int a, int d, Waffe w) {
         super(face);
@@ -101,6 +102,8 @@ public abstract class Creature extends Actor {
 
     private void hurt(int i) {
         System.out.print(getName() + " hat " + i + " HP verloren. ");
+        if(godMode)
+            return;
         if (i >= healthPoints) {
             System.out.println("Tot.");
             expire();
