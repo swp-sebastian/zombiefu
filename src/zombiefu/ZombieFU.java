@@ -8,7 +8,7 @@ public class ZombieFU {
 
     public static void main(String[] args) throws InterruptedException {
 
-        ZombiePanel term = ZombiePanel.getFramedTerminal("The Final Exam - Die Anwesenheitspflicht schlÃ¤gt zurÃ¼ck");
+        ZombiePanel term = ZombiePanel.getFramedTerminal("The Final Exam - Die Anwesenheitspflicht schlägt zurück");
         // Der neue Spieler
         Player player = new Player(term);
         // Die neue Welt, in der sich nun der neue Spieler befindet
