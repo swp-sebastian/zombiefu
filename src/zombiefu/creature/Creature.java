@@ -74,6 +74,8 @@ public abstract class Creature extends Actor {
     }
 
     public void tryToMove(Direction dir) {
+    	try {Guard.argumentIsNotNull(world());}
+    	catch (IllegalArgumentException e){return;}
         Creature creature = world().getActorAt(Creature.class, pos().getTranslated(dir));
         if (dir == Direction.ORIGIN) {
             return;
