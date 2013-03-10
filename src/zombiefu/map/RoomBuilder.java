@@ -14,7 +14,9 @@ public class RoomBuilder extends MapGenerator {
     private static HashMap<Character, Color> charSet; 	// Das CharSet
     private static HashMap<Character, Boolean> passSet;	// Das Passable-Set
     private ColoredChar[][] screen;								// Das Gelände
-
+    private int width;
+    private int height;
+    
     public static void setCharSet(String input) {
         charSet = new HashMap<Character, Color>();
         passSet = new HashMap<Character, Boolean>();
@@ -28,9 +30,19 @@ public class RoomBuilder extends MapGenerator {
         }
     }
 
+    public int width() {
+        return width;
+    }
+    
+    public int height() {
+        return height;
+    }
+    
     public RoomBuilder(String input, String charset) {
         try {
             this.screen = Screen.readFile(input);
+            this.height = screen.length;
+            this.width = screen[0].length;
             setCharSet(charset);
         } catch (IOException e) {
             System.out.println("File not found!");
@@ -47,8 +59,8 @@ public class RoomBuilder extends MapGenerator {
 
     @Override
     protected void generateStep(World world, Dice dice) {
-        for (int x = 0; x < screen.length; x++) {
-            for (int y = 0; y < screen[x].length; y++) {
+        for (int x = 0; x < height; x++) {
+            for (int y = 0; y < width; y++) {
                 if (charSet.containsKey(screen[x][y].ch())) {
                     world.setTile(ColoredChar.create(screen[x][y].ch(), charSet.get(screen[x][y].ch())),
                             passSet.get(screen[x][y].ch()), y, x);

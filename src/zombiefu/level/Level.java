@@ -21,9 +21,11 @@ public class Level extends World {
         gen.generate(this);
         fillWithEnemies();
     }
-
-    public Level(int width, int height, String level) {
-        this(width, height, new RoomBuilder(level, "src/sources/CharSet.txt"));
+    
+    public static Level levelFromFile(String file) {
+        RoomBuilder builder = new RoomBuilder(file, "src/sources/CharSet.txt");
+        System.out.println(builder.width() + " " + builder.height());
+        return new Level(builder.width(), builder.height(), builder);
     }
 
     public void fillWithEnemies() {
