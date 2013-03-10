@@ -1,4 +1,4 @@
-package zombiefu;
+package zombiefu.ui;
 
 import jade.ui.TermPanel;
 

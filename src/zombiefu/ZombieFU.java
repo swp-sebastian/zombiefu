@@ -3,6 +3,7 @@ package zombiefu;
 import zombiefu.creature.Player;
 import zombiefu.level.Level;
 import zombiefu.util.Screen;
+import zombiefu.ui.ZombiePanel;
 
 public class ZombieFU {
 
