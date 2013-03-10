@@ -1,17 +1,12 @@
 package zombiefu.level;
 
-import java.awt.Color;
-
 import jade.core.Actor;
 import jade.core.World;
 import jade.gen.Generator;
-import jade.util.datatype.ColoredChar;
-import jade.util.datatype.Coordinate;
 import zombiefu.ui.ZombiePanel;
 import zombiefu.creature.DozentZombie;
 import zombiefu.creature.Player;
 import zombiefu.creature.Zombie;
-import zombiefu.items.Teleporter;
 import zombiefu.map.RoomBuilder;
 
 public class Level extends World {
@@ -21,11 +16,22 @@ public class Level extends World {
         gen.generate(this);
         fillWithEnemies();
     }
-    
+
     public static Level levelFromFile(String file) {
         RoomBuilder builder = new RoomBuilder(file, "src/sources/CharSet.txt");
-        System.out.println(builder.width() + " " + builder.height());
         return new Level(builder.width(), builder.height(), builder);
+    }
+
+    public void tick()
+    {
+    	// Der Player führt IMMER die erste Aktion aus.
+    	try{super.getActor(Player.class).act();
+    	}catch (IllegalArgumentException e){}
+        for(Class<? extends Actor> cls : super.getActOrder())
+            for(Actor actor : getActors(cls))
+            	if (!(actor instanceof Player))
+            		actor.act();
+        removeExpired();
     }
 
     public void fillWithEnemies() {
