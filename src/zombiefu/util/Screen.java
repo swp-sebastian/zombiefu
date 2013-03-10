@@ -33,12 +33,12 @@ public class Screen {
         return chars;
     }
 
-    public static void showImage(TermPanel term, World world, String input){
+    public static void showImage(TermPanel term, String input) throws InterruptedException{
         try {
             ColoredChar[][] start = readFile(input);
             term.clearBuffer();
-            for(int x = 0; x < world.width(); x++) {
-                for(int y = 0; y < world.height(); y++) {
+            for(int x = 0; x < term.DEFAULT_COLS; x++) {
+                for(int y = 0; y < term.DEFAULT_ROWS; y++) {
                     if (y >= start.length || x >= start[0].length) {
                         term.bufferChar(x,y,ColoredChar.create(' '));
                     } else {
@@ -48,8 +48,7 @@ public class Screen {
             }
             term.bufferCameras();
             term.refreshScreen();
-
-            world.tick();
+            term.getKey();
         } catch (IOException e) {
             System.out.println("Datei nicht gefunden.");
         }
