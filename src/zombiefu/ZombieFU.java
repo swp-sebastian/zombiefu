@@ -21,15 +21,10 @@ public class ZombieFU {
         // Startscreen
         Screen.showImage(term, "src/sources/startscreen.txt");
         
-        // Welten und Teleporter
-        Level world1 = Level.levelFromFile("src/sources/Testraum.txt");
-        Level world2 = Level.levelFromFile("src/sources/TestraumZ.txt");
-        ZombieTools.bidirektionalerTeleporter(world1, new Coordinate(33, 19), world2, new Coordinate(33, 1));
-        
-        // Spieler auf erste Welt setzen
-        world1.addActor(player);
-        
-        // Spielbetrieb
+        // Story initialisieren
+        ZombieTools.createStoryForPlayer(player);
+
+        // Spielen!
         while (!player.expired()) {
             ((Level) player.world()).refresh(term);
         }
