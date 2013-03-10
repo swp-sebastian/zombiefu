@@ -7,7 +7,7 @@ import jade.core.World;
 import jade.gen.Generator;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
-import zombiefu.ZombiePanel;
+import zombiefu.ui.ZombiePanel;
 import zombiefu.creature.DozentZombie;
 import zombiefu.creature.Player;
 import zombiefu.creature.Zombie;
