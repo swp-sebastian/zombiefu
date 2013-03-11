@@ -8,5 +8,10 @@ public abstract class Item extends Actor {
 	public Item(ColoredChar face) {
 		super(face);
 	}
+        
+        @Override
+        public void act() {
+            
+        }
 
 }

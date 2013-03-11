@@ -24,7 +24,5 @@ public class Waffe extends Item {
     public String getName() {
         return name;
     }
-
-	@Override
-	public void act() {}
+    
 }
