@@ -24,6 +24,9 @@ public class ZombieFU {
                 ColoredChar.create('\u263B', Color.decode("0x7D26CD")),
                 "John Dorian", 100, 10, 10, 10,
                 new Waffe("Faust", 1, ColoredChar.create('|')));
+        
+        // Superhäßlich, müssen wir nochmal drüber reden (tomas)
+        ZombieTools.registerPlayer(player);
 
         // Startscreen
         Screen.showImage(term, "src/sources/startscreen.txt");
