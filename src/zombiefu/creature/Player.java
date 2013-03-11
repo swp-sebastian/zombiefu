@@ -19,10 +19,11 @@ import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
+import zombiefu.util.ZombieTools;
 
 public class Player extends Creature implements Camera {
 
-    private ZombieFrame frame;
+    public ZombieFrame frame;
     private ViewField fov;
     private int intelligenceValue;
     private int money;
@@ -81,7 +82,7 @@ public class Player extends Creature implements Camera {
                     godMode = !godMode;
                     act();
                     break;
-                case 'x':
+                case '\n':
                     roundHouseKick();
                     break;
                 default:
@@ -191,6 +192,7 @@ public class Player extends Creature implements Camera {
     }
 
     private void consumeItem(ConsumableItem it) {
+        ZombieTools.sendMessage("Du benutzt '" + it.getName() + "'.", frame);
         System.out.println(getName() + " benutzt Item " + it.getName());
         it.getConsumedBy(this);
         inventar.remove(it);

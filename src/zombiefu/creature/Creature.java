@@ -68,7 +68,7 @@ public abstract class Creature extends Actor {
         if (damage == 0) {
             damage = 1;
         }
-        cr.hurt(damage);
+        cr.hurt(damage,this);
     }
 
     public String getName() {
@@ -116,12 +116,13 @@ public abstract class Creature extends Actor {
         }
     }
 
-    private void hurt(int i) {
+    private void hurt(int i, Creature hurter) {
         System.out.print(getName() + " hat " + i + " HP verloren. ");
         if (godMode) {
             return;
         }
         if (i >= healthPoints) {
+            ZombieTools.sendMessage(hurter.getName() + " hat " + getName() + " getötet.");
             System.out.println("Tot.");
             expire();
         } else {
