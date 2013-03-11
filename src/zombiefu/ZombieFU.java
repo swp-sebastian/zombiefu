@@ -21,13 +21,13 @@ public class ZombieFU {
 
         // Der neue Spieler
         Player player = new Player(frame,
-                                   ColoredChar.create('\u263B', Color.decode("0x7D26CD")),
-                                   "John Dorian", 100, 10, 10, 10,
-                                   new Waffe("Faust", 1, ColoredChar.create('|')));
+                ColoredChar.create('\u263B', Color.decode("0x7D26CD")),
+                "John Dorian", 100, 10, 10, 10,
+                new Waffe("Faust", 1, ColoredChar.create('|')));
 
         // Startscreen
         Screen.showImage(term, "src/sources/startscreen.txt");
-        
+
         // Storytext
         Screen.showImage(term, "src/sources/story.txt");
 
@@ -36,8 +36,9 @@ public class ZombieFU {
 
         // Spielen!
         while (!player.expired()) {
-            ((Level) player.world()).refresh(term);
+            player.refreshWorld();
             player.refreshStats();
+            player.world().tick();
         }
 
         Screen.showImage(term, "src/sources/endscreen.txt");

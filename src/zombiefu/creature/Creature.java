@@ -19,7 +19,6 @@ public abstract class Creature extends Actor {
     private int dazed;
     protected String name;
     protected boolean godMode;
-    
 
     public Creature(ColoredChar face, String n, int h, int a, int d) {
         super(face);
@@ -30,14 +29,14 @@ public abstract class Creature extends Actor {
         defenseValue = d;
     }
 
-    public Creature(ColoredChar face,String name) {
+    public Creature(ColoredChar face, String name) {
         this(face, name, 1, 1, 1);
     }
-    
+
     public Creature(ColoredChar face) {
-        this(face,"Zombie");
+        this(face, "Zombie");
     }
-    
+
     public abstract Waffe getActiveWeapon();
 
     @Override
@@ -66,8 +65,9 @@ public abstract class Creature extends Actor {
         int damage = getActiveWeapon().getDamage() * (attackValue / cr.defenseValue) * Dice.global.nextInt(20, 40) / 30;
         System.out.println("Berechneter Schaden: " + damage);
 
-	if(damage == 0)
-		damage = 1;
+        if (damage == 0) {
+            damage = 1;
+        }
         cr.hurt(damage);
     }
 
@@ -109,7 +109,7 @@ public abstract class Creature extends Actor {
     }
 
     public void roundHouseKick() {
-        for (Direction dir: ZombieTools.getAllowedDirections()) {
+        for (Direction dir : ZombieTools.getAllowedDirections()) {
             if (dir != Direction.ORIGIN) {
                 attack(pos().getTranslated(dir));
             }
