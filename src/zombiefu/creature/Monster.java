@@ -10,9 +10,12 @@ import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import zombiefu.util.ZombieTools;
 
 public class Monster extends Creature {
-    
+
     private PathFinder pathfinder;
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w) {
@@ -25,33 +28,45 @@ public class Monster extends Creature {
         pathfinder = new Bresenham();
     }
 
-    private void moveRandomly() {
-        tryToMove(Dice.global.choose(Arrays.asList(Direction.values())));
+    protected void moveRandomly() {
+        tryToMove(ZombieTools.getRandomDirection());
     }
 
-    @Override
-    public void act() {
+    private Coordinate getPlayerPosition() throws PlayerIsNotInThisWorldException {
         Guard.argumentIsNotNull(world());
         Player player = world().getActor(Player.class);
 
         if (player == null) {
-            // Der Player ist in einer anderen Welt
-            moveRandomly();
-            return;
+            throw new PlayerIsNotInThisWorldException();
         }
-        
-        // Player suchen
-        Coordinate playerPos = player.pos();
-        double distance = playerPos.distance(pos());
-        
-        if (distance <= 10) {
-            Direction toPlayer = pathfinder.getDirectionOfFirstStep(world(), pos(), playerPos);
-            if(toPlayer == null)
-                tryToMove(pos().directionTo(playerPos));
-            else
-                tryToMove(toPlayer);
-        } else {
-            moveRandomly();            
+
+        return player.pos();
+    }
+
+    protected double getDistanceToPlayer() throws PlayerIsNotInThisWorldException {
+        return getPlayerPosition().distance(pos());
+    }
+
+    protected void moveToPlayer() throws PlayerIsNotInThisWorldException {
+        tryToMove(pos().directionTo(getPlayerPosition()));
+    }
+
+    @Override
+    public void act() {
+        try {
+            double distance = getDistanceToPlayer();
+            if (distance <= 10) {
+                moveToPlayer();
+            } else {
+                moveRandomly();
+            }
+        } catch (PlayerIsNotInThisWorldException ex) {
+        }
+    }
+
+    private static class PlayerIsNotInThisWorldException extends Exception {
+
+        public PlayerIsNotInThisWorldException() {
         }
     }
 }
