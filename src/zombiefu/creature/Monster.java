@@ -1,72 +1,62 @@
 package zombiefu.creature;
 
-import jade.path.Bresenham;
-import jade.path.PathFinder;
-import java.util.Arrays;
 
 import zombiefu.items.Waffe;
-import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
-import jade.util.datatype.Direction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import zombiefu.ki.StupidMover;
+import zombiefu.ki.MoveAlgorithm;
+import zombiefu.util.TargetIsNotInThisWorldException;
 import zombiefu.util.ZombieTools;
 
 public class Monster extends Creature {
 
-    private PathFinder pathfinder;
+    protected MoveAlgorithm movealg;
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w) {
         super(face, n, h, a, d, w);
-        pathfinder = new Bresenham();
+        movealg = new StupidMover();
     }
 
     public Monster(ColoredChar face) {
         super(face);
-        pathfinder = new Bresenham();
+        movealg = new StupidMover();
     }
 
     protected void moveRandomly() {
         tryToMove(ZombieTools.getRandomDirection());
     }
 
-    private Coordinate getPlayerPosition() throws PlayerIsNotInThisWorldException {
+    private Coordinate getPlayerPosition() throws TargetIsNotInThisWorldException {
         Guard.argumentIsNotNull(world());
         Player player = world().getActor(Player.class);
 
         if (player == null) {
-            throw new PlayerIsNotInThisWorldException();
+            throw new TargetIsNotInThisWorldException();
         }
 
         return player.pos();
     }
-
-    protected double getDistanceToPlayer() throws PlayerIsNotInThisWorldException {
-        return getPlayerPosition().distance(pos());
+    
+    protected boolean positionIsVisible(Coordinate pos) throws TargetIsNotInThisWorldException {
+        return pos().distance(getPlayerPosition()) <= 10;
     }
 
-    protected void moveToPlayer() throws PlayerIsNotInThisWorldException {
-        tryToMove(pos().directionTo(getPlayerPosition()));
+    protected void moveToPlayer() throws TargetIsNotInThisWorldException {
+        tryToMove(movealg.directionTo(world(), pos(), getPlayerPosition()));
     }
 
     @Override
     public void act() {
         try {
-            double distance = getDistanceToPlayer();
-            if (distance <= 10) {
+            if (positionIsVisible(getPlayerPosition())) {
                 moveToPlayer();
             } else {
                 moveRandomly();
             }
-        } catch (PlayerIsNotInThisWorldException ex) {
+        } catch (TargetIsNotInThisWorldException ex) {
         }
     }
-
-    private static class PlayerIsNotInThisWorldException extends Exception {
-
-        public PlayerIsNotInThisWorldException() {
-        }
-    }
+    
 }
