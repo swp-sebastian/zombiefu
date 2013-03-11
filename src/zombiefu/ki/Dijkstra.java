@@ -15,7 +15,7 @@ import zombiefu.util.ZombieTools;
  *
  * @author tomas
  */
-public class Dijkstra extends MoveAlgorithm {
+public class Dijkstra implements MoveAlgorithm {
 
     @Override
     public Direction directionTo(World w, Coordinate start, Coordinate ziel) {
