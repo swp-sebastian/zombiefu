@@ -2,13 +2,14 @@ package zombiefu.items;
 
 import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
+import zombiefu.creature.Creature;
 import zombiefu.creature.Player;
 import zombiefu.level.Level;
 
 public abstract class Item extends Actor {
-    
+
     protected String name;
-    
+
     public Item(ColoredChar face, String s) {
         super(face);
         this.name = s;
@@ -17,6 +18,7 @@ public abstract class Item extends Actor {
     public Item(ColoredChar face) {
         this(face, "Unbekannter Gegenstand");
     }
+
     public String getName() {
         return name;
     }
