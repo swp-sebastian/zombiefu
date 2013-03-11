@@ -51,20 +51,20 @@ public class Dijkstra implements MoveAlgorithm {
             for (Direction d : dirs) {
                 Coordinate nachbar = vertex.getTranslated(d);
 
-                if (nachbar.equals(ziel)) {
-                    Coordinate back = vertex;
-                    while (distance[back.x()][back.y()] > 2) {
-                        back = previous[back.x()][back.y()];
-                    }
-                    return start.directionTo(back);
-                }
-
                 if (!w.passableAt(nachbar) || previous[nachbar.x()][nachbar.y()] != null) {
                     continue;
                 }
                 queue.add(nachbar);
                 distance[nachbar.x()][nachbar.y()] = ndist;
                 previous[nachbar.x()][nachbar.y()] = vertex;
+
+                if (nachbar.equals(ziel)) {
+                    Coordinate back = nachbar;
+                    while (distance[back.x()][back.y()] > 2) {
+                        back = previous[back.x()][back.y()];
+                    }
+                    return start.directionTo(back);
+                }
             }
         }
 
