@@ -8,7 +8,6 @@ import jade.util.datatype.ColoredChar;
  */
 public class Waffe extends Item {
 
-    private String name;
     private int damage;
 
     public Waffe(String n, int d, ColoredChar c) {
@@ -19,10 +18,6 @@ public class Waffe extends Item {
     
     public int getDamage() {
         return damage;
-    }
-
-    public String getName() {
-        return name;
     }
     
 }

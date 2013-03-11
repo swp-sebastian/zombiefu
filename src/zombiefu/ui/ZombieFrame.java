@@ -77,7 +77,7 @@ public class ZombieFrame extends JFrame {
         // Statuspanels sind harcoded eine Reihe hoch und so breit wie die Karte.
         topTerm    = new TermPanel(columns, 1,    tilesize);
         mainTerm   = new TermPanel(columns, rows, tilesize);
-        bottomTerm = new TermPanel(columns, 1,   tilesize);
+        bottomTerm = new TermPanel(columns, 2,   tilesize);
 
         addTerminals(panel);
         this.getContentPane().add(panel);

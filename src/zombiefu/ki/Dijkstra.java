@@ -17,10 +17,10 @@ import zombiefu.util.ZombieTools;
  */
 public class Dijkstra implements MoveAlgorithm {
 
-    private int schrittweite;
+    private int maxDistance;
 
     public Dijkstra(int s) {
-        schrittweite = s;
+        maxDistance = s;
     }
 
     public Dijkstra() {
@@ -44,7 +44,7 @@ public class Dijkstra implements MoveAlgorithm {
 
             Coordinate vertex = queue.remove(0);
             int ndist = distance[vertex.x()][vertex.y()] + 1;
-            if (ndist > schrittweite) {
+            if (ndist > maxDistance) {
                 throw new TargetNotFoundException();
             }
 
