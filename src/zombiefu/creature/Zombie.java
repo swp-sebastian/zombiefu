@@ -9,7 +9,7 @@ public class Zombie extends Monster {
 
 	public Zombie() {
 		super(ColoredChar.create('\u263F', Color.GREEN), "Zombie", Dice.global
-				.nextInt(10, 50), Dice.global.nextInt(1, 20), Dice.global
+				.nextInt(1, 20), Dice.global.nextInt(1, 20), Dice.global
 				.nextInt(1, 20), new Waffe("Kralle", 2, ColoredChar.create('|')));
 	}
 	

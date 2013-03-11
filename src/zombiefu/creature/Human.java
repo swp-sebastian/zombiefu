@@ -1,7 +1,5 @@
 package zombiefu.creature;
 
-import java.util.List;
-
 import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
 
