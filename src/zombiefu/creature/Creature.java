@@ -42,18 +42,23 @@ public abstract class Creature extends Actor {
     }
     
     public void attack(Creature cr) {
-        // Nicht diagonal bewegen:
-        // Guard.validateArgument(Math.abs(x()-cr.x())+Math.abs(y()-cr.y()) == 1);
         Guard.validateArgument(!this.equals(cr));
+        
+        // Wer keine Waffe hat, kann nicht angreifen!
         if (activeWeapon == null) {
             return;
         }
+        
+        // Monster greifen keine Monster an!
+        if (this instanceof Monster && cr instanceof Monster) {
+            return;
+        }
+        
         System.out.println(getName() + " attacks " + cr.getName() + " with " + activeWeapon.getName() + " (Damage: " + activeWeapon.getDamage() + "). Attack value: " + attackValue + ", Defense Value: " + cr.defenseValue);
         
         // Calculate damage
         int damage = activeWeapon.getDamage() * (attackValue / cr.defenseValue) * Dice.global.nextInt(20, 40) / 30;
         System.out.println("Berechneter Schaden: " + damage);
-        
         
         cr.hurt(damage);
     }
