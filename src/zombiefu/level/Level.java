@@ -10,7 +10,7 @@ import zombiefu.creature.DozentZombie;
 import zombiefu.creature.Player;
 import zombiefu.creature.Zombie;
 import zombiefu.items.Item;
-import zombiefu.items.Nahrung;
+import zombiefu.items.HealingItem;
 import zombiefu.items.Waffe;
 import zombiefu.map.RoomBuilder;
 
@@ -55,7 +55,7 @@ public class Level extends World {
     }
 
     private void fillWithItems() {
-        addActor(new Nahrung(ColoredChar.create('A', Color.decode("0x7D26CD")), "Apfel", 40));
+        addActor(new HealingItem(ColoredChar.create('A', Color.decode("0x7D26CD")), "Apfel", 40));
         addActor(new Waffe("Kettensäge", 15, ColoredChar.create('K', Color.decode("0x7D26CD"))));
     }
 
@@ -68,6 +68,5 @@ public class Level extends World {
         // }
         term.bufferCameras();
         term.refreshScreen();
-        tick();
     }
 }
