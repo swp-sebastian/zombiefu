@@ -65,8 +65,11 @@ public class ZombieTools {
         return nameOfLevels.get(levels[0]);
     }
 
+    public static List<Direction> getAllowedDirections() {
+        return Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTH);
+    }
     public static Direction getRandomDirection() {
-        return Dice.global.choose(Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTH));
+        return Dice.global.choose(getAllowedDirections());
     }
 
 }
