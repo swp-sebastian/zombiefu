@@ -37,6 +37,7 @@ public class ZombieFU {
         // Spielen!
         while (!player.expired()) {
             ((Level) player.world()).refresh(term);
+            player.refrestStats(frame.bottomTerm());
         }
 
         Screen.showImage(term, "src/sources/endscreen.txt");
