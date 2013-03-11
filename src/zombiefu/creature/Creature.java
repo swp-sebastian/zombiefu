@@ -56,7 +56,7 @@ public abstract class Creature extends Actor {
         System.out.println("Berechneter Schaden: " + damage);
         
         
-        cr.hurt(damage);
+        cr.hurt(Math.max(damage,Dice.global.nextInt(1,4)));
     }
     
     public String getName() {
