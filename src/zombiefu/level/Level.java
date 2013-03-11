@@ -61,11 +61,11 @@ public class Level extends World {
 
     public void refresh(TermPanel term) {
         term.clearBuffer();
-        for (int x = 0; x < width(); x++) {
-            for (int y = 0; y < height(); y++) {
-                term.bufferChar(x, y, look(x, y));
-            }
-        }
+        // for (int x = 0; x < width(); x++) {
+        //     for (int y = 0; y < height(); y++) {
+        //         term.bufferChar(x, y, look(x, y));
+        //     }
+        // }
         term.bufferCameras();
         term.refreshScreen();
         tick();

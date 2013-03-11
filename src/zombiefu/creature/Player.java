@@ -94,7 +94,7 @@ public class Player extends Creature implements Camera {
 
     @Override
     public Collection<Coordinate> getViewField() {
-        return fov.getViewField(world(), pos(), 5);
+        return fov.getViewField(world(), pos(), 100);
     }
 
     public void changeWorld(World world) {
@@ -111,12 +111,12 @@ public class Player extends Creature implements Camera {
         frame.bottomTerm().bufferString(0, 0, "Waffe: " + getActiveWeapon().getName()
                 + " (" + getActiveWeapon().getDamage() + ") "
                 + " | HP: " + healthPoints + "/" + maximalHealthPoints
-                + " | A: " + attackValue 
+                + " | A: " + attackValue
                 + " | D: " + defenseValue
                 + " | I: " + intelligenceValue);
         frame.bottomTerm().bufferString(0, 1, "Pi-Gebäude"
-                + " | $ " + money  
-                + " | ECTS " + ects 
+                + " | $ " + money
+                + " | ECTS " + ects
                 + " | Sem " + semester);
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
