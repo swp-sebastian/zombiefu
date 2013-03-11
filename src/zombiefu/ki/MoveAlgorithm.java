@@ -14,6 +14,6 @@ import jade.util.datatype.Direction;
  */
 public interface MoveAlgorithm {
     
-    public Direction directionTo(World w, Coordinate start, Coordinate ziel);
+    public Direction directionTo(World w, Coordinate start, Coordinate ziel) throws TargetNotFoundException;
     
 }
