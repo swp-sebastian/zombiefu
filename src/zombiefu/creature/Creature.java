@@ -9,35 +9,36 @@ import jade.util.datatype.Direction;
 import java.util.Collection;
 import java.util.Iterator;
 import zombiefu.items.Waffe;
+import zombiefu.util.ZombieTools;
 
 public abstract class Creature extends Actor {
 
-    private int healthPoints;
-    private int attackValue;
-    private int defenseValue;
+    protected int healthPoints;
+    protected int attackValue;
+    protected int defenseValue;
     private int dazed;
-    private Waffe activeWeapon;
-    private String name;
+    protected String name;
     protected boolean godMode;
     
 
-    public Creature(ColoredChar face, String n, int h, int a, int d, Waffe w) {
+    public Creature(ColoredChar face, String n, int h, int a, int d) {
         super(face);
         dazed = 0;
         name = n;
         healthPoints = h;
         attackValue = a;
         defenseValue = d;
-        activeWeapon = w;
     }
 
     public Creature(ColoredChar face,String name) {
-        this(face, name, 1, 1, 1, new Waffe("Faust", 1,ColoredChar.create('|')));
+        this(face, name, 1, 1, 1);
     }
     
     public Creature(ColoredChar face) {
         this(face,"Zombie");
     }
+    
+    public abstract Waffe getActiveWeapon();
 
     @Override
     public void setPos(int x, int y) {
@@ -50,7 +51,7 @@ public abstract class Creature extends Actor {
         Guard.validateArgument(!this.equals(cr));
 
         // Wer keine Waffe hat, kann nicht angreifen!
-        if (activeWeapon == null) {
+        if (getActiveWeapon() == null) {
             return;
         }
 
@@ -59,10 +60,10 @@ public abstract class Creature extends Actor {
             return;
         }
 
-        System.out.println(getName() + " attacks " + cr.getName() + " with " + activeWeapon.getName() + " (Damage: " + activeWeapon.getDamage() + "). Attack value: " + attackValue + ", Defense Value: " + cr.defenseValue);
+        System.out.println(getName() + " attacks " + cr.getName() + " with " + getActiveWeapon().getName() + " (Damage: " + getActiveWeapon().getDamage() + "). Attack value: " + attackValue + ", Defense Value: " + cr.defenseValue);
 
         // Calculate damage
-        int damage = activeWeapon.getDamage() * (attackValue / cr.defenseValue) * Dice.global.nextInt(20, 40) / 30;
+        int damage = getActiveWeapon().getDamage() * (attackValue / cr.defenseValue) * Dice.global.nextInt(20, 40) / 30;
         System.out.println("Berechneter Schaden: " + damage);
 
 	if(damage == 0)
@@ -108,7 +109,7 @@ public abstract class Creature extends Actor {
     }
 
     public void roundHouseKick() {
-        for (Direction dir : Direction.values()) {
+        for (Direction dir: ZombieTools.getAllowedDirections()) {
             if (dir != Direction.ORIGIN) {
                 attack(pos().getTranslated(dir));
             }
