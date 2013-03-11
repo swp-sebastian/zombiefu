@@ -3,7 +3,9 @@ package zombiefu.util;
 import java.util.HashMap;
 
 import jade.core.World;
+import jade.ui.TermPanel;
 import jade.util.Dice;
+import jade.util.Guard;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
@@ -12,11 +14,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Logger;
 import zombiefu.creature.Player;
 import zombiefu.items.Teleporter;
 import zombiefu.level.Level;
+import zombiefu.ui.ZombieFrame;
 
 public class ZombieTools {
+
+    public static Player activePlayer;
 
     public static void createStoryForPlayer(Player player) {
         Level world = createWorld();
@@ -68,8 +74,34 @@ public class ZombieTools {
     public static List<Direction> getAllowedDirections() {
         return Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTH);
     }
+
     public static Direction getRandomDirection() {
         return Dice.global.choose(getAllowedDirections());
     }
 
+    public static void sendMessage(String s, ZombieFrame frame) {
+        frame.topTerm().clearBuffer();
+        frame.topTerm().bufferString(0, 0, s);
+        frame.topTerm().bufferCameras();
+        frame.topTerm().refreshScreen();
+        char key = 0;
+        try {
+            while (key != '\n') {
+                key = frame.mainTerm().getKey();
+            }
+        } catch (InterruptedException ex) {
+        }
+        frame.topTerm().clearBuffer();
+        frame.topTerm().bufferCameras();
+        frame.topTerm().refreshScreen();
+    }
+
+    public static void sendMessage(String string) {
+        Guard.argumentIsNotNull(activePlayer);
+        sendMessage(string, activePlayer.frame);
+    }
+
+    public static void registerPlayer(Player pl) {
+        activePlayer = pl;
+    }
 }
