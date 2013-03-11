@@ -20,6 +20,9 @@ public class ZombieFU {
 
         // Startscreen
         Screen.showImage(term, "src/sources/startscreen.txt");
+        
+        // Storytext
+        Screen.showImage(term, "src/sources/story.txt");
 
         // Story initialisieren
         ZombieTools.createStoryForPlayer(player);
