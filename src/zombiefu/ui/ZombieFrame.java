@@ -3,6 +3,7 @@ package zombiefu.ui;
 import jade.ui.TermPanel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.BorderFactory;
 import java.awt.Container;
 import java.awt.Insets;
 import java.awt.Dimension;
@@ -10,35 +11,52 @@ import java.awt.Color;
 
 // Erweitert ein JFrame und hält drei dazugehörige TermPanels.
 // topTerm() für die Statusanzeige oben.
-// mainTerm() für die Karte
+// mainTerm() für die Karte.
 // bottomTerm() für die Statusanzeige unten.
 public class ZombieFrame extends JFrame {
 
     private TermPanel mainTerm, topTerm, bottomTerm;
-    private JFrame frame;
 
-    // Ordnet die TermPanels manuell ohne LayoutManageruntereinander an.
+    // Ordnet die TermPanels manuell ohne LayoutManager untereinander an.
     // Besser nicht anfassen, fragil!
-    private Dimension addTerminals(Container pane) {
-        pane.setLayout(null);
-        pane.add(topTerm.panel());
-        pane.add(mainTerm.panel());
-        pane.add(bottomTerm.panel());
+    private void addTerminals(JPanel panel) {
 
-        Insets insets = pane.getInsets();
+        // Wir geben dem Panel einen schmalen Rand. Sieht besser aus
+        panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+        // Kein LayoutManager
+        panel.setLayout(null);
+
+        // TermPanels zu Panel hinzufügen - ggf. Fokus entfernen.
+        panel.add(topTerm.panel());
+        topTerm.panel().setFocusable(false);
+
+        panel.add(mainTerm.panel());
+
+        panel.add(bottomTerm.panel());
+        bottomTerm.panel().setFocusable(false);
+
+        // Insets des Panels
+        Insets insets = panel.getInsets();
+
+        // Positionierung TopZeile
         Dimension sizeTop = topTerm.panel().getPreferredSize();
         topTerm.panel().setBounds(insets.left, insets.top,
                                   sizeTop.width, sizeTop.height);
 
+        // Positionierung Karte
         Dimension sizeMain = mainTerm.panel().getPreferredSize();
         mainTerm.panel().setBounds(insets.left, insets.top+sizeTop.height,
                                    sizeMain.width, sizeMain.height);
 
+        // Positionierung BottomZeile
         Dimension sizeBottom = bottomTerm.panel().getPreferredSize();
         bottomTerm.panel().setBounds(insets.left, insets.top+sizeTop.height+sizeMain.height,
                                    sizeBottom.width, sizeBottom.height);
 
-        return new Dimension(insets.left+sizeMain.width, insets.top+sizeTop.height + sizeMain.height + sizeBottom.height+100); //+ 100?
+        // Setzen der Panelgröße.
+        panel.setPreferredSize(new Dimension(sizeMain.width + insets.left + insets.right,
+                                             sizeTop.height + sizeMain.height + sizeBottom.height + insets.top + insets.bottom));
     }
 
     // Default Constructor
@@ -52,13 +70,18 @@ public class ZombieFrame extends JFrame {
         // Schwarzer Hintergrund
         this.getContentPane().setBackground(Color.BLACK);
 
+        // Das die TermPanels umschließende Panel
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.BLACK);
+
         // Statuspanels sind harcoded eine Reihe hoch und so breit wie die Karte.
         topTerm    = new TermPanel(columns, 1,    tilesize);
         mainTerm   = new TermPanel(columns, rows, tilesize);
         bottomTerm = new TermPanel(columns, 1,   tilesize);
 
-        Dimension sizeAll = addTerminals(this.getContentPane());
-        this.setSize(sizeAll);
+        addTerminals(panel);
+        this.getContentPane().add(panel);
+        this.pack();
 
         // Marked for removal.
         topTerm.bufferString(0,0,"Oben TEST TEST TEST");
