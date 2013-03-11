@@ -31,7 +31,7 @@ public abstract class Creature extends Actor {
     }
 
     public Creature(ColoredChar face) {
-        this(face, "Zombie", 1, 1, 1, new Waffe("Faust", 1,ColoredChar.create('|')));
+        this(face, "Zombie", 1, 1, 1, new Waffe("Faust", 1, ColoredChar.create('|')));
     }
 
     @Override
@@ -40,33 +40,33 @@ public abstract class Creature extends Actor {
             super.setPos(x, y);
         }
     }
-    
+
     public void attack(Creature cr) {
         Guard.validateArgument(!this.equals(cr));
-        
+
         // Wer keine Waffe hat, kann nicht angreifen!
         if (activeWeapon == null) {
             return;
         }
-        
+
         // Monster greifen keine Monster an!
         if (this instanceof Monster && cr instanceof Monster) {
             return;
         }
-        
+
         System.out.println(getName() + " attacks " + cr.getName() + " with " + activeWeapon.getName() + " (Damage: " + activeWeapon.getDamage() + "). Attack value: " + attackValue + ", Defense Value: " + cr.defenseValue);
-        
+
         // Calculate damage
         int damage = activeWeapon.getDamage() * (attackValue / cr.defenseValue) * Dice.global.nextInt(20, 40) / 30;
         System.out.println("Berechneter Schaden: " + damage);
-        
+
         cr.hurt(damage);
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void attack(int x, int y) {
         Collection<Creature> actors = world().getActorsAt(Creature.class, x, y);
         Iterator<Creature> it = actors.iterator();
@@ -80,10 +80,13 @@ public abstract class Creature extends Actor {
     }
 
     public void tryToMove(Direction dir) {
-    	try {Guard.argumentIsNotNull(world());}
-    	catch (IllegalArgumentException e){return;}
+        try {
+            Guard.argumentIsNotNull(world());
+        } catch (IllegalArgumentException e) {
+            return;
+        }
         Creature creature = world().getActorAt(Creature.class, pos().getTranslated(dir));
-        if (dir == Direction.ORIGIN) {
+        if (dir == null || dir == Direction.ORIGIN) {
             return;
         }
         if (dazed > 0) {
@@ -107,8 +110,9 @@ public abstract class Creature extends Actor {
 
     private void hurt(int i) {
         System.out.print(getName() + " hat " + i + " HP verloren. ");
-        if(godMode)
+        if (godMode) {
             return;
+        }
         if (i >= healthPoints) {
             System.out.println("Tot.");
             expire();
