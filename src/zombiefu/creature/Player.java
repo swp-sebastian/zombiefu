@@ -12,77 +12,126 @@ import jade.ui.TermPanel;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import java.util.ArrayList;
+import java.util.List;
+import zombiefu.items.Item;
 import zombiefu.level.Level;
+import zombiefu.ui.ZombieFrame;
 
 public class Player extends Creature implements Camera {
-	private TermPanel term;
-	private ViewField fov;
-	private int intelligenceValue;
-	private int money;
-	private int ects;
-	private int semester;
-	private int maximalHealthPoints;
 
-	public Player(TermPanel term, ColoredChar face, String name,
-			int healthPoints, int attackValue, int defenseValue,
-			int intelligenceValue, Waffe w) {
-		super(face, name, healthPoints, attackValue, defenseValue, w);
-		this.maximalHealthPoints = healthPoints;
-		this.intelligenceValue = intelligenceValue;
-		this.term = term;
-		this.godMode = false;
-                this.money = 10;
-                this.ects = 0;
-                this.semester = 1;
-		fov = new RayCaster();
-	}
+    private ZombieFrame frame;
+    private ViewField fov;
+    private int intelligenceValue;
+    private int money;
+    private int ects;
+    private int semester;
+    private int maximalHealthPoints;
+    private List<Item> inventar;
+    private List<Waffe> waffen;
 
-	@Override
-	public void act() {
-		try {
-			char key;
-			key = term.getKey();
-			switch (key) {
-			case 'q':
-				expire();
-				break;
-			case 'g':
-				changeWorld("src/sources/TestRaumZ.txt");
-				break;
-			case 'x':
-				roundHouseKick();
-				break;
-			default:
-				Direction dir = Direction.keyToDir(key);
-				if (dir != null)
-					tryToMove(dir);
-				break;
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+    public Player(ZombieFrame frame, ColoredChar face, String name,
+            int healthPoints, int attackValue, int defenseValue,
+            int intelligenceValue, Waffe w) {
 
-	@Override
-	public Collection<Coordinate> getViewField() {
-		return fov.getViewField(world(), pos(), 5);
-	}
+        super(face, name, healthPoints, attackValue, defenseValue);
 
-	public void changeWorld(World world) {
-		world().removeActor(this);
-		world.addActor(this);
-	}
+        this.maximalHealthPoints = healthPoints;
+        this.intelligenceValue = intelligenceValue;
+        this.frame = frame;
+        this.godMode = false;
+        this.money = 10;
+        this.ects = 0;
+        this.semester = 1;
 
-	public void changeWorld(String level) {
-		changeWorld(Level.levelFromFile(level));
-	}
-        
-        public void refrestStats(TermPanel term) {
-            term.clearBuffer();
-            term.bufferString(0,0, "Waffe: " + activeWeapon.getName() + 
-                    " | HP: " + healthPoints + "/" + maximalHealthPoints +
-                    " | A: " + attackValue + " | D: " + defenseValue);
-            term.bufferCameras();
-            term.refreshScreen();
+        this.inventar = new ArrayList<>();
+        this.waffen = new ArrayList<>();
+        waffen.add(w);
+
+        fov = new RayCaster();
+    }
+
+    @Override
+    public void act() {
+        try {
+            char key;
+            key = frame.mainTerm().getKey();
+            switch (key) {
+                case 'q':
+                    switchWeapon(true);
+                    refreshStats();
+                    act();
+                    return;
+                case 'e':
+                    switchWeapon(false);
+                    refreshStats();
+                    act();
+                    return;
+                case 'x':
+                    roundHouseKick();
+                    break;
+                default:
+                    Direction dir = Direction.keyToDir(key);
+                    if (dir != null) {
+                        tryToMove(dir);
+                    }
+                    break;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+    }
+
+    public void switchWeapon(boolean backwards) {
+        if (backwards) {
+            Waffe tmp = waffen.remove(waffen.size()-1);
+            waffen.add(0,tmp);
+        } else {
+            Waffe tmp = waffen.remove(0);
+            waffen.add(tmp);
+        }
+    }
+
+    @Override
+    public Collection<Coordinate> getViewField() {
+        return fov.getViewField(world(), pos(), 5);
+    }
+
+    public void changeWorld(World world) {
+        world().removeActor(this);
+        world.addActor(this);
+    }
+
+    public void changeWorld(String level) {
+        changeWorld(Level.levelFromFile(level));
+    }
+
+    public void refreshStats() {
+        frame.bottomTerm().clearBuffer();
+        frame.bottomTerm().bufferString(0, 0, "Waffe: " + getActiveWeapon().getName()
+                + " (" + getActiveWeapon().getDamage() + ") "
+                + " | HP: " + healthPoints + "/" + maximalHealthPoints
+                + " | A: " + attackValue 
+                + " | D: " + defenseValue
+                + " | I: " + intelligenceValue);
+        frame.bottomTerm().bufferString(0, 1, "Pi-Gebäude"
+                + " | $ " + money  
+                + " | ECTS " + ects 
+                + " | Sem " + semester);
+        frame.bottomTerm().bufferCameras();
+        frame.bottomTerm().refreshScreen();
+    }
+
+    public void toInventar(Item i) {
+        if (i instanceof Waffe) {
+            waffen.add((Waffe) i);
+        } else {
+            inventar.add(i);
+        }
+    }
+
+    @Override
+    public Waffe getActiveWeapon() {
+        return waffen.get(0);
+    }
 }
