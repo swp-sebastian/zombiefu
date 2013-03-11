@@ -9,15 +9,16 @@ import jade.util.datatype.Direction;
 import java.util.Collection;
 import java.util.Iterator;
 import zombiefu.items.Waffe;
+import zombiefu.util.ZombieTools;
 
 public abstract class Creature extends Actor {
 
-    private int healthPoints;
-    private int attackValue;
-    private int defenseValue;
+    protected int healthPoints;
+    protected int attackValue;
+    protected int defenseValue;
     private int dazed;
-    private Waffe activeWeapon;
-    private String name;
+    protected Waffe activeWeapon;
+    protected String name;
     protected boolean godMode;
     
 
@@ -108,7 +109,7 @@ public abstract class Creature extends Actor {
     }
 
     public void roundHouseKick() {
-        for (Direction dir : Direction.values()) {
+        for (Direction dir: ZombieTools.getAllowedDirections()) {
             if (dir != Direction.ORIGIN) {
                 attack(pos().getTranslated(dir));
             }

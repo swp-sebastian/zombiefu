@@ -18,9 +18,9 @@ public class Player extends Creature implements Camera {
 	private TermPanel term;
 	private ViewField fov;
 	private int intelligenceValue;
-	private int money = 10;
-	private int ects = 0;
-	private int semester = 1;
+	private int money;
+	private int ects;
+	private int semester;
 	private int maximalHealthPoints;
 
 	public Player(TermPanel term, ColoredChar face, String name,
@@ -30,7 +30,10 @@ public class Player extends Creature implements Camera {
 		this.maximalHealthPoints = healthPoints;
 		this.intelligenceValue = intelligenceValue;
 		this.term = term;
-		this.godMode = true;
+		this.godMode = false;
+                this.money = 10;
+                this.ects = 0;
+                this.semester = 1;
 		fov = new RayCaster();
 	}
 
@@ -73,4 +76,13 @@ public class Player extends Creature implements Camera {
 	public void changeWorld(String level) {
 		changeWorld(Level.levelFromFile(level));
 	}
+        
+        public void refrestStats(TermPanel term) {
+            term.clearBuffer();
+            term.bufferString(0,0, "Waffe: " + activeWeapon.getName() + 
+                    " | HP: " + healthPoints + "/" + maximalHealthPoints +
+                    " | A: " + attackValue + " | D: " + defenseValue);
+            term.bufferCameras();
+            term.refreshScreen();
+        }
 }
