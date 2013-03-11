@@ -22,6 +22,7 @@ public class Level extends World {
         return new Level(builder.width(), builder.height(), builder);
     }
 
+    @Override
     public void tick()
     {
     	// Der Player führt IMMER die erste Aktion aus.
