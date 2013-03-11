@@ -3,6 +3,7 @@ package zombiefu.items;
 import jade.util.datatype.ColoredChar;
 import zombiefu.creature.Creature;
 import zombiefu.creature.Player;
+import zombiefu.util.ZombieTools;
 
 public class HealingItem extends ConsumableItem {
 
@@ -15,6 +16,7 @@ public class HealingItem extends ConsumableItem {
 
     @Override
     public void getConsumedBy(Player pl) {
+        ZombieTools.sendMessage("'" + getName() + "' hat dich geheilt.", pl.frame);
         pl.heal(heilkraft);
     }
 }

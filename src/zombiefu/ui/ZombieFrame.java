@@ -83,12 +83,6 @@ public class ZombieFrame extends JFrame {
         this.getContentPane().add(panel);
         this.pack();
 
-        // Marked for removal.
-        topTerm.bufferString(0,0,"Oben TEST TEST TEST");
-        topTerm.refreshScreen();
-        bottomTerm.bufferString(0,0,"Unten TEST TEST TEST");
-        bottomTerm.refreshScreen();
-
         // Fenster anzeigen
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
