@@ -34,6 +34,10 @@ public abstract class Creature extends Actor {
     public Creature(ColoredChar face,String name) {
         this(face, name, 1, 1, 1, new Waffe("Faust", 1,ColoredChar.create('|')));
     }
+    
+    public Creature(ColoredChar face) {
+        this(face,"Zombie");
+    }
 
     @Override
     public void setPos(int x, int y) {
