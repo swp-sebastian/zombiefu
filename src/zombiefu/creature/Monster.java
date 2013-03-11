@@ -23,8 +23,8 @@ public class Monster extends Creature {
         pathfinder = new Bresenham();
     }
 
-    public Monster(ColoredChar face) {
-        super(face);
+    public Monster(ColoredChar face, String name) {
+        super(face,name);
         pathfinder = new Bresenham();
     }
 
