@@ -14,14 +14,22 @@ public class Monster extends Creature {
 
     protected MoveAlgorithm movealg;
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w) {
+    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w, MoveAlgorithm m) {
         super(face, n, h, a, d, w);
-        movealg = new StupidMover();
+        movealg = m;
+    }
+
+    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w) {
+        this(face, n, h, a, d, w, new StupidMover());
+    }
+
+    public Monster(ColoredChar face, MoveAlgorithm m) {
+        super(face);
+        movealg = m;
     }
 
     public Monster(ColoredChar face) {
-        super(face);
-        movealg = new StupidMover();
+        this(face, new StupidMover());
     }
 
     protected void moveRandomly() {
