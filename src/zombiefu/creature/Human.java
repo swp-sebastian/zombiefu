@@ -1,12 +1,16 @@
 package zombiefu.creature;
 
+import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
 
 public class Human extends Creature {
 
-	public Human(ColoredChar face) {
-		super(face);
-		// TODO Auto-generated constructor stub
+	private static final String[] randomNames = { "John", "Paul", "Celestina",
+			"Marcus", "Nadine", ""};
+
+	public Human(ColoredChar face, String rank) {
+		super(face, rank+randomNames[Dice.global.nextInt(randomNames.length)]);
+		godMode = true;
 	}
 
 	@Override
