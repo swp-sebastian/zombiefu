@@ -12,7 +12,7 @@ import jade.util.datatype.Direction;
  *
  * @author tomas
  */
-public class StupidMover extends MoveAlgorithm {
+public class StupidMover implements MoveAlgorithm {
 
     @Override
     public Direction directionTo(World w, Coordinate start, Coordinate ziel) {
