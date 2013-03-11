@@ -19,7 +19,7 @@ public class ZombieFrame extends JFrame {
 
     // Ordnet die TermPanels manuell ohne LayoutManageruntereinander an.
     // Besser nicht anfassen, fragil!
-    private void addTerminals(Container pane) {
+    private Dimension addTerminals(Container pane) {
         pane.setLayout(null);
         pane.add(topTerm.panel());
         pane.add(mainTerm.panel());
@@ -38,6 +38,7 @@ public class ZombieFrame extends JFrame {
         bottomTerm.panel().setBounds(insets.left, insets.top+sizeTop.height+sizeMain.height,
                                    sizeBottom.width, sizeBottom.height);
 
+        return new Dimension(insets.left+sizeMain.width, insets.top+sizeTop.height + sizeMain.height + sizeBottom.height+100); //+ 100?
     }
 
     // Default Constructor
@@ -56,7 +57,8 @@ public class ZombieFrame extends JFrame {
         mainTerm   = new TermPanel(columns, rows, tilesize);
         bottomTerm = new TermPanel(columns, 1,   tilesize);
 
-        addTerminals(this.getContentPane());
+        Dimension sizeAll = addTerminals(this.getContentPane());
+        this.setSize(sizeAll);
 
         // Marked for removal.
         topTerm.bufferString(0,0,"Oben TEST TEST TEST");
@@ -65,12 +67,11 @@ public class ZombieFrame extends JFrame {
         bottomTerm.refreshScreen();
 
         // Fenster anzeigen
-        this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
 
         // Fokus an die Karte.
-        mainTerm.panel().requestFocus();
+        mainTerm.panel().requestFocusInWindow();
     }
 
     public TermPanel topTerm() {
