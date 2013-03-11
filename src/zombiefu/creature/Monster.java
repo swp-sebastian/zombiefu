@@ -5,8 +5,12 @@ import zombiefu.items.Waffe;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
+import jade.util.datatype.Direction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import zombiefu.ki.StupidMover;
 import zombiefu.ki.MoveAlgorithm;
+import zombiefu.ki.TargetNotFoundException;
 import zombiefu.util.TargetIsNotInThisWorldException;
 import zombiefu.util.ZombieTools;
 
@@ -51,8 +55,9 @@ public class Monster extends Creature {
         return pos().distance(getPlayerPosition()) <= 10;
     }
 
-    protected void moveToPlayer() throws TargetIsNotInThisWorldException {
-        tryToMove(movealg.directionTo(world(), pos(), getPlayerPosition()));
+    protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException {
+        Direction dir = movealg.directionTo(world(), pos(), getPlayerPosition());
+        tryToMove(dir);
     }
 
     @Override
@@ -64,6 +69,8 @@ public class Monster extends Creature {
                 moveRandomly();
             }
         } catch (TargetIsNotInThisWorldException ex) {
+        } catch (TargetNotFoundException ex) {
+            moveRandomly();            
         }
     }
     
