@@ -45,7 +45,6 @@ public class Screen {
                     }
                 }
             }
-            term.bufferCameras();
             term.refreshScreen();
             term.getKey();
         } catch (IOException e) {
