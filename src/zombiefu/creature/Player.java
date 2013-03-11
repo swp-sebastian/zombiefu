@@ -14,6 +14,8 @@ import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
@@ -27,7 +29,7 @@ public class Player extends Creature implements Camera {
     private int ects;
     private int semester;
     private int maximalHealthPoints;
-    private List<Item> inventar;
+    private List<ConsumableItem> inventar;
     private List<Waffe> waffen;
 
     public Player(ZombieFrame frame, ColoredChar face, String name,
@@ -39,7 +41,7 @@ public class Player extends Creature implements Camera {
         this.maximalHealthPoints = healthPoints;
         this.intelligenceValue = intelligenceValue;
         this.frame = frame;
-        this.godMode = false;
+        this.godMode = true;
         this.money = 10;
         this.ects = 0;
         this.semester = 1;
@@ -61,12 +63,24 @@ public class Player extends Creature implements Camera {
                     switchWeapon(true);
                     refreshStats();
                     act();
-                    return;
+                    break;
                 case 'e':
                     switchWeapon(false);
                     refreshStats();
                     act();
-                    return;
+                    break;
+                case 'i':
+                    ConsumableItem it = chooseItem();
+                    if (it == null) {
+                        act();
+                    } else {
+                        consumeItem(it);
+                    }
+                    break;
+                case 'g':
+                    godMode = !godMode;
+                    act();
+                    break;
                 case 'x':
                     roundHouseKick();
                     break;
@@ -74,18 +88,19 @@ public class Player extends Creature implements Camera {
                     Direction dir = Direction.keyToDir(key);
                     if (dir != null) {
                         tryToMove(dir);
+                    } else {
+                        act();
                     }
                     break;
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
     public void switchWeapon(boolean backwards) {
         if (backwards) {
-            Waffe tmp = waffen.remove(waffen.size()-1);
-            waffen.add(0,tmp);
+            Waffe tmp = waffen.remove(waffen.size() - 1);
+            waffen.add(0, tmp);
         } else {
             Waffe tmp = waffen.remove(0);
             waffen.add(tmp);
@@ -106,17 +121,21 @@ public class Player extends Creature implements Camera {
         changeWorld(Level.levelFromFile(level));
     }
 
+    public void refreshWorld() {
+        ((Level) world()).refresh(frame.mainTerm());
+    }
+
     public void refreshStats() {
         frame.bottomTerm().clearBuffer();
         frame.bottomTerm().bufferString(0, 0, "Waffe: " + getActiveWeapon().getName()
                 + " (" + getActiveWeapon().getDamage() + ") "
                 + " | HP: " + healthPoints + "/" + maximalHealthPoints
-                + " | A: " + attackValue 
+                + " | A: " + attackValue
                 + " | D: " + defenseValue
                 + " | I: " + intelligenceValue);
         frame.bottomTerm().bufferString(0, 1, "Pi-Gebäude"
-                + " | $ " + money  
-                + " | ECTS " + ects 
+                + " | $ " + money
+                + " | ECTS " + ects
                 + " | Sem " + semester);
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
@@ -125,13 +144,57 @@ public class Player extends Creature implements Camera {
     public void toInventar(Item i) {
         if (i instanceof Waffe) {
             waffen.add((Waffe) i);
+        } else if (i instanceof ConsumableItem) {
+            inventar.add((ConsumableItem) i);
         } else {
-            inventar.add(i);
+            throw new IllegalStateException("Items should either be Weapons or consumable.");
         }
     }
 
     @Override
     public Waffe getActiveWeapon() {
         return waffen.get(0);
+    }
+
+    private ConsumableItem chooseItem() {
+        ConsumableItem output = null;
+        if (inventar.isEmpty()) {
+            // TODO: topFrame Fehlermeldung - keine Items!
+            return null;
+        }
+        frame.mainTerm().clearBuffer();
+        frame.mainTerm().bufferString(0, 0, "Inventarliste:");
+        for (int i = 0; i < inventar.size(); i++) {
+            Item it = inventar.get(i);
+            frame.mainTerm().bufferString(0, 2 + i, "[" + ((char) (97 + i)) + "] " + it.face() + " - " + it.getName());
+        }
+        frame.mainTerm().bufferCameras();
+        frame.mainTerm().refreshScreen();
+        try {
+            int key = ((int) frame.mainTerm().getKey()) - 97;
+            if (key >= 0 && key <= 25) {
+                output = inventar.get(key);
+            }
+        } catch (InterruptedException ex) {
+        }
+        refreshWorld();
+        return output;
+    }
+
+    public void heal(int i) {
+        System.out.print(getName() + " hat " + i + " HP geheilt. ");
+        healthPoints += i;
+        if (healthPoints >= maximalHealthPoints) {
+            healthPoints = maximalHealthPoints;
+        }
+        System.out.println("HP: " + healthPoints);
+    }
+
+    private void consumeItem(ConsumableItem it) {
+        System.out.println(getName() + " benutzt Item " + it.getName());
+        it.getConsumedBy(this);
+        inventar.remove(it);
+        it.expire();
+        refreshStats();
     }
 }
