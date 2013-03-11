@@ -1,6 +1,5 @@
 package zombiefu.creature;
 
-
 import zombiefu.items.Waffe;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
@@ -17,9 +16,11 @@ import zombiefu.util.ZombieTools;
 public class Monster extends Creature {
 
     protected MoveAlgorithm movealg;
+    private Waffe waffe;
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w, MoveAlgorithm m) {
-        super(face, n, h, a, d, w);
+        super(face, n, h, a, d);
+        waffe = w;
         movealg = m;
     }
 
@@ -29,6 +30,7 @@ public class Monster extends Creature {
 
     public Monster(ColoredChar face, MoveAlgorithm m) {
         super(face);
+        waffe = new Waffe("Faust", 1, ColoredChar.create('|'));
         movealg = m;
     }
 
@@ -50,7 +52,7 @@ public class Monster extends Creature {
 
         return player.pos();
     }
-    
+
     protected boolean positionIsVisible(Coordinate pos) throws TargetIsNotInThisWorldException {
         return pos().distance(getPlayerPosition()) <= 10;
     }
@@ -70,8 +72,12 @@ public class Monster extends Creature {
             }
         } catch (TargetIsNotInThisWorldException ex) {
         } catch (TargetNotFoundException ex) {
-            moveRandomly();            
+            moveRandomly();
         }
     }
-    
+
+    @Override
+    public Waffe getActiveWeapon() {
+        return waffe;
+    }
 }
