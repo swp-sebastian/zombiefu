@@ -27,13 +27,13 @@ public class ZombieFU {
 
         // Startscreen
         Screen.showImage(term, "src/sources/startscreen.txt");
-        
+
         // Storytext
         Screen.showImage(term, "src/sources/story.txt");
 
         // Story initialisieren
         ZombieTools.createStoryForPlayer(player);
-
+        term.registerCamera(player, 40, 17);
         // Spielen!
         while (!player.expired()) {
             ((Level) player.world()).refresh(term);
