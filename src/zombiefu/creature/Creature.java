@@ -12,13 +12,14 @@ import zombiefu.items.Waffe;
 
 public abstract class Creature extends Actor {
 
-    public int healthPoints;
+    private int healthPoints;
     private int attackValue;
     private int defenseValue;
     private int dazed;
     private Waffe activeWeapon;
     private String name;
     protected boolean godMode;
+    
 
     public Creature(ColoredChar face, String n, int h, int a, int d, Waffe w) {
         super(face);
@@ -30,8 +31,8 @@ public abstract class Creature extends Actor {
         activeWeapon = w;
     }
 
-    public Creature(ColoredChar face) {
-        this(face, "Zombie", 1, 1, 1, new Waffe("Faust", 1, ColoredChar.create('|')));
+    public Creature(ColoredChar face,String name) {
+        this(face, name, 1, 1, 1, new Waffe("Faust", 1,ColoredChar.create('|')));
     }
 
     @Override
@@ -60,6 +61,8 @@ public abstract class Creature extends Actor {
         int damage = activeWeapon.getDamage() * (attackValue / cr.defenseValue) * Dice.global.nextInt(20, 40) / 30;
         System.out.println("Berechneter Schaden: " + damage);
 
+	if(damage == 0)
+		damage = 1;
         cr.hurt(damage);
     }
 
