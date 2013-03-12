@@ -104,7 +104,15 @@ public class ZombieTools {
 	}
 
 	private static HashMap<Character, String> createItemMap() {
+		String[] items = getStrings(srcs + "Items.txt");
 		HashMap<Character, String> itemMap = new HashMap<Character, String>();
+		for (String st : items) {
+			String[] s = st.split(" ");
+			try {
+				itemMap.put(s[0].charAt(0), s[1]);
+			} catch (Exception e) {
+			}
+		}
 		return itemMap;
 	}
 
@@ -147,6 +155,24 @@ public class ZombieTools {
 			for (int j = 0; j < level[i].length(); j++) {
 				chars[i][j] = ColoredChar.create(level[i].charAt(j),
 						Color.white);
+			}
+		}
+		return chars;
+	}
+
+	public static ColoredChar[][] readLevel(String input) throws IOException {
+		String[] level = getStrings(input);
+		HashMap<Character, String> itemMap = createItemMap();
+		ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
+		for (int i = 0; i < level.length; i++) {
+			for (int j = 0; j < level[i].length(); j++) {
+				if (!itemMap.containsKey(level[i].charAt(j)))
+					chars[i][j] = ColoredChar.create(level[i].charAt(j));
+				else
+					chars[i][j] = ColoredChar.create('.'); // TODO: nicht der
+															// Punkt, sondern
+															// beliebiges
+															// Zeichen
 			}
 		}
 		return chars;
