@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
+import zombiefu.util.DamageAnimation;
 import zombiefu.util.ZombieTools;
 
 public abstract class Creature extends Actor {
@@ -34,7 +35,7 @@ public abstract class Creature extends Actor {
         attackValue = a;
         defenseValue = d;
     }
-    
+
     public Collection<Coordinate> getViewField() {
         return fov.getViewField(world(), pos(), sichtweite);
     }
@@ -56,7 +57,13 @@ public abstract class Creature extends Actor {
         }
     }
 
-    public void attack(Creature cr) {
+    public String getName() {
+        return name;
+    }
+
+    protected abstract Direction getAttackDirection();
+
+    public void attackCreature(Creature cr) {
         if (this.equals(cr)) {
             return;
         }
@@ -75,33 +82,30 @@ public abstract class Creature extends Actor {
 
         // Calculate damage
         int damage = (int) (((double) getActiveWeapon().getDamage()) * ((double) attackValue / (double) cr.defenseValue) * (double) Dice.global.nextInt(20, 40) / 30);
-        System.out.println("Berechneter Schaden: " + damage);
-
         if (damage == 0) {
             damage = 1;
         }
+
+        ZombieTools.sendMessage(getName() + " hat " + cr.getName() + " " + damage + " Schadenspunkte hinzugefügt.");
+
         cr.hurt(damage, this);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    protected abstract Direction getAttackDirection();
-
-    public void attackCoord(int x, int y) {
-        Guard.argumentIsNotNull(x);
-        Guard.argumentIsNotNull(y);
-        attackCoord(new Coordinate(x, y));
-    }
-
-    public void attackCoord(Coordinate coord) {
+    public void attackCoordinate(Coordinate coord) {
         Guard.argumentIsNotNull(coord);
+        DamageAnimation anim = new DamageAnimation();
+        world().addActor(anim, coord);
         Collection<Creature> actors = world().getActorsAt(Creature.class, coord);
-        Iterator<Creature> it = actors.iterator();
-        while (it.hasNext()) {
-            attack(it.next());
+        if (actors.isEmpty()) {
+            ZombieTools.sendMessage("Niemanden getroffen!");
+        } else {
+            Iterator<Creature> it = actors.iterator();
+            while (it.hasNext()) {
+                attackCreature(it.next());
+            }
         }
+        world().removeActor(anim);
+        anim.expire();
     }
 
     private void createDetonation(Coordinate c, double blastRadius) {
@@ -139,7 +143,7 @@ public abstract class Creature extends Actor {
             ziel = pos().getTranslated(dir);
         }
         if (typ.isDirected()) {
-            attackCoord(ziel);
+            attackCoordinate(ziel);
         } else {
             createDetonation(ziel, getActiveWeapon().getBlastRadius());
         }
@@ -169,7 +173,7 @@ public abstract class Creature extends Actor {
             return;
         }
         Coordinate targetField = pos().getTranslated(dir);
-        if(!world().passableAt(targetField)) {
+        if (!world().passableAt(targetField)) {
             throw new CannotMoveToImpassableFieldException();
         }
         if (world().getActorsAt(Creature.class, pos().getTranslated(dir)).isEmpty()) {

@@ -103,7 +103,7 @@ public class ZombieTools {
         setTopTermContent("Bitte gib die Richtung an.", frame);
         Direction d = null;
         try {
-            while (d == null) {
+            while (d == null || d == Direction.ORIGIN) {
                 d = Direction.keyToDir(frame.mainTerm().getKey());
             }
         } catch (InterruptedException ex) {
@@ -117,9 +117,7 @@ public class ZombieTools {
         setTopTermContent(s, frame);
         char key = 0;
         try {
-            while (key != '\n') {
-                key = frame.mainTerm().getKey();
-            }
+            key = frame.mainTerm().getKey();
         } catch (InterruptedException ex) {
         }
         clearTopTerm(frame);
