@@ -17,18 +17,22 @@ import zombiefu.map.RoomBuilder;
 import zombiefu.util.TargetIsNotInThisWorldException;
 
 public class Level extends World {
-    
+
+    private int freeFields;
+
     public Level(int width, int height, Generator gen) {
         super(width, height);
         gen.generate(this);
         fillWithEnemies();
         fillWithItems();
+        calculateFreeFields();
     }
 
     public static Level levelFromFile(String file) {
         RoomBuilder builder = new RoomBuilder(file, "src/sources/CharSet.txt");
         return new Level(builder.width(), builder.height(), builder);
     }
+
 
     public Player getPlayer() throws TargetIsNotInThisWorldException {
         Player pl = super.getActor(Player.class);
@@ -37,7 +41,15 @@ public class Level extends World {
         }
         return pl;
     }
-    
+
+    public void calculateFreeFields() {
+        for (int x = 0; x < width(); x++) {
+            for (int y = 0; y < height(); y++) {
+                freeFields += passableAt(x, y) ? 1 : 0;
+            }
+        }
+    }
+
     @Override
     public void tick() {
         // Der Player führt IMMER die erste Aktion aus.
@@ -56,10 +68,9 @@ public class Level extends World {
     }
 
     public void fillWithEnemies() {
-        // Der Zombie-Dozent kommt hinzu.
-        addActor(new DozentZombie());
+        int enemies = 5;
         // 6 normale Zombies kommen hinzu
-        for (int i = 0; i <= 5; i++) {
+        for (int i = 0; i <= enemies; i++) {
             addActor(new Zombie());
         }
     }
