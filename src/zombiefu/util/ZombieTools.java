@@ -32,8 +32,7 @@ public class ZombieTools {
         world.addActor(player);
         try {
             world.fillWithEnemies();
-            world.fillWithItems();
-        } catch (TargetIsNotInThisWorldException e) {
+            } catch (TargetIsNotInThisWorldException e) {
         }
     }
 
