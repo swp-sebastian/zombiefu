@@ -41,10 +41,10 @@ public class RoomBuilder extends MapGenerator {
 
 	public RoomBuilder(String input, String charset) {
 		try {
-			this.screen = ZombieTools.readFile(input);
+			setCharSet(charset);
+			this.screen = ZombieTools.readLevel(input);
 			this.height = screen.length;
 			this.width = screen[0].length;
-			setCharSet(charset);
 		} catch (IOException e) {
 			System.out.println("File not found!");
 		}
