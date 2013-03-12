@@ -29,8 +29,8 @@ public class Player extends Creature implements Camera {
     private ArrayList<Waffe> waffen;
 
     public Player(ZombieFrame frame, ColoredChar face, String name,
-                  int healthPoints, int attackValue, int defenseValue,
-                  int intelligenceValue, ArrayList<Waffe> w) {
+            int healthPoints, int attackValue, int defenseValue,
+            int intelligenceValue, ArrayList<Waffe> w) {
 
         super(face, name, healthPoints, attackValue, defenseValue);
 
@@ -59,50 +59,50 @@ public class Player extends Creature implements Camera {
             char key;
             key = frame.mainTerm().getKey();
             switch (key) {
-            case 'q':
-                switchWeapon(true);
-                refreshStats();
-                act();
-                break;
-            case 'e':
-                switchWeapon(false);
-                refreshStats();
-                act();
-                break;
-            case 'f':
-                if (fov instanceof RayCaster) {
-                    fov = new ViewEverything();
-                } else {
-                    fov = new RayCaster();
-                }
-                refreshWorld();
-                act();
-                break;
-            case 'i':
-                ConsumableItem it = chooseItem();
-                if (it == null) {
+                case 'q':
+                    switchWeapon(true);
+                    refreshStats();
                     act();
-                } else {
-                    consumeItem(it);
-                }
-                break;
-            case (char) 27:
-                System.exit(0);
-            case 'g':
-                godMode = !godMode;
-                act();
-                break;
-            case '\n':
-                attack();
-                break;
-            default:
-                Direction dir = Direction.keyToDir(key);
-                if (dir != null) {
-                    tryToMove(dir);
-                } else {
+                    break;
+                case 'e':
+                    switchWeapon(false);
+                    refreshStats();
                     act();
-                }
-                break;
+                    break;
+                case 'f':
+                    if (fov instanceof RayCaster) {
+                        fov = new ViewEverything();
+                    } else {
+                        fov = new RayCaster();
+                    }
+                    refreshWorld();
+                    act();
+                    break;
+                case 'i':
+                    ConsumableItem it = chooseItem();
+                    if (it == null) {
+                        act();
+                    } else {
+                        consumeItem(it);
+                    }
+                    break;
+                case (char) 27:
+                    System.exit(0);
+                case 'g':
+                    godMode = !godMode;
+                    act();
+                    break;
+                case '\n':
+                    attack();
+                    break;
+                default:
+                    Direction dir = Direction.keyToDir(key);
+                    if (dir != null) {
+                        tryToMove(dir);
+                    } else {
+                        act();
+                    }
+                    break;
             }
         } catch (InterruptedException e) {
         } catch (CannotMoveToImpassableFieldException ex) {
@@ -123,10 +123,7 @@ public class Player extends Creature implements Camera {
     public void changeWorld(World world) {
         world().removeActor(this);
         world.addActor(this);
-        try {
-            ((Level) world).fillWithEnemies();
-        } catch (TargetIsNotInThisWorldException e) {
-        }
+        ((Level) world).fillWithEnemies();
     }
 
     public void changeWorld(String level) {
@@ -140,17 +137,17 @@ public class Player extends Creature implements Camera {
     public void refreshStats() {
         frame.bottomTerm().clearBuffer();
         frame.bottomTerm().bufferString(0,
-                                        0,
-                                        "Waffe: " + getActiveWeapon().getName() + " ("
-                                        + getActiveWeapon().getDamage() + ") " + " | HP: "
-                                        + healthPoints + "/" + maximalHealthPoints + " | A: "
-                                        + attackValue + " | D: " + defenseValue + " | I: "
-                                        + intelligenceValue);
+                0,
+                "Waffe: " + getActiveWeapon().getName() + " ("
+                + getActiveWeapon().getDamage() + ") " + " | HP: "
+                + healthPoints + "/" + maximalHealthPoints + " | A: "
+                + attackValue + " | D: " + defenseValue + " | I: "
+                + intelligenceValue);
         frame.bottomTerm().bufferString(0,
-                                        1,
-                                        "Coord: (" + pos().x() + "|" + pos().y() + ")"
-                                        + " | € " + money + " | ECTS " + ects + " | Sem "
-                                        + semester);
+                1,
+                "Coord: (" + pos().x() + "|" + pos().y() + ")"
+                + " | € " + money + " | ECTS " + ects + " | Sem "
+                + semester);
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
     }
@@ -181,10 +178,10 @@ public class Player extends Creature implements Camera {
         for (int i = 0; i < inventar.size(); i++) {
             Item it = inventar.get(i);
             frame.mainTerm().bufferString(
-                                          0,
-                                          2 + i,
-                                          "[" + ((char) (97 + i)) + "] " + it.face() + " - "
-                                          + it.getName());
+                    0,
+                    2 + i,
+                    "[" + ((char) (97 + i)) + "] " + it.face() + " - "
+                    + it.getName());
         }
         frame.mainTerm().refreshScreen();
         try {
@@ -223,7 +220,7 @@ public class Player extends Creature implements Camera {
             Creator.showImage(frame.mainTerm(), "src/sources/endscreen.txt");
         } catch (InterruptedException ex) {
             Logger.getLogger(Player.class.getName()).log(
-                                                         java.util.logging.Level.SEVERE, null, ex);
+                    java.util.logging.Level.SEVERE, null, ex);
         }
         System.exit(0);
     }

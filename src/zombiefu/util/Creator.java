@@ -29,10 +29,7 @@ public class Creator {
     public static void createStoryForPlayer(Player player) {
         Level level = world.get(getFirstWordOfFile(srcs + "levels.txt"));
         level.addActor(player);
-        try {
-            level.fillWithEnemies();
-        } catch (TargetIsNotInThisWorldException e) {
-        }
+        level.fillWithEnemies();
     }
 
     public static void createBidirectionalTeleporter(World world1,
@@ -68,11 +65,11 @@ public class Creator {
                 else if (st[3].equals("Umkreis"))
                     itemMap.put(st[0],
                             new Waffe(chr, st[0], Integer.decode(st[4]),
-                                    Waffentyp.UMKREIS, Integer.decode(st[5])));
+                                    Waffentyp.UMKREIS, Double.parseDouble(st[5])));
                 else
                     itemMap.put(st[0],
                             new Waffe(chr, st[0], Integer.decode(st[4]),
-                                    Waffentyp.GRANATE, Integer.decode(st[5]),
+                                    Waffentyp.GRANATE, Double.parseDouble(st[5]),
                                     Integer.decode(st[6])));
             } catch (Exception e) {
             }
