@@ -14,7 +14,7 @@ public class ViewEverything extends ViewField {
     
     @Override
     protected Collection<Coordinate> calcViewField(World world, int x, int y, int r) {
-        Collection<Coordinate> output = new HashSet<>();
+        HashSet<Coordinate> output = new HashSet<Coordinate>();
         for (int i = 0; i < world.width(); i++) {
             for (int j = 0; j < world.height(); j++) {
                 output.add(new Coordinate(i, j));

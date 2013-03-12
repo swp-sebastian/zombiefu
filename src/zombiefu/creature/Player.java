@@ -32,8 +32,8 @@ public class Player extends Creature implements Camera {
     private int ects;
     private int semester;
     private int maximalHealthPoints;
-    private List<ConsumableItem> inventar;
-    private List<Waffe> waffen;
+    private ArrayList<ConsumableItem> inventar;
+    private ArrayList<Waffe> waffen;
 
     public Player(ZombieFrame frame, ColoredChar face, String name,
             int healthPoints, int attackValue, int defenseValue,
@@ -49,8 +49,8 @@ public class Player extends Creature implements Camera {
         this.ects = 0;
         this.semester = 1;
 
-        this.inventar = new ArrayList<>();
-        this.waffen = new ArrayList<>();
+        this.inventar = new ArrayList<ConsumableItem>();
+        this.waffen = new ArrayList<Waffe>();
         waffen.add(w);
 
         fov = new RayCaster();
