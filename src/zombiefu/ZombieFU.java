@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import zombiefu.creature.Player;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
-import zombiefu.level.Level;
 import zombiefu.util.Screen;
 import zombiefu.util.ZombieTools;
 import zombiefu.ui.ZombieFrame;
