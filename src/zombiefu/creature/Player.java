@@ -173,7 +173,7 @@ public class Player extends Creature implements Camera {
     private ConsumableItem chooseItem() {
         ConsumableItem output = null;
         if (inventar.isEmpty()) {
-            // TODO: topFrame Fehlermeldung - keine Items!
+            ZombieTools.sendMessage("Inventar ist leer.", frame);
             return null;
         }
         frame.mainTerm().clearBuffer();
