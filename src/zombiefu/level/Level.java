@@ -71,7 +71,7 @@ public class Level extends World {
 	public void fillWithEnemies() throws TargetIsNotInThisWorldException {
 		int oldEnemies = getActors(Monster.class).size();
 		int semester = getPlayer().getSemester();
-		int newEnemies = (int) (semester * 0.005 * freeFields+ Dice.global.nextInt(semester));
+		int newEnemies = (int) (semester * 0.005 * freeFields * Dice.global.nextInt(40,60) / 50);
 		// 6 normale Zombies kommen hinzu
 		for (int i = oldEnemies; i <= newEnemies; i++) {
 			addActor(new Zombie());

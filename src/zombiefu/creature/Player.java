@@ -27,7 +27,6 @@ import zombiefu.util.ZombieTools;
 public class Player extends Creature implements Camera {
 
     public ZombieFrame frame;
-    private ViewField fov;
     private int intelligenceValue;
     private int money;
     private int ects;
@@ -53,7 +52,8 @@ public class Player extends Creature implements Camera {
         this.inventar = new ArrayList<ConsumableItem>();
         this.waffen = w;
 
-        fov = new RayCaster();
+        this.sichtweite = 20;
+        this.fov = new RayCaster();
     }
 
     public int getSemester() {
@@ -112,6 +112,8 @@ public class Player extends Creature implements Camera {
                 break;
             }
         } catch (InterruptedException e) {
+        } catch (CannotMoveToImpassableFieldException ex) {
+            act();
         }
     }
 
@@ -123,11 +125,6 @@ public class Player extends Creature implements Camera {
             Waffe tmp = waffen.remove(0);
             waffen.add(tmp);
         }
-    }
-
-    @Override
-    public Collection<Coordinate> getViewField() {
-        return fov.getViewField(world(), pos(), 100);
     }
 
     public void changeWorld(World world) {
