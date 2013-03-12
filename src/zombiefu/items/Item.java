@@ -4,6 +4,7 @@ import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
 import zombiefu.creature.Player;
 import zombiefu.level.Level;
+import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
 public abstract class Item extends Actor {
@@ -24,7 +25,7 @@ public abstract class Item extends Actor {
     }
 
     protected void pickedUpByPlayer(Player player) {
-            ZombieTools.sendMessage("Du hast '" + getName() + "' aufgehoben.", player.frame);
+            ZombieGame.newMessage("Du hast '" + getName() + "' aufgehoben.");
             System.out.println(player.getName() + " hat " + getName() + " gefunden.");
             player.toInventar(this);        
     }
