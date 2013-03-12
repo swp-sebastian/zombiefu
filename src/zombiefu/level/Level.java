@@ -91,8 +91,6 @@ public class Level extends World {
                 "Kaffee", 40));
         addActor(new Waffe(ColoredChar.create('⚩', new Color(90, 90, 90)),
                 "Kettensäge", 15));
-        addActor(new Waffe(ColoredChar.create('F', new Color(90, 90, 90)),
-                "Flammenwerfer", 40, Waffentyp.FERNKAMPF));
     }
 
     public void refresh(TermPanel term) {
