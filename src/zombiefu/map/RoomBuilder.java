@@ -49,15 +49,7 @@ public class RoomBuilder extends MapGenerator {
 			System.out.println("File not found!");
 		}
 	}
-
-	public void changeFile(String input) {
-		try {
-			this.screen = ZombieTools.readFile(input);
-		} catch (IOException e) {
-			System.out.println("File not found!");
-		}
-	}
-
+	
 	@Override
 	protected void generateStep(World world, Dice dice) {
 		for (int x = 0; x < height; x++) {
