@@ -21,8 +21,8 @@ public abstract class World extends Messenger
     private int height;
     private Tile[][] grid;
     private Set<Actor> register;
-    private List<Class<? extends Actor>> drawOrder;
-    private List<Class<? extends Actor>> actOrder;
+    protected List<Class<? extends Actor>> drawOrder;
+    protected List<Class<? extends Actor>> actOrder;
 
     /**
      * Constructs a new {@code World} with the given dimensions. Both width and height must be
