@@ -93,10 +93,9 @@ public class ZombieTools {
     
     public static Direction askForDirection(ZombieFrame frame) {
         setTopTermContent("Bitte gib die Richtung an.", frame);
-        char key = 0;
         Direction d = null;
         try {
-            while (d != null) {
+            while (d == null) {
                 d = Direction.keyToDir(frame.mainTerm().getKey());
             }
         } catch (InterruptedException ex) {
