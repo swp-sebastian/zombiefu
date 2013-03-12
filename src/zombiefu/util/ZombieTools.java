@@ -80,11 +80,34 @@ public class ZombieTools {
         return Dice.global.choose(getAllowedDirections());
     }
 
-    public static void sendMessage(String s, ZombieFrame frame) {
-        activePlayer.refreshWorld();
+    public static void setTopTermContent(String s, ZombieFrame frame) {
         frame.topTerm().clearBuffer();
         frame.topTerm().bufferString(0, 0, s);
+        frame.topTerm().refreshScreen();    
+    }
+    
+    public static void clearTopTerm(ZombieFrame frame) {
+        frame.topTerm().clearBuffer();
         frame.topTerm().refreshScreen();
+    }
+    
+    public static Direction askForDirection(ZombieFrame frame) {
+        setTopTermContent("Bitte gib die Richtung an.", frame);
+        char key = 0;
+        Direction d = null;
+        try {
+            while (d != null) {
+                d = Direction.keyToDir(frame.mainTerm().getKey());
+            }
+        } catch (InterruptedException ex) {
+        }
+        clearTopTerm(frame);
+        return d;
+    }
+    
+    public static void sendMessage(String s, ZombieFrame frame) {
+        activePlayer.refreshWorld();
+        setTopTermContent(s,frame);
         char key = 0;
         try {
             while (key != '\n') {
@@ -92,8 +115,7 @@ public class ZombieTools {
             }
         } catch (InterruptedException ex) {
         }
-        frame.topTerm().clearBuffer();
-        frame.topTerm().refreshScreen();
+        clearTopTerm(frame);
     }
 
     public static void sendMessage(String string) {

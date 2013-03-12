@@ -6,6 +6,7 @@ import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import zombiefu.items.Waffe;
@@ -62,7 +63,7 @@ public abstract class Creature extends Actor {
         System.out.println(getName() + " attacks " + cr.getName() + " with " + getActiveWeapon().getName() + " (Damage: " + getActiveWeapon().getDamage() + "). Attack value: " + attackValue + ", Defense Value: " + cr.defenseValue);
 
         // Calculate damage
-        int damage = (int) (((double) getActiveWeapon().getDamage()) * ( (double) attackValue / (double) cr.defenseValue) * (double) Dice.global.nextInt(20, 40) / 30);
+        int damage = (int) (((double) getActiveWeapon().getDamage()) * ((double) attackValue / (double) cr.defenseValue) * (double) Dice.global.nextInt(20, 40) / 30);
         System.out.println("Berechneter Schaden: " + damage);
 
         if (damage == 0) {
@@ -76,15 +77,68 @@ public abstract class Creature extends Actor {
     }
 
     public void attack(int x, int y) {
-        Collection<Creature> actors = world().getActorsAt(Creature.class, x, y);
+        Guard.argumentIsNotNull(x);
+        Guard.argumentIsNotNull(y);
+        attack(new Coordinate(x, y));
+    }
+
+    public void attack(Coordinate coord) {
+        Guard.argumentIsNotNull(coord);
+        Collection<Creature> actors = world().getActorsAt(Creature.class, coord);
         Iterator<Creature> it = actors.iterator();
         while (it.hasNext()) {
             attack(it.next());
         }
     }
 
-    public void attack(Coordinate coord) {
-        attack(coord.x(), coord.y());
+    public void attack(Direction dir) {
+        Guard.argumentIsNotNull(dir);
+        attack(pos().getTranslated(dir));
+    }
+
+    protected abstract Direction getAttackDirection();
+
+    private void createDetonation(Coordinate c) {
+    }
+
+    private Coordinate findTargetInDirection(Direction dir, int maxDistance) {
+        Coordinate detPos = pos();
+        int dcounter = 0;
+        do {
+            detPos = detPos.getTranslated(dir);
+            dcounter++;
+        } while (world().getActorsAt(Creature.class, detPos).isEmpty() || dcounter == maxDistance);
+        return detPos;
+    }
+
+    public void attack() {
+        Direction dir;
+        switch (getActiveWeapon().getTyp()) {
+            case NAHKAMPF:
+                dir = getAttackDirection();
+                if (dir != null) {
+                    attack(dir);
+                }
+                break;
+            case FERNKAMPF:
+                dir = getAttackDirection();
+                if (dir != null) {
+                    attack(findTargetInDirection(dir, getActiveWeapon().getRange()));
+                }
+                break;
+            case GRANATE:
+                dir = getAttackDirection();
+                if (dir != null) {
+                    createDetonation(findTargetInDirection(dir, getActiveWeapon().getRange()));
+                }
+                break;
+            case UMKREIS:
+                for (Iterator<Direction> it = Arrays.asList(Direction.values()).iterator(); it.hasNext();) {
+                    dir = it.next();
+                    attack(dir);
+                }
+                break;
+        }
     }
 
     public void tryToMove(Direction dir) {
@@ -108,14 +162,6 @@ public abstract class Creature extends Actor {
         }
     }
 
-    public void roundHouseKick() {
-        for (Direction dir : ZombieTools.getAllowedDirections()) {
-            if (dir != Direction.ORIGIN) {
-                attack(pos().getTranslated(dir));
-            }
-        }
-    }
-    
     protected abstract void killed(Creature killer);
 
     private void hurt(int i, Creature hurter) {

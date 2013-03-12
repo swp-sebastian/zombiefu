@@ -96,7 +96,7 @@ public class Player extends Creature implements Camera {
                     act();
                     break;
                 case '\n':
-                    roundHouseKick();
+                    attack();
                     break;
                 default:
                     Direction dir = Direction.keyToDir(key);
@@ -225,5 +225,14 @@ public class Player extends Creature implements Camera {
 
     public void addMoney(int m) {
         this.money += m;
+    }
+
+    private void attacking() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected Direction getAttackDirection() {
+        return ZombieTools.askForDirection(frame);
     }
 }

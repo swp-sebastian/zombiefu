@@ -10,9 +10,18 @@ package zombiefu.items;
  */
 public enum Waffentyp {
     
-    NAHKAMPF,
-    FERNKAMPF,
-    UMKREIS,
-    GRANATE;
+    NAHKAMPF(false, true),
+    FERNKAMPF(true, true),
+    UMKREIS(false, false),
+    GRANATE(true, false);
+    
+    private boolean ranged;
+    private boolean directed;
+
+    private Waffentyp(boolean r, boolean d)
+    {
+        this.ranged = r;
+        this.directed = d;
+    }
     
 }

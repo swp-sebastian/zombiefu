@@ -2,6 +2,7 @@ package zombiefu.creature;
 
 import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
+import jade.util.datatype.Direction;
 import zombiefu.items.Waffe;
 
 public class Human extends Creature {
@@ -16,7 +17,6 @@ public class Human extends Creature {
 
     @Override
     public void act() {
-        // TODO Auto-generated method stub
     }
 
     @Override
@@ -27,5 +27,10 @@ public class Human extends Creature {
     @Override
     protected void killed(Creature killer) {
         // TODO: Spiel sofort beenden.
+    }
+
+    @Override
+    protected Direction getAttackDirection() {
+        return null;
     }
 }
