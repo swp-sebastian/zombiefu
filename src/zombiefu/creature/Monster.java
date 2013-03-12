@@ -14,7 +14,9 @@ import zombiefu.items.Item;
 import zombiefu.ki.StupidMover;
 import zombiefu.ki.MoveAlgorithm;
 import zombiefu.ki.TargetNotFoundException;
-import zombiefu.util.TargetIsNotInThisWorldException;
+import zombiefu.util.NoDirectionGivenException;
+import zombiefu.ki.TargetIsNotInThisWorldException;
+import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
 public abstract class Monster extends Creature {
@@ -44,7 +46,7 @@ public abstract class Monster extends Creature {
         this(face, new StupidMover());
     }
 
-    private void moveRandomly() throws NoDirectionToMoveException {
+    private void moveRandomly() throws NoPlaceToMoveException {
         List<Direction> dirs = ZombieTools.getAllowedDirections();
         Collections.shuffle(dirs);
         for (Direction d : dirs) {
@@ -54,7 +56,7 @@ public abstract class Monster extends Creature {
             } catch (CannotMoveToImpassableFieldException ex) {
             }
         }
-        throw new NoDirectionToMoveException();
+        throw new NoPlaceToMoveException();
     }
 
     private Coordinate getPlayerPosition() throws TargetIsNotInThisWorldException {
@@ -96,7 +98,7 @@ public abstract class Monster extends Creature {
         }
         try {
             moveRandomly();
-        } catch (NoDirectionToMoveException ex) {
+        } catch (NoPlaceToMoveException ex) {
             System.out.println(getName() + ": Cannot move - doing nothing");
             return;
         }
@@ -116,17 +118,18 @@ public abstract class Monster extends Creature {
             world().addActor(it, pos());
         }
         expire();
-        ZombieTools.sendMessage(killer.getName() + " hat " + getName() + " getötet.");
+        ZombieGame.newMessage(killer.getName() + " hat " + getName() + " getötet.");
     }
 
     @Override
-    protected Direction getAttackDirection() {
-        // TODO: Überprüfen, ob Gegner wirklich in einer Linie
+    protected Direction getAttackDirection() throws NoDirectionGivenException {
+        // TODO: Überprüfen, ob Gegner wirklich in einer Linie ist
         try {
             return directionToPlayer();
         } catch (TargetNotFoundException e) {
+            throw new NoDirectionGivenException();
         } catch (TargetIsNotInThisWorldException ex) {
+            throw new NoDirectionGivenException();
         }
-        return null;
     }
 }
