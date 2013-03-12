@@ -15,7 +15,7 @@ import zombiefu.ki.StupidMover;
 import zombiefu.ki.MoveAlgorithm;
 import zombiefu.ki.TargetNotFoundException;
 import zombiefu.util.NoDirectionGivenException;
-import zombiefu.util.TargetIsNotInThisWorldException;
+import zombiefu.ki.TargetIsNotInThisWorldException;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 

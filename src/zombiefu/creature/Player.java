@@ -7,17 +7,12 @@ import jade.ui.Camera;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import zombiefu.fov.ViewEverything;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
-import zombiefu.ui.ZombieFrame;
-import zombiefu.util.Creator;
 import zombiefu.util.NoDirectionGivenException;
-import zombiefu.util.TargetIsNotInThisWorldException;
 import zombiefu.util.ZombieGame;
-import zombiefu.util.ZombieTools;
 
 public class Player extends Creature implements Camera {
 

@@ -164,7 +164,6 @@ public abstract class Creature extends Actor {
         Coordinate nPos = pos();
         int dcounter = 0;
         do {
-            System.out.println(nPos);
             nPos = nPos.getTranslated(dir);
             if (!world().insideBounds(nPos) || !world().passableAt(nPos)) {
                 return nPos.getTranslated(ZombieTools.getReversedDirection(dir));

@@ -17,9 +17,8 @@ import zombiefu.items.Teleporter;
 import zombiefu.items.Waffe;
 import zombiefu.map.RoomBuilder;
 import zombiefu.util.DamageAnimation;
-import zombiefu.util.TargetIsNotInThisWorldException;
+import zombiefu.ki.TargetIsNotInThisWorldException;
 import zombiefu.util.ZombieGame;
-import zombiefu.util.ZombieTools;
 
 public class Level extends World {
 
@@ -86,7 +85,6 @@ public class Level extends World {
             addActor(new Zombie());
         }
     }
-
 
     private void fillWithItems() {
         addActor(new HealingItem(ColoredChar.create('☕', new Color(80, 0, 0)),
