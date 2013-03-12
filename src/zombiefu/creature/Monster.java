@@ -32,7 +32,7 @@ public abstract class Monster extends Creature {
 
     public Monster(ColoredChar face, MoveAlgorithm m) {
         super(face);
-        waffe = new Waffe("Faust", 1, ColoredChar.create('|'));
+        waffe = new Waffe(ColoredChar.create('|'), "Faust", 1);
         movealg = m;
     }
 

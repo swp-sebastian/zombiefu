@@ -23,7 +23,7 @@ public class ZombieFU {
         Player player = new Player(frame,
                 ColoredChar.create('\u263B', Color.decode("0x7D26CD")),
                 "John Dorian", 100, 10, 10, 10,
-                new Waffe("Faust", 1, ColoredChar.create('|')));
+                new Waffe(ColoredChar.create('|'), "Faust", 1));
 
         // Superhäßlich, müssen wir nochmal drüber reden (tomas)
         ZombieTools.registerPlayer(player);
