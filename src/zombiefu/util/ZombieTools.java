@@ -76,17 +76,16 @@ public class ZombieTools {
                 else if (st[3].equals("Fernkampf"))
                     itemMap.put(st[0],
                             new Waffe(chr, st[0], Integer.decode(st[4]),
-                                    Integer.decode(st[5]), Waffentyp.FERNKAMPF));
+                                    Waffentyp.FERNKAMPF, Integer.decode(st[5])));
                 else if (st[3].equals("Umkreis"))
                     itemMap.put(st[0],
                             new Waffe(chr, st[0], Integer.decode(st[4]),
-                                    Integer.decode(st[5]), Waffentyp.UMKREIS));
+                                    Waffentyp.UMKREIS, Integer.decode(st[5])));
                 else
-                    itemMap.put(
-                            st[0],
+                    itemMap.put(st[0],
                             new Waffe(chr, st[0], Integer.decode(st[4]),
-                                    Integer.decode(st[5]), Integer
-                                            .decode(st[6]), Waffentyp.GRANATE));
+                                    Waffentyp.GRANATE, Integer.decode(st[5]),
+                                    Integer.decode(st[6])));
             } catch (Exception e) {
             }
         }
@@ -119,10 +118,10 @@ public class ZombieTools {
 
     private static void addItems(Level lev, String[] s,
             HashMap<Character, String> iMap, HashMap<String, Item> items) {
-        for (int y=0;y<s.length;y++){
-            for (int x=0;x<s[y].length();x++){
+        for (int y = 0; y < s.length; y++) {
+            for (int x = 0; x < s[y].length(); x++) {
                 char c = s[y].charAt(x);
-                if (iMap.containsKey(c)){
+                if (iMap.containsKey(c)) {
                     lev.addActor(items.get(iMap.get(c)), x, y);
                 }
             }
