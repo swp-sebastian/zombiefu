@@ -1,19 +1,15 @@
 package zombiefu.creature;
 
 import jade.core.Actor;
-import jade.fov.RayCaster;
 import jade.fov.ViewField;
 import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.util.DamageAnimation;

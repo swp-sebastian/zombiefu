@@ -15,7 +15,6 @@ import zombiefu.items.Item;
 import zombiefu.items.HealingItem;
 import zombiefu.items.Teleporter;
 import zombiefu.items.Waffe;
-import zombiefu.items.Waffentyp;
 import zombiefu.map.RoomBuilder;
 import zombiefu.util.DamageAnimation;
 import zombiefu.util.TargetIsNotInThisWorldException;
