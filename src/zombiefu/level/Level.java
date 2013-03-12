@@ -25,7 +25,6 @@ public class Level extends World {
 	public Level(int width, int height, Generator gen) {
 		super(width, height);
 		gen.generate(this);
-		fillWithItems();
 		calculateFreeFields();
 	}
 
@@ -77,10 +76,10 @@ public class Level extends World {
 		}
 	}
 
-	private void fillWithItems() {
-		addActor(new HealingItem(ColoredChar.create('☕', new Color(80, 0, 0)),
+	public void fillWithItems() {
+		addActor(new HealingItem(ColoredChar.create('K', new Color(80, 0, 0)),
 				"Kaffee", 40));
-		addActor(new Waffe(ColoredChar.create('⚩', new Color(90, 90, 90)),
+		addActor(new Waffe(ColoredChar.create('S', new Color(90, 90, 90)),
 				"Kettensäge", 15));
 	}
 
