@@ -7,19 +7,15 @@ import jade.ui.Camera;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import zombiefu.fov.ViewEverything;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
-import zombiefu.ui.ZombieFrame;
-import zombiefu.util.Creator;
-import zombiefu.util.TargetIsNotInThisWorldException;
-import zombiefu.util.ZombieTools;
+import zombiefu.util.NoDirectionGivenException;
+import zombiefu.util.ZombieGame;
 
 public class Player extends Creature implements Camera {
 
-    public ZombieFrame frame;
     private int intelligenceValue;
     private int money;
     private int ects;
@@ -28,7 +24,7 @@ public class Player extends Creature implements Camera {
     private ArrayList<ConsumableItem> inventar;
     private ArrayList<Waffe> waffen;
 
-    public Player(ZombieFrame frame, ColoredChar face, String name,
+    public Player(ColoredChar face, String name,
             int healthPoints, int attackValue, int defenseValue,
             int intelligenceValue, ArrayList<Waffe> w) {
 
@@ -36,7 +32,6 @@ public class Player extends Creature implements Camera {
 
         this.maximalHealthPoints = healthPoints;
         this.intelligenceValue = intelligenceValue;
-        this.frame = frame;
         this.godMode = true;
         this.money = 10;
         this.ects = 0;
@@ -53,20 +48,40 @@ public class Player extends Creature implements Camera {
         return semester;
     }
 
+    public int getECTS() {
+        return ects;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public int getMaximalHealthPoints() {
+        return maximalHealthPoints;
+    }
+
+    public int getIntelligenceValue() {
+        return intelligenceValue;
+    }
+
+    public ArrayList<ConsumableItem> getInventar() {
+        return inventar;
+    }
+
     @Override
     public void act() {
         try {
             char key;
-            key = frame.mainTerm().getKey();
+            key = ZombieGame.askPlayerForKey();
             switch (key) {
                 case 'q':
                     switchWeapon(true);
-                    refreshStats();
+                    ZombieGame.refreshBottomFrame();
                     act();
                     break;
                 case 'e':
                     switchWeapon(false);
-                    refreshStats();
+                    ZombieGame.refreshBottomFrame();
                     act();
                     break;
                 case 'f':
@@ -75,11 +90,11 @@ public class Player extends Creature implements Camera {
                     } else {
                         fov = new RayCaster();
                     }
-                    refreshWorld();
+                    ZombieGame.refreshMainFrame();
                     act();
                     break;
                 case 'i':
-                    ConsumableItem it = chooseItem();
+                    ConsumableItem it = ZombieGame.askPlayerForItem();
                     if (it == null) {
                         act();
                     } else {
@@ -93,7 +108,11 @@ public class Player extends Creature implements Camera {
                     act();
                     break;
                 case '\n':
-                    attack();
+                    try {
+                        attack();
+                    } catch (NoDirectionGivenException ex) {
+                        act();
+                    }
                     break;
                 default:
                     Direction dir = Direction.keyToDir(key);
@@ -130,28 +149,6 @@ public class Player extends Creature implements Camera {
         changeWorld(Level.levelFromFile(level));
     }
 
-    public void refreshWorld() {
-        ((Level) world()).refresh(frame.mainTerm());
-    }
-
-    public void refreshStats() {
-        frame.bottomTerm().clearBuffer();
-        frame.bottomTerm().bufferString(0,
-                0,
-                "Waffe: " + getActiveWeapon().getName() + " ("
-                + getActiveWeapon().getDamage() + ") " + " | HP: "
-                + healthPoints + "/" + maximalHealthPoints + " | A: "
-                + attackValue + " | D: " + defenseValue + " | I: "
-                + intelligenceValue);
-        frame.bottomTerm().bufferString(0,
-                1,
-                "Coord: (" + pos().x() + "|" + pos().y() + ")"
-                + " | € " + money + " | ECTS " + ects + " | Sem "
-                + semester);
-        frame.bottomTerm().bufferCameras();
-        frame.bottomTerm().refreshScreen();
-    }
-
     public void toInventar(Item i) {
         if (i instanceof Waffe) {
             waffen.add((Waffe) i);
@@ -167,34 +164,6 @@ public class Player extends Creature implements Camera {
         return waffen.get(0);
     }
 
-    private ConsumableItem chooseItem() {
-        ConsumableItem output = null;
-        if (inventar.isEmpty()) {
-            ZombieTools.sendMessage("Inventar ist leer.", frame);
-            return null;
-        }
-        frame.mainTerm().clearBuffer();
-        frame.mainTerm().bufferString(0, 0, "Inventarliste:");
-        for (int i = 0; i < inventar.size(); i++) {
-            Item it = inventar.get(i);
-            frame.mainTerm().bufferString(
-                    0,
-                    2 + i,
-                    "[" + ((char) (97 + i)) + "] " + it.face() + " - "
-                    + it.getName());
-        }
-        frame.mainTerm().refreshScreen();
-        try {
-            int key = ((int) frame.mainTerm().getKey()) - 97;
-            if (key >= 0 && key <= 25 && key < inventar.size()) {
-                output = inventar.get(key);
-            }
-        } catch (InterruptedException ex) {
-        }
-        refreshWorld();
-        return output;
-    }
-
     public void heal(int i) {
         System.out.print(getName() + " hat " + i + " HP geheilt. ");
         healthPoints += i;
@@ -205,36 +174,25 @@ public class Player extends Creature implements Camera {
     }
 
     private void consumeItem(ConsumableItem it) {
-        ZombieTools.sendMessage("Du benutzt '" + it.getName() + "'.", frame);
+        ZombieGame.newMessage("Du benutzt '" + it.getName() + "'.");
         System.out.println(getName() + " benutzt Item " + it.getName());
         it.getConsumedBy(this);
         inventar.remove(it);
         it.expire();
-        refreshStats();
+        ZombieGame.refreshBottomFrame();
     }
 
     @Override
     protected void killed(Creature killer) {
-        // TODO: Im Endscreen dynamisch Informationen anzeigen.
-        try {
-            Creator.showImage(frame.mainTerm(), "src/sources/endscreen.txt");
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Player.class.getName()).log(
-                    java.util.logging.Level.SEVERE, null, ex);
-        }
-        System.exit(0);
+        ZombieGame.endGame();
     }
 
     public void addMoney(int m) {
         this.money += m;
     }
 
-    private void attacking() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
-    protected Direction getAttackDirection() {
-        return ZombieTools.askForDirection(frame);
+    protected Direction getAttackDirection() throws NoDirectionGivenException {
+        return ZombieGame.askPlayerForDirection();
     }
 }

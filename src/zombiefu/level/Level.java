@@ -17,18 +17,18 @@ import zombiefu.items.Teleporter;
 import zombiefu.items.Waffe;
 import zombiefu.map.RoomBuilder;
 import zombiefu.util.DamageAnimation;
-import zombiefu.util.TargetIsNotInThisWorldException;
-import zombiefu.util.ZombieTools;
+import zombiefu.ki.TargetIsNotInThisWorldException;
+import zombiefu.util.ZombieGame;
 
 public class Level extends World {
 
-    private int freeFields;
+    private int numberOfPassableFields;
 
     public Level(int width, int height, Generator gen) {
         super(width, height);
         gen.generate(this);
         fillWithItems();
-        calculateFreeFields();
+        calculateNumberOfPassableFields();
 
         drawOrder = new ArrayList<Class<? extends Actor>>();
         drawOrder.add(DamageAnimation.class);
@@ -51,10 +51,10 @@ public class Level extends World {
         return pl;
     }
 
-    public void calculateFreeFields() {
+    private void calculateNumberOfPassableFields() {
         for (int x = 0; x < width(); x++) {
             for (int y = 0; y < height(); y++) {
-                freeFields += passableAt(x, y) ? 1 : 0;
+                numberOfPassableFields += passableAt(x, y) ? 1 : 0;
             }
         }
     }
@@ -78,14 +78,13 @@ public class Level extends World {
 
     public void fillWithEnemies() {
         int oldEnemies = getActors(Monster.class).size();
-        int semester = ZombieTools.activePlayer.getSemester();
-        int newEnemies = (int) (semester * 0.005 * freeFields * Dice.global.nextInt(40, 60) / 50);
+        int semester = ZombieGame.getPlayer().getSemester();
+        int newEnemies = (int) (semester * 0.005 * numberOfPassableFields * Dice.global.nextInt(40, 60) / 50);
         // 6 normale Zombies kommen hinzu
         for (int i = oldEnemies; i <= newEnemies; i++) {
             addActor(new Zombie());
         }
     }
-
 
     private void fillWithItems() {
         addActor(new HealingItem(ColoredChar.create('☕', new Color(80, 0, 0)),
