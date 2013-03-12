@@ -3,7 +3,7 @@ package zombiefu.map;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.HashMap;
-import zombiefu.util.Screen;
+import zombiefu.util.ZombieTools;
 import jade.core.World;
 import jade.gen.map.MapGenerator;
 import jade.util.Dice;
@@ -20,7 +20,7 @@ public class RoomBuilder extends MapGenerator {
 	public static void setCharSet(String input) {
 		charSet = new HashMap<Character, Color>();
 		passSet = new HashMap<Character, Boolean>();
-		String[] settings = Screen.getStrings(input);
+		String[] settings = ZombieTools.getStrings(input);
 		for (int i = 0; i < settings.length; i++) {
 			String[] setting = settings[i].split(" ");
 			if (setting.length > 2) {
@@ -41,23 +41,15 @@ public class RoomBuilder extends MapGenerator {
 
 	public RoomBuilder(String input, String charset) {
 		try {
-			this.screen = Screen.readFile(input);
+			setCharSet(charset);
+			this.screen = ZombieTools.readLevel(input);
 			this.height = screen.length;
 			this.width = screen[0].length;
-			setCharSet(charset);
 		} catch (IOException e) {
 			System.out.println("File not found!");
 		}
 	}
-
-	public void changeFile(String input) {
-		try {
-			this.screen = Screen.readFile(input);
-		} catch (IOException e) {
-			System.out.println("File not found!");
-		}
-	}
-
+	
 	@Override
 	protected void generateStep(World world, Dice dice) {
 		for (int x = 0; x < height; x++) {
