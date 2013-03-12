@@ -28,15 +28,14 @@ public class ZombieTools {
     public static void createStoryForPlayer(Player player) {
         Level world = createWorld();
         world.addActor(player);
-		try {
-			world.fillWithEnemies();
-		} catch (TargetIsNotInThisWorldException e) {
-		}
+        try {
+            world.fillWithEnemies();
+        } catch (TargetIsNotInThisWorldException e) { }
     }
 
     public static void createBidirectionalTeleporter(World world1,
-            Coordinate from1, Coordinate to2, World world2, Coordinate from2,
-            Coordinate to1) {
+                                                     Coordinate from1, Coordinate to2, World world2, Coordinate from2,
+                                                     Coordinate to1) {
         /*
          * fromi: Wo befindet sich der Teleporter in Welt i? toi: Wo soll der
          * Player in Welt i hinteleportiert werden?
@@ -60,16 +59,16 @@ public class ZombieTools {
                 String[] d = s.split(" ");
                 Level world1 = nameOfLevels.get(d[0]);
                 Coordinate from1 = new Coordinate(Integer.decode(d[1]),
-                        Integer.decode(d[2]));
+                                                  Integer.decode(d[2]));
                 Coordinate to2 = new Coordinate(Integer.decode(d[3]),
-                        Integer.decode(d[4]));
+                                                Integer.decode(d[4]));
                 Level world2 = nameOfLevels.get(d[5]);
                 Coordinate from2 = new Coordinate(Integer.decode(d[6]),
-                        Integer.decode(d[7]));
+                                                  Integer.decode(d[7]));
                 Coordinate to1 = new Coordinate(Integer.decode(d[8]),
-                        Integer.decode(d[9]));
+                                                Integer.decode(d[9]));
                 createBidirectionalTeleporter(world1, from1, to2, world2,
-                        from2, to1);
+                                              from2, to1);
             } catch (Exception e) {
             }
         }
@@ -77,8 +76,8 @@ public class ZombieTools {
     }
 
     public static List<Direction> getAllowedDirections() {
-		return Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.WEST,
-				Direction.NORTH);
+        return Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.WEST,
+                             Direction.NORTH);
     }
 
     public static Direction getRandomDirection() {
@@ -88,14 +87,14 @@ public class ZombieTools {
     public static void setTopTermContent(String s, ZombieFrame frame) {
         frame.topTerm().clearBuffer();
         frame.topTerm().bufferString(0, 0, s);
-        frame.topTerm().refreshScreen();    
+        frame.topTerm().refreshScreen();
     }
-    
+
     public static void clearTopTerm(ZombieFrame frame) {
         frame.topTerm().clearBuffer();
         frame.topTerm().refreshScreen();
     }
-    
+
     public static Direction askForDirection(ZombieFrame frame) {
         setTopTermContent("Bitte gib die Richtung an.", frame);
         Direction d = null;
@@ -108,7 +107,7 @@ public class ZombieTools {
         clearTopTerm(frame);
         return d;
     }
-    
+
     public static void sendMessage(String s, ZombieFrame frame) {
         activePlayer.refreshWorld();
         setTopTermContent(s,frame);
@@ -130,12 +129,12 @@ public class ZombieTools {
     public static void registerPlayer(Player pl) {
         activePlayer = pl;
     }
-    
+
     public static Color getRandomColor(Dice d) {
-		return new Color(d.nextInt(0, 255), d.nextInt(0, 255),
-				d.nextInt(0, 255));
+        return new Color(d.nextInt(0, 255), d.nextInt(0, 255),
+                         d.nextInt(0, 255));
     }
-    
+
     public static Color getRandomColor() {
         return getRandomColor(Dice.global);
     }
