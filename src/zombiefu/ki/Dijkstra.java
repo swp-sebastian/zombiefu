@@ -8,6 +8,7 @@ import jade.core.World;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import zombiefu.util.ZombieTools;
 
@@ -47,6 +48,8 @@ public class Dijkstra implements MoveAlgorithm {
             if (ndist > maxDistance) {
                 throw new TargetNotFoundException();
             }
+            
+            Collections.shuffle(dirs);
 
             for (Direction d : dirs) {
                 Coordinate nachbar = vertex.getTranslated(d);
