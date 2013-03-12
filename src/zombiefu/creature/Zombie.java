@@ -2,7 +2,6 @@ package zombiefu.creature;
 
 import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
-import java.awt.Color;
 import zombiefu.items.Item;
 import zombiefu.items.MensaCard;
 import zombiefu.items.Waffe;
