@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Logger;
 import zombiefu.creature.Player;
+import zombiefu.items.HealingItem;
+import zombiefu.items.Item;
 import zombiefu.items.Teleporter;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
@@ -30,6 +32,8 @@ public class ZombieTools {
 	private static final String srcs = "src/sources/";
 
 	public static void createStoryForPlayer(Player player) {
+		HashMap<String, Item> items = createItems();
+		for (String item : items.keySet()) System.out.println(item);
 		Level world = createWorld();
 		world.addActor(player);
 		try {
@@ -52,31 +56,29 @@ public class ZombieTools {
 		world2.addActor(tel2, from2);
 	}
 
-	private static HashMap<String, Waffe> createWeapons() {
+	private static HashMap<String, Item> createItems() {
+		HashMap<String, Item> itemMap = new HashMap<String, Item>();
 		String[] waffen = Screen.getStrings(srcs + "Waffen.txt");
-		HashMap<String, Waffe> waffenMap = new HashMap<String, Waffe>();
+		String[] healingItems = Screen.getStrings(srcs + "HealingItems.txt");
 		for (String s : waffen) {
 			try {
 				String[] st = s.split(" ");
 				ColoredChar chr = ColoredChar.create(st[1].charAt(0),
 						Color.decode("0x" + st[2]));
 				if (st[3].equals("Nahkampf"))
-					waffenMap.put(st[0],
+					itemMap.put(st[0],
 							new Waffe(chr, st[0], Integer.decode(st[4]),
 									Waffentyp.NAHKAMPF));
 				else if (st[3].equals("Fernkampf"))
-					waffenMap
-							.put(st[0],
-									new Waffe(chr, st[0],
-											Integer.decode(st[4]), Integer
-													.decode(st[5]),
-											Waffentyp.FERNKAMPF));
+					itemMap.put(st[0],
+							new Waffe(chr, st[0], Integer.decode(st[4]),
+									Integer.decode(st[5]), Waffentyp.FERNKAMPF));
 				else if (st[3].equals("Umkreis"))
-					waffenMap.put(st[0],
+					itemMap.put(st[0],
 							new Waffe(chr, st[0], Integer.decode(st[4]),
 									Integer.decode(st[5]), Waffentyp.UMKREIS));
 				else
-					waffenMap.put(
+					itemMap.put(
 							st[0],
 							new Waffe(chr, st[0], Integer.decode(st[4]),
 									Integer.decode(st[5]), Integer
@@ -84,14 +86,21 @@ public class ZombieTools {
 			} catch (Exception e) {
 			}
 		}
-		return waffenMap;
+		for (String s : healingItems) {
+			try {
+				String[] st = s.split(" ");
+				itemMap.put(
+						st[0],
+						new HealingItem(ColoredChar.create(st[2].charAt(0),
+								Color.decode("0x" + st[3])), st[0], Integer
+								.decode(st[1])));
+			} catch (Exception e) {
+			}
+		}
+		return itemMap;
 	}
 
 	private static Level createWorld() {
-		HashMap<String, Waffe> waffen = createWeapons();
-		for (String s : waffen.keySet()) {
-			System.out.println(s);
-		}
 		String[] levels = Screen.getStrings(srcs + "levels.txt");
 		String[] teles = Screen.getStrings(srcs + "teleporters.txt");
 		HashMap<String, Level> nameOfLevels = new HashMap<String, Level>();
