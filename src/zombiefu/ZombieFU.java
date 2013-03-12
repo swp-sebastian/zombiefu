@@ -36,6 +36,7 @@ public class ZombieFU {
 
         // Story initialisieren
         ZombieTools.createStoryForPlayer(player);
+        term.registerCamera(player, 40, 17);
 
         // Spielen!
         while (!player.expired()) {
