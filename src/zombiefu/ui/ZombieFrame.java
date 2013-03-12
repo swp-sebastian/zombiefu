@@ -4,7 +4,6 @@ import jade.ui.TermPanel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.BorderFactory;
-import java.awt.Container;
 import java.awt.Insets;
 import java.awt.Dimension;
 import java.awt.Color;
