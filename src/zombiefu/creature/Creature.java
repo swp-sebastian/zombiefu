@@ -2,6 +2,7 @@ package zombiefu.creature;
 
 import jade.core.Actor;
 import jade.fov.RayCaster;
+import jade.fov.ViewField;
 import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
@@ -21,6 +22,8 @@ public abstract class Creature extends Actor {
     protected int defenseValue;
     private int dazed;
     protected String name;
+    protected ViewField fov;
+    protected int sichtweite;
     protected boolean godMode;
 
     public Creature(ColoredChar face, String n, int h, int a, int d) {
@@ -30,6 +33,10 @@ public abstract class Creature extends Actor {
         healthPoints = h;
         attackValue = a;
         defenseValue = d;
+    }
+    
+    public Collection<Coordinate> getViewField() {
+        return fov.getViewField(world(), pos(), sichtweite);
     }
 
     public Creature(ColoredChar face, String name) {
@@ -50,7 +57,9 @@ public abstract class Creature extends Actor {
     }
 
     public void attack(Creature cr) {
-        Guard.validateArgument(!this.equals(cr));
+        if (this.equals(cr)) {
+            return;
+        }
 
         // Wer keine Waffe hat, kann nicht angreifen!
         if (getActiveWeapon() == null) {
@@ -78,13 +87,15 @@ public abstract class Creature extends Actor {
         return name;
     }
 
-    public void attack(int x, int y) {
+    protected abstract Direction getAttackDirection();
+
+    public void attackCoord(int x, int y) {
         Guard.argumentIsNotNull(x);
         Guard.argumentIsNotNull(y);
-        attack(new Coordinate(x, y));
+        attackCoord(new Coordinate(x, y));
     }
 
-    public void attack(Coordinate coord) {
+    public void attackCoord(Coordinate coord) {
         Guard.argumentIsNotNull(coord);
         Collection<Creature> actors = world().getActorsAt(Creature.class, coord);
         Iterator<Creature> it = actors.iterator();
@@ -92,13 +103,6 @@ public abstract class Creature extends Actor {
             attack(it.next());
         }
     }
-
-    public void attack(Direction dir) {
-        Guard.argumentIsNotNull(dir);
-        attack(pos().getTranslated(dir));
-    }
-
-    protected abstract Direction getAttackDirection();
 
     private void createDetonation(Coordinate c, double blastRadius) {
         ZombieTools.sendMessage("Detonation nocht nicht implementiert. Sorry.");
@@ -126,10 +130,24 @@ public abstract class Creature extends Actor {
         return nPos;
     }
 
+    public void attack(Direction dir) {
+        Waffentyp typ = getActiveWeapon().getTyp();
+        Coordinate ziel;
+        if (typ.isRanged()) {
+            ziel = findTargetInDirection(dir, getActiveWeapon().getRange());
+        } else {
+            ziel = pos().getTranslated(dir);
+        }
+        if (typ.isDirected()) {
+            attackCoord(ziel);
+        } else {
+            createDetonation(ziel, getActiveWeapon().getBlastRadius());
+        }
+    }
+
     public void attack() {
         Direction dir;
-        Waffentyp typ = getActiveWeapon().getTyp();
-        if (typ != Waffentyp.UMKREIS) {
+        if (getActiveWeapon().getTyp() != Waffentyp.UMKREIS) {
             dir = getAttackDirection();
             if (dir == null) {
                 return;
@@ -137,37 +155,27 @@ public abstract class Creature extends Actor {
         } else {
             dir = Direction.ORIGIN;
         }
-        Coordinate ziel;
-        if (typ.isRanged()) {
-            ziel = findTargetInDirection(dir, getActiveWeapon().getRange());
-        } else {
-            ziel = pos().getTranslated(dir);
-        }
-        if(typ.isDirected()) {
-            attack(ziel);
-        } else {
-            createDetonation(ziel, getActiveWeapon().getBlastRadius());            
-        }
+        attack(dir);
     }
 
-    public void tryToMove(Direction dir) {
-        try {
-            Guard.argumentIsNotNull(world());
-        } catch (IllegalArgumentException e) {
-            return;
-        }
-        Creature creature = world().getActorAt(Creature.class, pos().getTranslated(dir));
-        if (dir == null || dir == Direction.ORIGIN) {
-            return;
-        }
+    public void tryToMove(Direction dir) throws CannotMoveToImpassableFieldException {
+        Guard.argumentIsNotNull(world());
+        Guard.argumentIsNotNull(dir);
         if (dazed > 0) {
             dazed--;
             return;
         }
-        if (creature == null) {
+        if (dir == Direction.ORIGIN) {
+            return;
+        }
+        Coordinate targetField = pos().getTranslated(dir);
+        if(!world().passableAt(targetField)) {
+            throw new CannotMoveToImpassableFieldException();
+        }
+        if (world().getActorsAt(Creature.class, pos().getTranslated(dir)).isEmpty()) {
             move(dir);
         } else {
-            attack(creature);
+            attack(dir);
         }
     }
 
