@@ -24,6 +24,12 @@ public abstract class Item extends Actor {
         return name;
     }
 
+    protected void pickedUpByPlayer(Player player) {
+            ZombieTools.sendMessage("Du hast '" + getName() + "' aufgehoben.", player.frame);
+            System.out.println(player.getName() + " hat " + getName() + " gefunden.");
+            player.toInventar(this);        
+    }
+    
     @Override
     public void act() {
         Level world = (Level) world();
@@ -32,11 +38,8 @@ public abstract class Item extends Actor {
             return;
         }
         if (player.pos().equals(pos())) {
-            // Player picks up item
-            ZombieTools.sendMessage("Du hast '" + getName() + "' aufgehoben.", player.frame);
-            System.out.println(player.getName() + " hat " + getName() + " gefunden.");
             world.removeActor(this);
-            player.toInventar(this);
+            pickedUpByPlayer(player);
         }
     }
 }
