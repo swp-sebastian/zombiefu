@@ -7,13 +7,15 @@ import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import zombiefu.items.Item;
+import zombiefu.items.MensaCard;
 import zombiefu.ki.StupidMover;
 import zombiefu.ki.MoveAlgorithm;
 import zombiefu.ki.TargetNotFoundException;
 import zombiefu.util.TargetIsNotInThisWorldException;
 import zombiefu.util.ZombieTools;
 
-public class Monster extends Creature {
+public abstract class Monster extends Creature {
 
     protected MoveAlgorithm movealg;
     private Waffe waffe;
@@ -79,5 +81,17 @@ public class Monster extends Creature {
     @Override
     public Waffe getActiveWeapon() {
         return waffe;
+    }
+
+    protected abstract Item itemDroppedOnKill();
+    
+    @Override
+    protected void killed(Creature killer) {
+        Item it = itemDroppedOnKill();
+        if (it != null) {
+            world().addActor(it, pos());
+        }
+        expire();
+        ZombieTools.sendMessage(killer.getName() + " hat " + getName() + " getötet.");
     }
 }

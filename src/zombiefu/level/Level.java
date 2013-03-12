@@ -55,17 +55,12 @@ public class Level extends World {
     }
 
     private void fillWithItems() {
-        addActor(new HealingItem(ColoredChar.create('A', Color.decode("0x7D26CD")), "Apfel", 40));
-        addActor(new Waffe("Kettensäge", 15, ColoredChar.create('K', Color.decode("0x7D26CD"))));
+        addActor(new HealingItem(ColoredChar.create('☕', new Color(80, 0, 0)), "Kaffee", 40));
+        addActor(new Waffe("Kettensäge", 15, ColoredChar.create('⚩', new Color(90, 90, 90))));
     }
 
     public void refresh(TermPanel term) {
         term.clearBuffer();
-        // for (int x = 0; x < width(); x++) {
-        //     for (int y = 0; y < height(); y++) {
-        //         term.bufferChar(x, y, look(x, y));
-        //     }
-        // }
         term.bufferCameras();
         term.refreshScreen();
     }

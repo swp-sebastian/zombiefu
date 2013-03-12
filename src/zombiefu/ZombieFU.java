@@ -24,7 +24,7 @@ public class ZombieFU {
                 ColoredChar.create('\u263B', Color.decode("0x7D26CD")),
                 "John Dorian", 100, 10, 10, 10,
                 new Waffe("Faust", 1, ColoredChar.create('|')));
-        
+
         // Superhäßlich, müssen wir nochmal drüber reden (tomas)
         ZombieTools.registerPlayer(player);
 
@@ -37,14 +37,12 @@ public class ZombieFU {
         // Story initialisieren
         ZombieTools.createStoryForPlayer(player);
         term.registerCamera(player, 40, 17);
+
         // Spielen!
         while (!player.expired()) {
             player.refreshWorld();
             player.refreshStats();
             player.world().tick();
         }
-
-        Screen.showImage(term, "src/sources/endscreen.txt");
-        System.exit(0);
     }
 }
