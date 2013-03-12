@@ -13,6 +13,7 @@ import java.util.Iterator;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.util.DamageAnimation;
+import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
 public abstract class Creature extends Actor {
@@ -35,6 +36,18 @@ public abstract class Creature extends Actor {
         defenseValue = d;
     }
 
+    public int getAttackValue() {
+        return attackValue;
+    }
+    
+    public int getDefenseValue() {
+        return defenseValue;
+    }
+    
+    public int getHealthPoints() {
+        return healthPoints;
+    }
+    
     public Collection<Coordinate> getViewField() {
         return fov.getViewField(world(), pos(), sichtweite);
     }
@@ -84,8 +97,8 @@ public abstract class Creature extends Actor {
         if (damage == 0) {
             damage = 1;
         }
-
-        ZombieTools.sendMessage(getName() + " hat " + cr.getName() + " " + damage + " Schadenspunkte hinzugefügt.");
+        
+        ZombieGame.newMessage(getName() + " hat " + cr.getName() + " " + damage + " Schadenspunkte hinzugefügt.");
 
         cr.hurt(damage, this);
     }
@@ -96,7 +109,7 @@ public abstract class Creature extends Actor {
         world().addActor(anim, coord);
         Collection<Creature> actors = world().getActorsAt(Creature.class, coord);
         if (actors.isEmpty()) {
-            ZombieTools.sendMessage("Niemanden getroffen!");
+            ZombieGame.newMessage("Niemanden getroffen!");
         } else {
             Iterator<Creature> it = actors.iterator();
             while (it.hasNext()) {
@@ -131,7 +144,7 @@ public abstract class Creature extends Actor {
             }
         }
         if (targets.isEmpty()) {
-            ZombieTools.sendMessage("Niemanden getroffen!");
+            ZombieGame.newMessage("Niemanden getroffen!");
         } else {
             for (Creature target : targets) {
                 attackCreature(target);

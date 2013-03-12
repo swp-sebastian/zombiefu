@@ -9,41 +9,21 @@ import zombiefu.items.Waffe;
 import zombiefu.util.Creator;
 import zombiefu.util.ZombieTools;
 import zombiefu.ui.ZombieFrame;
+import zombiefu.util.ZombieGame;
 
 public class ZombieFU {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
-        // Der Frame, der drei TermPanels erzeugt
-        ZombieFrame frame = new ZombieFrame(
-                "The Final Exam - Die Anwesenheitspflicht schlägt zurück");
-        TermPanel term = frame.mainTerm();
+        ZombieGame.createGame("The Final Exam - Die Anwesenheitspflicht schlägt zurück");
+        ZombieGame.createPlayer("John Dorian");
+        
+        ZombieGame.showStaticImage("startscreen.txt");
+        ZombieGame.showStaticImage("story.txt");
 
-        // Der neue Spieler
-        ArrayList<Waffe> waffen = new ArrayList<Waffe>();
-        waffen.add(new Waffe(ColoredChar.create('S'), "SuperFist", 100));
-        Player player = new Player(frame, ColoredChar.create('\u263B',
-                Color.decode("0x7D26CD")), "John Dorian", 100, 10, 10, 10,
-                waffen);
-
-        // Superhäßlich, müssen wir nochmal drüber reden (tomas)
-        ZombieTools.registerPlayer(player);
-
-        // Startscreen
-        Creator.showImage(term, "src/sources/startscreen.txt");
-
-        // Storytext
-        Creator.showImage(term, "src/sources/story.txt");
-
-        // Story initialisieren
-        Creator.createStoryForPlayer(player);
-        term.registerCamera(player, 40, 17);
-
-        // Spielen!
-        while (!player.expired()) {
-            player.refreshWorld();
-            player.refreshStats();
-            player.world().tick();
-        }
+        ZombieGame.initialize();
+        
+        ZombieGame.startGame();
+        
     }
 }
