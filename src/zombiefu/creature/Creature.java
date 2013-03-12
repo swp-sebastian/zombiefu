@@ -127,8 +127,9 @@ public abstract class Creature extends Actor {
                     Iterator<Creature> it = actors.iterator();
                     while (it.hasNext()) {
                         Creature next = it.next();
-                        if(!equals(next))
-                        targets.add(next);
+                        if (!equals(next)) {
+                            targets.add(next);
+                        }
                     }
                 }
             }
@@ -206,7 +207,11 @@ public abstract class Creature extends Actor {
         if (world().getActorsAt(Creature.class, pos().getTranslated(dir)).isEmpty()) {
             move(dir);
         } else {
-            attack(dir);
+            if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
+                attack(dir);
+            } else {
+                throw new CannotMoveToImpassableFieldException();
+            }
         }
     }
 
