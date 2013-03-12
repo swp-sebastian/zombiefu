@@ -204,14 +204,15 @@ public abstract class Creature extends Actor {
         if (!world().passableAt(targetField)) {
             throw new CannotMoveToImpassableFieldException();
         }
-        if (world().getActorsAt(Creature.class, pos().getTranslated(dir)).isEmpty()) {
+        Creature creat = world().getActorAt(Creature.class, pos().getTranslated(dir));
+        if (creat == null) {
             move(dir);
+        } else if (creat instanceof Monster && this instanceof Monster) {
+            throw new CannotMoveToImpassableFieldException();
+        } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
+            attack(dir);
         } else {
-            if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
-                attack(dir);
-            } else {
-                throw new CannotMoveToImpassableFieldException();
-            }
+            throw new CannotMoveToImpassableFieldException();
         }
     }
 

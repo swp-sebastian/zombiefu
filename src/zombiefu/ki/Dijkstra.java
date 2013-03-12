@@ -10,6 +10,7 @@ import jade.util.datatype.Direction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import zombiefu.creature.Monster;
 import zombiefu.util.ZombieTools;
 
 /**
@@ -54,7 +55,7 @@ public class Dijkstra implements MoveAlgorithm {
             for (Direction d : dirs) {
                 Coordinate nachbar = vertex.getTranslated(d);
 
-                if (!w.passableAt(nachbar) || previous[nachbar.x()][nachbar.y()] != null) {
+                if (!w.passableAt(nachbar) || !w.getActorsAt(Monster.class, nachbar).isEmpty() || previous[nachbar.x()][nachbar.y()] != null) {
                     continue;
                 }
                 queue.add(nachbar);
