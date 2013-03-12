@@ -62,13 +62,13 @@ public abstract class Creature extends Actor {
         System.out.println(getName() + " attacks " + cr.getName() + " with " + getActiveWeapon().getName() + " (Damage: " + getActiveWeapon().getDamage() + "). Attack value: " + attackValue + ", Defense Value: " + cr.defenseValue);
 
         // Calculate damage
-        int damage = getActiveWeapon().getDamage() * (attackValue / cr.defenseValue) * Dice.global.nextInt(20, 40) / 30;
+        int damage = (int) (((double) getActiveWeapon().getDamage()) * ( (double) attackValue / (double) cr.defenseValue) * (double) Dice.global.nextInt(20, 40) / 30);
         System.out.println("Berechneter Schaden: " + damage);
 
         if (damage == 0) {
             damage = 1;
         }
-        cr.hurt(damage,this);
+        cr.hurt(damage, this);
     }
 
     public String getName() {
@@ -115,19 +115,18 @@ public abstract class Creature extends Actor {
             }
         }
     }
+    
+    protected abstract void killed(Creature killer);
 
     private void hurt(int i, Creature hurter) {
-        System.out.print(getName() + " hat " + i + " HP verloren. ");
+        System.out.println(getName() + " hat " + i + " HP verloren. ");
         if (godMode) {
             return;
         }
         if (i >= healthPoints) {
-            ZombieTools.sendMessage(hurter.getName() + " hat " + getName() + " getötet.");
-            System.out.println("Tot.");
-            expire();
+            killed(hurter);
         } else {
             healthPoints -= i;
-            System.out.println("HP: " + healthPoints);
         }
     }
 }

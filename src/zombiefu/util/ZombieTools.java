@@ -80,9 +80,9 @@ public class ZombieTools {
     }
 
     public static void sendMessage(String s, ZombieFrame frame) {
+        activePlayer.refreshWorld();
         frame.topTerm().clearBuffer();
         frame.topTerm().bufferString(0, 0, s);
-        frame.topTerm().bufferCameras();
         frame.topTerm().refreshScreen();
         char key = 0;
         try {
@@ -92,7 +92,6 @@ public class ZombieTools {
         } catch (InterruptedException ex) {
         }
         frame.topTerm().clearBuffer();
-        frame.topTerm().bufferCameras();
         frame.topTerm().refreshScreen();
     }
 
@@ -104,4 +103,5 @@ public class ZombieTools {
     public static void registerPlayer(Player pl) {
         activePlayer = pl;
     }
+    
 }
