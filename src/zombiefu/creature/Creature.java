@@ -8,9 +8,12 @@ import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.util.DamageAnimation;
@@ -109,15 +112,40 @@ public abstract class Creature extends Actor {
     }
 
     private void createDetonation(Coordinate c, double blastRadius) {
-        ZombieTools.sendMessage("Detonation nocht nicht implementiert. Sorry.");
-        /*
-         RayCaster rayCaster = new RayCaster();
-         Collection<Coordinate> viewField = rayCaster.getViewField(world(), c, blastRadius);
-         for (Iterator<Coordinate> it = viewField.iterator(); it.hasNext();) {
-         Coordinate coord = it.next();
-         world().setTile(ColoredChar.create('D'), coord.x(), coord.y());
-         }
-         */
+        // TODO: Verschönern (mit RayCaster)
+        Collection<Creature> targets = new HashSet<Creature>();
+        Collection<DamageAnimation> anims = new HashSet<DamageAnimation>();
+        int blastMax = (int) Math.ceil(blastRadius);
+        for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world().width()-1); x++) {
+            for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world().height()-1); y++) {
+                Coordinate neu = new Coordinate(x, y);
+                if (neu.distance(c) <= blastRadius) {
+                    DamageAnimation anim = new DamageAnimation();
+                    anims.add(anim);
+                    world().addActor(anim, neu);
+                    Collection<Creature> actors = world().getActorsAt(Creature.class, neu);
+                    Iterator<Creature> it = actors.iterator();
+                    while (it.hasNext()) {
+                        Creature next = it.next();
+                        if (!equals(next)) {
+                            targets.add(next);
+                        }
+                    }
+                }
+            }
+        }
+        if (targets.isEmpty()) {
+            ZombieTools.sendMessage("Niemanden getroffen!");
+        } else {
+            for (Creature target : targets) {
+                attackCreature(target);
+            }
+        }
+        for (DamageAnimation anim : anims) {
+            world().removeActor(anim);
+            anim.expire();
+        }
+
     }
 
     private Coordinate findTargetInDirection(Direction dir, int maxDistance) {
@@ -126,7 +154,7 @@ public abstract class Creature extends Actor {
         do {
             System.out.println(nPos);
             nPos = nPos.getTranslated(dir);
-            if (world().insideBounds(nPos)) {
+            if (!world().insideBounds(nPos) || !world().passableAt(nPos)) {
                 return nPos.getTranslated(ZombieTools.getReversedDirection(dir));
             }
             dcounter++;
@@ -176,10 +204,15 @@ public abstract class Creature extends Actor {
         if (!world().passableAt(targetField)) {
             throw new CannotMoveToImpassableFieldException();
         }
-        if (world().getActorsAt(Creature.class, pos().getTranslated(dir)).isEmpty()) {
+        Creature creat = world().getActorAt(Creature.class, pos().getTranslated(dir));
+        if (creat == null) {
             move(dir);
-        } else {
+        } else if (creat instanceof Monster && this instanceof Monster) {
+            throw new CannotMoveToImpassableFieldException();
+        } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
             attack(dir);
+        } else {
+            throw new CannotMoveToImpassableFieldException();
         }
     }
 

@@ -6,6 +6,8 @@ import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import zombiefu.items.Item;
@@ -42,12 +44,17 @@ public abstract class Monster extends Creature {
         this(face, new StupidMover());
     }
 
-    private void moveRandomly() {
-        try {
-            tryToMove(ZombieTools.getRandomDirection());
-        } catch (CannotMoveToImpassableFieldException ex) {
-            moveRandomly();
+    private void moveRandomly() throws NoDirectionToMoveException {
+        List<Direction> dirs = ZombieTools.getAllowedDirections();
+        Collections.shuffle(dirs);
+        for (Direction d : dirs) {
+            try {
+                tryToMove(d);
+                return;
+            } catch (CannotMoveToImpassableFieldException ex) {
+            }
         }
+        throw new NoDirectionToMoveException();
     }
 
     private Coordinate getPlayerPosition() throws TargetIsNotInThisWorldException {
@@ -82,12 +89,16 @@ public abstract class Monster extends Creature {
         try {
             if (positionIsVisible(getPlayerPosition())) {
                 moveToPlayer();
-            } else {
-                moveRandomly();
+                return;
             }
         } catch (TargetIsNotInThisWorldException ex) {
         } catch (TargetNotFoundException ex) {
+        }
+        try {
             moveRandomly();
+        } catch (NoDirectionToMoveException ex) {
+            System.out.println(getName() + ": Cannot move - doing nothing");
+            return;
         }
     }
 

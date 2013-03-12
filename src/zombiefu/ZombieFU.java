@@ -21,20 +21,22 @@ public class ZombieFU {
 
         // Der neue Spieler
         ArrayList<Waffe> waffen = new ArrayList<Waffe>();
-        waffen.add(new Waffe(ColoredChar.create('F'), "SuperFist", 1000));
-        waffen.add(new Waffe(ColoredChar.create('G'), "Granate", 1000, Waffentyp.GRANATE));
+        waffen.add(new Waffe(ColoredChar.create('S'), "SuperFist", 100));
+        waffen.add(new Waffe(ColoredChar.create('G'), "Granate", 300, Waffentyp.GRANATE));
+        waffen.add(new Waffe(ColoredChar.create('F'), "Flammenwerfer", 80, Waffentyp.FERNKAMPF));
+        waffen.add(new Waffe(ColoredChar.create('M'), "Morgenstern", 80, Waffentyp.UMKREIS));
         Player player = new Player(frame, ColoredChar.create('\u263B',
-                                                             Color.decode("0x7D26CD")), "John Dorian", 100, 10, 10, 10,
-                                   waffen);
+                Color.decode("0x7D26CD")), "John Dorian", 100, 10, 10, 10,
+                waffen);
 
         // Superhäßlich, müssen wir nochmal drüber reden (tomas)
         ZombieTools.registerPlayer(player);
 
         // Startscreen
-		ZombieTools.showImage(term, "src/sources/startscreen.txt");
+	ZombieTools.showImage(term, "src/sources/startscreen.txt");
 
         // Storytext
-		ZombieTools.showImage(term, "src/sources/story.txt");
+	ZombieTools.showImage(term, "src/sources/story.txt");
 
         // Story initialisieren
         ZombieTools.createStoryForPlayer(player);

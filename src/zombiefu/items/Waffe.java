@@ -1,6 +1,7 @@
 package zombiefu.items;
 
 import jade.util.datatype.ColoredChar;
+import zombiefu.items.Item;
 
 /**
  *
@@ -8,37 +9,35 @@ import jade.util.datatype.ColoredChar;
  */
 public class Waffe extends Item {
 
-    private int damage;
-    private boolean ranged;
-    private boolean directed;
-    private Waffentyp wtyp;
-    private double blastRadius = 2; // TODO: Individuell
-    private int range = 6; // TODO: Individuell
+    private static final int DEFAULT_RANGE = 10;
+    private static final double DEFAULT_RADIUS = 3.0;
+    protected int damage;
+    protected Waffentyp wtyp;
+    protected double blastRadius;
+    protected int range;
 
-    public Waffe(ColoredChar c, String n, int d, Waffentyp w) {
+    public Waffe(ColoredChar c, String n, int d, Waffentyp w, double radius, int range) {
         super(c, n);
-        damage = d;
-        wtyp = w;
+        this.damage = d;
+        this.wtyp = w;
+        this.blastRadius = radius;
+        this.range = range;
     }
 
-	public Waffe(ColoredChar c, String n, int damage, int range,
-			int blastRadius, Waffentyp w) {
-		this(c, n, damage, w);
-		this.blastRadius = blastRadius;
-		this.range = range;
-	}
+    public Waffe(ColoredChar c, String n, int d, Waffentyp w, double radius) {
+        this(c, n, d, w, radius, DEFAULT_RANGE);
+    }
 
-	public Waffe(ColoredChar c, String n, int damage, int anderes, Waffentyp w) {
-		this(c, n, damage, w);
-		if (w.equals(Waffentyp.FERNKAMPF)) {
-			this.range = anderes;
-		} else {
-			this.blastRadius = anderes;
-		}
-	}
+    public Waffe(ColoredChar c, String n, int d, Waffentyp w, int range) {
+        this(c, n, d, w, DEFAULT_RADIUS, range);
+    }
+
+    public Waffe(ColoredChar c, String n, int d, Waffentyp w) {
+        this(c, n, d, w, DEFAULT_RADIUS, DEFAULT_RANGE);
+    }
 
     public Waffe(ColoredChar c, String n, int d) {
-        this(c, n, d, Waffentyp.NAHKAMPF);
+        this(c, n, d, Waffentyp.NAHKAMPF, DEFAULT_RADIUS, DEFAULT_RANGE);
     }
 
     public int getDamage() {
