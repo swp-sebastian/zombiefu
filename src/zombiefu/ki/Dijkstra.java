@@ -35,7 +35,7 @@ public class Dijkstra implements MoveAlgorithm {
         int[][] distance = new int[w.width()][w.height()];
         distance[start.x()][start.y()] = 1;
 
-        ArrayList<Coordinate> queue = new ArrayList<>();
+        ArrayList<Coordinate> queue = new ArrayList<Coordinate>();
         queue.add(start);
 
         Coordinate[][] previous = new Coordinate[w.width()][w.height()];
