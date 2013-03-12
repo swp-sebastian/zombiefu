@@ -6,26 +6,37 @@ import jade.core.World;
 import jade.ui.TermPanel;
 import jade.util.Dice;
 import jade.util.Guard;
+import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import static jade.util.datatype.Direction.NORTH;
 import static jade.util.datatype.Direction.SOUTH;
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Logger;
 import zombiefu.creature.Player;
+import zombiefu.items.HealingItem;
+import zombiefu.items.Item;
 import zombiefu.items.Teleporter;
+import zombiefu.items.Waffe;
+import zombiefu.items.Waffentyp;
 import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
 
 public class ZombieTools {
 
     public static Player activePlayer;
+    private static final String srcs = "src/sources/";
 
     public static void createStoryForPlayer(Player player) {
         Level world = createWorld();
@@ -49,10 +60,68 @@ public class ZombieTools {
         world2.addActor(tel2, from2);
     }
 
+	private static HashMap<String, Item> createItems() {
+		HashMap<String, Item> itemMap = new HashMap<String, Item>();
+		String[] waffen = getStrings(srcs + "Waffen.txt");
+		String[] healingItems = getStrings(srcs + "HealingItems.txt");
+		for (String s : waffen) {
+			try {
+				String[] st = s.split(" ");
+				ColoredChar chr = ColoredChar.create(st[1].charAt(0),
+						Color.decode("0x" + st[2]));
+				if (st[3].equals("Nahkampf"))
+					itemMap.put(st[0],
+							new Waffe(chr, st[0], Integer.decode(st[4]),
+									Waffentyp.NAHKAMPF));
+				else if (st[3].equals("Fernkampf"))
+					itemMap.put(st[0],
+							new Waffe(chr, st[0], Integer.decode(st[4]),
+									Integer.decode(st[5]), Waffentyp.FERNKAMPF));
+				else if (st[3].equals("Umkreis"))
+					itemMap.put(st[0],
+							new Waffe(chr, st[0], Integer.decode(st[4]),
+									Integer.decode(st[5]), Waffentyp.UMKREIS));
+				else
+					itemMap.put(
+							st[0],
+							new Waffe(chr, st[0], Integer.decode(st[4]),
+									Integer.decode(st[5]), Integer
+											.decode(st[6]), Waffentyp.GRANATE));
+			} catch (Exception e) {
+			}
+		}
+		for (String s : healingItems) {
+			try {
+				String[] st = s.split(" ");
+				itemMap.put(
+						st[0],
+						new HealingItem(ColoredChar.create(st[2].charAt(0),
+								Color.decode("0x" + st[3])), st[0], Integer
+								.decode(st[1])));
+			} catch (Exception e) {
+			}
+		}
+		return itemMap;
+	}
+
+	private static HashMap<Character, String> createItemMap() {
+		String[] items = getStrings(srcs + "Items.txt");
+		HashMap<Character, String> itemMap = new HashMap<Character, String>();
+		for (String st : items) {
+			String[] s = st.split(" ");
+			try {
+				itemMap.put(s[0].charAt(0), s[1]);
+			} catch (Exception e) {
+			}
+		}
+		return itemMap;
+	}
+
     private static Level createWorld() {
-        String srcs = "src/sources/";
-        String[] levels = Screen.getStrings(srcs + "levels.txt");
-        String[] teles = Screen.getStrings(srcs + "teleporters.txt");
+		HashMap<String, Item> items = createItems();
+		HashMap<Character, String> itemMap = createItemMap();
+		String[] levels = getStrings(srcs + "levels.txt");
+		String[] teles = getStrings(srcs + "teleporters.txt");
         HashMap<String, Level> nameOfLevels = new HashMap<String, Level>();
         for (String s : levels) {
             nameOfLevels.put(s, Level.levelFromFile(srcs + s + ".txt"));
@@ -77,6 +146,78 @@ public class ZombieTools {
         }
         return nameOfLevels.get(levels[0]);
     }
+
+	// Liest eine Datei im UTF-16 Format ein und gibt das 2-dim Feld in
+	// ColoredChars zurück
+	public static ColoredChar[][] readFile(String input) throws IOException {
+		String[] level = getStrings(input);
+		ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
+		for (int i = 0; i < level.length; i++) {
+			for (int j = 0; j < level[i].length(); j++) {
+				chars[i][j] = ColoredChar.create(level[i].charAt(j),
+						Color.white);
+			}
+		}
+		return chars;
+	}
+
+	public static ColoredChar[][] readLevel(String input) throws IOException {
+		String[] level = getStrings(input);
+		HashMap<Character, String> itemMap = createItemMap();
+		ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
+		for (int i = 0; i < level.length; i++) {
+			for (int j = 0; j < level[i].length(); j++) {
+				if (!itemMap.containsKey(level[i].charAt(j)))
+					chars[i][j] = ColoredChar.create(level[i].charAt(j));
+				else
+					chars[i][j] = ColoredChar.create('.'); // TODO: nicht der
+															// Punkt, sondern
+															// beliebiges
+															// Zeichen
+			}
+		}
+		return chars;
+	}
+
+	public static void showImage(TermPanel term, String input)
+			throws InterruptedException {
+		try {
+			ColoredChar[][] start = readFile(input);
+			term.clearBuffer();
+			for (int x = 0; x < term.DEFAULT_COLS; x++) {
+				for (int y = 0; y < term.DEFAULT_ROWS; y++) {
+					if (y >= start.length || x >= start[0].length) {
+						term.bufferChar(x, y, ColoredChar.create(' '));
+					} else {
+						term.bufferChar(x, y, start[y][x]);
+					}
+				}
+			}
+			term.refreshScreen();
+			term.getKey();
+		} catch (IOException e) {
+			System.out.println("Datei nicht gefunden.");
+		}
+	}
+
+	public static String[] getStrings(String input) {
+		LinkedList<String> lines = new LinkedList<String>();
+		try {
+			InputStreamReader reader = new InputStreamReader(
+					new FileInputStream(input), "UTF-16");
+			BufferedReader text = new BufferedReader(reader);
+			String temp;
+			while ((temp = text.readLine()) != null)
+				lines.add(temp);
+			text.close();
+			reader.close();
+		} catch (Exception e) {
+		}
+		String[] erg = new String[lines.size()];
+		for (int i = 0; i < lines.size(); i++)
+			erg[i] = lines.get(i);
+		return erg;
+	}
 
     public static List<Direction> getAllowedDirections() {
         return Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.WEST,

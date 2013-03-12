@@ -8,7 +8,6 @@ import zombiefu.creature.Player;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.level.Level;
-import zombiefu.util.Screen;
 import zombiefu.util.ZombieTools;
 import zombiefu.ui.ZombieFrame;
 
@@ -32,10 +31,10 @@ public class ZombieFU {
         ZombieTools.registerPlayer(player);
 
         // Startscreen
-        Screen.showImage(term, "src/sources/startscreen.txt");
+		ZombieTools.showImage(term, "src/sources/startscreen.txt");
 
         // Storytext
-        Screen.showImage(term, "src/sources/story.txt");
+		ZombieTools.showImage(term, "src/sources/story.txt");
 
         // Story initialisieren
         ZombieTools.createStoryForPlayer(player);
