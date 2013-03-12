@@ -15,6 +15,7 @@ import jade.util.datatype.Direction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import zombiefu.fov.ViewEverything;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
@@ -69,6 +70,15 @@ public class Player extends Creature implements Camera {
                 case 'e':
                     switchWeapon(false);
                     refreshStats();
+                    act();
+                    break;
+                case 'f':
+                    if (fov instanceof RayCaster) {
+                        fov = new ViewEverything();
+                    } else {
+                        fov = new RayCaster();
+                    }
+                    refreshWorld();
                     act();
                     break;
                 case 'i':
