@@ -62,7 +62,7 @@ public abstract class Monster extends Creature {
     protected Direction directionToPlayer() throws TargetNotFoundException, TargetIsNotInThisWorldException {
         return movealg.directionTo(world(), pos(), getPlayerPosition());
     }
-    
+
     protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException {
         tryToMove(directionToPlayer());
     }
@@ -100,11 +100,12 @@ public abstract class Monster extends Creature {
 
     @Override
     protected Direction getAttackDirection() {
-        // TODO: Überprüfen, ob Gegner wirklich in einer Linie 
+        // TODO: Überprüfen, ob Gegner wirklich in einer Linie
         try {
             return directionToPlayer();
-        } catch (TargetNotFoundException | TargetIsNotInThisWorldException ex) {
-        }        
+        } catch (TargetNotFoundException e) {
+        } catch (TargetIsNotInThisWorldException ex) {
+        }
         return null;
     }
 }
