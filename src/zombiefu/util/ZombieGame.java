@@ -110,16 +110,17 @@ public class ZombieGame {
         return frame.mainTerm().getKey();
     }
 
-    public static Direction askPlayerForDirection() {
+    public static Direction askPlayerForDirection() throws NoDirectionGivenException {
         setTopFrameContent("Bitte gib die Richtung an.");
         Direction d = null;
         try {
-            while (d == null || d == Direction.ORIGIN) {
-                d = Direction.keyToDir(frame.mainTerm().getKey());
-            }
+            d = Direction.keyToDir(frame.mainTerm().getKey());
         } catch (InterruptedException ex) {
         }
         setTopFrameContent(null);
+        if (d == null || d == Direction.ORIGIN) {
+            throw new NoDirectionGivenException();
+        }
         return d;
     }
 

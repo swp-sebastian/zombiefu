@@ -10,9 +10,12 @@ import jade.util.datatype.Direction;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.util.DamageAnimation;
+import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
@@ -39,15 +42,15 @@ public abstract class Creature extends Actor {
     public int getAttackValue() {
         return attackValue;
     }
-    
+
     public int getDefenseValue() {
         return defenseValue;
     }
-    
+
     public int getHealthPoints() {
         return healthPoints;
     }
-    
+
     public Collection<Coordinate> getViewField() {
         return fov.getViewField(world(), pos(), sichtweite);
     }
@@ -73,7 +76,7 @@ public abstract class Creature extends Actor {
         return name;
     }
 
-    protected abstract Direction getAttackDirection();
+    protected abstract Direction getAttackDirection() throws NoDirectionGivenException;
 
     public void attackCreature(Creature cr) {
         if (this.equals(cr)) {
@@ -97,7 +100,7 @@ public abstract class Creature extends Actor {
         if (damage == 0) {
             damage = 1;
         }
-        
+
         ZombieGame.newMessage(getName() + " hat " + cr.getName() + " " + damage + " Schadenspunkte hinzugefügt.");
 
         cr.hurt(damage, this);
@@ -125,8 +128,8 @@ public abstract class Creature extends Actor {
         Collection<Creature> targets = new HashSet<Creature>();
         Collection<DamageAnimation> anims = new HashSet<DamageAnimation>();
         int blastMax = (int) Math.ceil(blastRadius);
-        for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world().width()-1); x++) {
-            for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world().height()-1); y++) {
+        for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world().width() - 1); x++) {
+            for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world().height() - 1); y++) {
                 Coordinate neu = new Coordinate(x, y);
                 if (neu.distance(c) <= blastRadius && (includeCenter || !c.equals(neu))) {
                     DamageAnimation anim = new DamageAnimation();
@@ -182,17 +185,14 @@ public abstract class Creature extends Actor {
         if (typ.isDirected()) {
             attackCoordinate(ziel);
         } else {
-            createDetonation(ziel, getActiveWeapon().getBlastRadius(),typ.isRanged());
+            createDetonation(ziel, getActiveWeapon().getBlastRadius(), typ.isRanged());
         }
     }
 
-    public void attack() {
+    public void attack() throws NoDirectionGivenException {
         Direction dir;
         if (getActiveWeapon().getTyp() != Waffentyp.UMKREIS) {
             dir = getAttackDirection();
-            if (dir == null) {
-                return;
-            }
         } else {
             dir = Direction.ORIGIN;
         }

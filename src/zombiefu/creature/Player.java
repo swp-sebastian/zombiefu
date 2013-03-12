@@ -14,6 +14,7 @@ import zombiefu.items.Item;
 import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
 import zombiefu.util.Creator;
+import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.TargetIsNotInThisWorldException;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
@@ -55,23 +56,23 @@ public class Player extends Creature implements Camera {
     public int getECTS() {
         return ects;
     }
-    
+
     public int getMoney() {
         return money;
     }
-    
+
     public int getMaximalHealthPoints() {
         return maximalHealthPoints;
     }
-    
+
     public int getIntelligenceValue() {
         return intelligenceValue;
     }
-    
+
     public ArrayList<ConsumableItem> getInventar() {
         return inventar;
     }
-    
+
     @Override
     public void act() {
         try {
@@ -112,7 +113,11 @@ public class Player extends Creature implements Camera {
                     act();
                     break;
                 case '\n':
-                    attack();
+                    try {
+                        attack();
+                    } catch (NoDirectionGivenException ex) {
+                        act();
+                    }
                     break;
                 default:
                     Direction dir = Direction.keyToDir(key);
@@ -192,7 +197,7 @@ public class Player extends Creature implements Camera {
     }
 
     @Override
-    protected Direction getAttackDirection() {
+    protected Direction getAttackDirection() throws NoDirectionGivenException {
         return ZombieGame.askPlayerForDirection();
     }
 }
