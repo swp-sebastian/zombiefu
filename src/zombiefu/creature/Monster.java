@@ -15,6 +15,7 @@ import zombiefu.ki.StupidMover;
 import zombiefu.ki.MoveAlgorithm;
 import zombiefu.ki.TargetNotFoundException;
 import zombiefu.util.TargetIsNotInThisWorldException;
+import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
 public abstract class Monster extends Creature {
@@ -116,7 +117,7 @@ public abstract class Monster extends Creature {
             world().addActor(it, pos());
         }
         expire();
-        ZombieTools.sendMessage(killer.getName() + " hat " + getName() + " getötet.");
+        ZombieGame.newMessage(killer.getName() + " hat " + getName() + " getötet.");
     }
 
     @Override
