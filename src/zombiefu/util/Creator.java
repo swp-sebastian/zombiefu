@@ -29,10 +29,7 @@ public class Creator {
     public static void createStoryForPlayer(Player player) {
         Level level = world.get(getFirstWordOfFile(srcs + "levels.txt"));
         level.addActor(player);
-        try {
-            level.fillWithEnemies();
-        } catch (TargetIsNotInThisWorldException e) {
-        }
+        level.fillWithEnemies();
     }
 
     public static void createBidirectionalTeleporter(World world1,
