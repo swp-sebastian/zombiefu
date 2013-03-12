@@ -23,4 +23,9 @@ public class Human extends Creature {
     public Waffe getActiveWeapon() {
         return null;
     }
+
+    @Override
+    protected void killed(Creature killer) {
+        // TODO: Spiel sofort beenden.
+    }
 }
