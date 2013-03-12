@@ -107,7 +107,7 @@ public abstract class Creature extends Actor {
         anim.expire();
     }
 
-    private void createDetonation(Coordinate c, double blastRadius) {
+    private void createDetonation(Coordinate c, double blastRadius, boolean includeCenter) {
         // TODO: Verschönern (mit RayCaster)
         Collection<Creature> targets = new HashSet<Creature>();
         Collection<DamageAnimation> anims = new HashSet<DamageAnimation>();
@@ -115,7 +115,7 @@ public abstract class Creature extends Actor {
         for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world().width()-1); x++) {
             for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world().height()-1); y++) {
                 Coordinate neu = new Coordinate(x, y);
-                if (neu.distance(c) <= blastRadius) {
+                if (neu.distance(c) <= blastRadius && (includeCenter || !c.equals(neu))) {
                     DamageAnimation anim = new DamageAnimation();
                     anims.add(anim);
                     world().addActor(anim, neu);
@@ -169,7 +169,7 @@ public abstract class Creature extends Actor {
         if (typ.isDirected()) {
             attackCoordinate(ziel);
         } else {
-            createDetonation(ziel, getActiveWeapon().getBlastRadius());
+            createDetonation(ziel, getActiveWeapon().getBlastRadius(),typ.isRanged());
         }
     }
 
