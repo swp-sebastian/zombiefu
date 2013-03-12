@@ -1,5 +1,6 @@
 package zombiefu.creature;
 
+import jade.fov.RayCaster;
 import zombiefu.items.Waffe;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
@@ -8,7 +9,6 @@ import jade.util.datatype.Direction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import zombiefu.items.Item;
-import zombiefu.items.MensaCard;
 import zombiefu.ki.StupidMover;
 import zombiefu.ki.MoveAlgorithm;
 import zombiefu.ki.TargetNotFoundException;
@@ -24,6 +24,8 @@ public abstract class Monster extends Creature {
         super(face, n, h, a, d);
         waffe = w;
         movealg = m;
+        fov = new RayCaster();
+        sichtweite = 10;
     }
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w) {
@@ -40,8 +42,12 @@ public abstract class Monster extends Creature {
         this(face, new StupidMover());
     }
 
-    protected void moveRandomly() {
-        tryToMove(ZombieTools.getRandomDirection());
+    private void moveRandomly() {
+        try {
+            tryToMove(ZombieTools.getRandomDirection());
+        } catch (CannotMoveToImpassableFieldException ex) {
+            moveRandomly();
+        }
     }
 
     private Coordinate getPlayerPosition() throws TargetIsNotInThisWorldException {
@@ -56,7 +62,7 @@ public abstract class Monster extends Creature {
     }
 
     protected boolean positionIsVisible(Coordinate pos) throws TargetIsNotInThisWorldException {
-        return pos().distance(getPlayerPosition()) <= 10;
+        return fov.getViewField(world(), pos(), sichtweite).contains(pos);
     }
 
     protected Direction directionToPlayer() throws TargetNotFoundException, TargetIsNotInThisWorldException {
@@ -64,7 +70,11 @@ public abstract class Monster extends Creature {
     }
 
     protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException {
-        tryToMove(directionToPlayer());
+        try {
+            tryToMove(directionToPlayer());
+        } catch (CannotMoveToImpassableFieldException ex) {
+            Logger.getLogger(Monster.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

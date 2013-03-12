@@ -27,7 +27,6 @@ import zombiefu.util.ZombieTools;
 public class Player extends Creature implements Camera {
 
     public ZombieFrame frame;
-    private ViewField fov;
     private int intelligenceValue;
     private int money;
     private int ects;
@@ -38,7 +37,7 @@ public class Player extends Creature implements Camera {
 
     public Player(ZombieFrame frame, ColoredChar face, String name,
                   int healthPoints, int attackValue, int defenseValue,
-                  int intelligenceValue, Waffe w) {
+                  int intelligenceValue, ArrayList<Waffe> w) {
 
         super(face, name, healthPoints, attackValue, defenseValue);
 
@@ -51,10 +50,10 @@ public class Player extends Creature implements Camera {
         this.semester = 1;
 
         this.inventar = new ArrayList<ConsumableItem>();
-        this.waffen = new ArrayList<Waffe>();
-        waffen.add(w);
+        this.waffen = w;
 
-        fov = new RayCaster();
+        this.sichtweite = 20;
+        this.fov = new RayCaster();
     }
 
     public int getSemester() {
@@ -113,6 +112,8 @@ public class Player extends Creature implements Camera {
                 break;
             }
         } catch (InterruptedException e) {
+        } catch (CannotMoveToImpassableFieldException ex) {
+            act();
         }
     }
 
@@ -124,11 +125,6 @@ public class Player extends Creature implements Camera {
             Waffe tmp = waffen.remove(0);
             waffen.add(tmp);
         }
-    }
-
-    @Override
-    public Collection<Coordinate> getViewField() {
-        return fov.getViewField(world(), pos(), 100);
     }
 
     public void changeWorld(World world) {
@@ -160,7 +156,8 @@ public class Player extends Creature implements Camera {
                                         + intelligenceValue);
         frame.bottomTerm().bufferString(0,
                                         1,
-                                        "Pi-Gebäude" + " | € " + money + " | ECTS " + ects + " | Sem "
+                                        "Coord: (" + pos().x() + "|" + pos().y() + ")"
+                                        + " | € " + money + " | ECTS " + ects + " | Sem "
                                         + semester);
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
