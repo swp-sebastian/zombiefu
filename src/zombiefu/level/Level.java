@@ -8,9 +8,6 @@ import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import zombiefu.creature.DozentZombie;
 import zombiefu.creature.Monster;
 import zombiefu.creature.Player;
 import zombiefu.creature.Zombie;
@@ -94,7 +91,7 @@ public class Level extends World {
                 "Kaffee", 40));
         addActor(new Waffe(ColoredChar.create('⚩', new Color(90, 90, 90)),
                 "Kettensäge", 15));
-        addActor(new Waffe(ColoredChar.create('S', new Color(90, 90, 90)),
+        addActor(new Waffe(ColoredChar.create('F', new Color(90, 90, 90)),
                 "Flammenwerfer", 40, Waffentyp.FERNKAMPF));
     }
 

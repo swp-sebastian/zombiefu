@@ -123,10 +123,12 @@ public abstract class Creature extends Actor {
     private Coordinate findTargetInDirection(Direction dir, int maxDistance) {
         Coordinate nPos = pos();
         int dcounter = 0;
+        System.out.println(dir);
+        System.out.println(maxDistance);
         do {
             System.out.println(nPos);
             nPos = nPos.getTranslated(dir);
-            if (world().insideBounds(nPos)) {
+            if (!world().insideBounds(nPos)) {
                 return nPos.getTranslated(ZombieTools.getReversedDirection(dir));
             }
             dcounter++;
