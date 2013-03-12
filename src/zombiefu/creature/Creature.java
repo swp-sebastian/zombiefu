@@ -116,8 +116,8 @@ public abstract class Creature extends Actor {
         Collection<Creature> targets = new HashSet<Creature>();
         Collection<DamageAnimation> anims = new HashSet<DamageAnimation>();
         int blastMax = (int) Math.ceil(blastRadius);
-        for (int x = c.x() - blastMax; x <= c.x() + blastMax; x++) {
-            for (int y = c.y() - blastMax; y <= c.y() + blastMax; y++) {
+        for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world().width()-1); x++) {
+            for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world().height()-1); y++) {
                 Coordinate neu = new Coordinate(x, y);
                 if (neu.distance(c) <= blastRadius) {
                     DamageAnimation anim = new DamageAnimation();
