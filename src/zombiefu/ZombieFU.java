@@ -1,7 +1,6 @@
 package zombiefu;
 
 import java.awt.Color;
-
 import jade.ui.TermPanel;
 import jade.util.datatype.ColoredChar;
 import zombiefu.creature.Player;

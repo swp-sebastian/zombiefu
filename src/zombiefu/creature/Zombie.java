@@ -11,7 +11,7 @@ import zombiefu.ki.Dijkstra;
 public class Zombie extends Monster {
 
     public Zombie() {
-        super(ColoredChar.create('\u263F', Color.GREEN), "Zombie", Dice.global
+        super(ColoredChar.create('\u263F', Color.green), "Zombie", Dice.global
                 .nextInt(1, 20), Dice.global.nextInt(1, 20), Dice.global
                 .nextInt(1, 20), new Waffe("Kralle", 2, ColoredChar.create('|')), new Dijkstra());
     }

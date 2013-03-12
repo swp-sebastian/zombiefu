@@ -16,52 +16,64 @@ import zombiefu.map.RoomBuilder;
 
 public class Level extends World {
 
-    public Level(int width, int height, Generator gen) {
-        super(width, height);
-        gen.generate(this);
-        fillWithEnemies();
-        fillWithItems();
-    }
+	private int freeFields;
 
-    public static Level levelFromFile(String file) {
-        RoomBuilder builder = new RoomBuilder(file, "src/sources/CharSet.txt");
-        return new Level(builder.width(), builder.height(), builder);
-    }
+	public Level(int width, int height, Generator gen) {
+		super(width, height);
+		gen.generate(this);
+		fillWithEnemies();
+		fillWithItems();
+		calculateFreeFields();
+	}
 
-    @Override
-    public void tick() {
-        // Der Player führt IMMER die erste Aktion aus.
-        try {
-            super.getActor(Player.class).act();
-        } catch (IllegalArgumentException e) {
-        }
-        for (Class<? extends Actor> cls : super.getActOrder()) {
-            for (Actor actor : getActors(cls)) {
-                if (!(actor instanceof Player)) {
-                    actor.act();
-                }
-            }
-        }
-        removeExpired();
-    }
+	public static Level levelFromFile(String file) {
+		RoomBuilder builder = new RoomBuilder(file, "src/sources/CharSet.txt");
+		return new Level(builder.width(), builder.height(), builder);
+	}
+	
+	public void calculateFreeFields() {
+		for (int x = 0; x < width(); x++) {
+			for (int y = 0; y < height(); y++) {
+				freeFields += passableAt(x, y) ? 1 : 0;
+			}
+		}
+	}
 
-    public void fillWithEnemies() {
-        // Der Zombie-Dozent kommt hinzu.
-        addActor(new DozentZombie());
-        // 6 normale Zombies kommen hinzu
-        for (int i = 0; i <= 5; i++) {
-            addActor(new Zombie());
-        }
-    }
+	@Override
+	public void tick() {
+		// Der Player führt IMMER die erste Aktion aus.
+		try {
+			super.getActor(Player.class).act();
+		} catch (IllegalArgumentException e) {
+		}
+		for (Class<? extends Actor> cls : super.getActOrder()) {
+			for (Actor actor : getActors(cls)) {
+				if (!(actor instanceof Player)) {
+					actor.act();
+				}
+			}
+		}
+		removeExpired();
+	}
 
-    private void fillWithItems() {
-        addActor(new HealingItem(ColoredChar.create('☕', new Color(80, 0, 0)), "Kaffee", 40));
-        addActor(new Waffe("Kettensäge", 15, ColoredChar.create('⚩', new Color(90, 90, 90))));
-    }
+	public void fillWithEnemies() {
+		int enemies = 5;
+		// 6 normale Zombies kommen hinzu
+		for (int i = 0; i <= enemies; i++) {
+			addActor(new Zombie());
+		}
+	}
 
-    public void refresh(TermPanel term) {
-        term.clearBuffer();
-        term.bufferCameras();
-        term.refreshScreen();
-    }
+	private void fillWithItems() {
+		addActor(new HealingItem(ColoredChar.create('☕', new Color(80, 0, 0)),
+				"Kaffee", 40));
+		addActor(new Waffe("Kettensäge", 15, ColoredChar.create('⚩', new Color(
+				90, 90, 90))));
+	}
+
+	public void refresh(TermPanel term) {
+		term.clearBuffer();
+		term.bufferCameras();
+		term.refreshScreen();
+	}
 }
