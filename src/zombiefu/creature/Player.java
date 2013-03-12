@@ -21,6 +21,7 @@ import zombiefu.items.Item;
 import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
 import zombiefu.util.Screen;
+import zombiefu.util.TargetIsNotInThisWorldException;
 import zombiefu.util.ZombieTools;
 
 public class Player extends Creature implements Camera {
@@ -55,6 +56,10 @@ public class Player extends Creature implements Camera {
 
         fov = new RayCaster();
     }
+
+	public int getSemester() {
+		return semester;
+	}
 
     @Override
     public void act() {
@@ -129,6 +134,10 @@ public class Player extends Creature implements Camera {
     public void changeWorld(World world) {
         world().removeActor(this);
         world.addActor(this);
+		try {
+			((Level) world).fillWithEnemies();
+		} catch (TargetIsNotInThisWorldException e) {
+		}
     }
 
     public void changeWorld(String level) {
@@ -141,16 +150,19 @@ public class Player extends Creature implements Camera {
 
     public void refreshStats() {
         frame.bottomTerm().clearBuffer();
-        frame.bottomTerm().bufferString(0, 0, "Waffe: " + getActiveWeapon().getName()
-                + " (" + getActiveWeapon().getDamage() + ") "
-                + " | HP: " + healthPoints + "/" + maximalHealthPoints
-                + " | A: " + attackValue
-                + " | D: " + defenseValue
-                + " | I: " + intelligenceValue);
-        frame.bottomTerm().bufferString(0, 1, "Pi-Gebäude"
-                + " | $ " + money
-                + " | ECTS " + ects
-                + " | Sem " + semester);
+		frame.bottomTerm().bufferString(
+				0,
+				0,
+				"Waffe: " + getActiveWeapon().getName() + " ("
+						+ getActiveWeapon().getDamage() + ") " + " | HP: "
+						+ healthPoints + "/" + maximalHealthPoints + " | A: "
+						+ attackValue + " | D: " + defenseValue + " | I: "
+						+ intelligenceValue);
+		frame.bottomTerm().bufferString(
+				0,
+				1,
+				"Pi-Gebäude" + " | € " + money + " | ECTS " + ects + " | Sem "
+						+ semester);
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
     }
@@ -161,7 +173,8 @@ public class Player extends Creature implements Camera {
         } else if (i instanceof ConsumableItem) {
             inventar.add((ConsumableItem) i);
         } else {
-            throw new IllegalStateException("Items should either be Weapons or consumable.");
+			throw new IllegalStateException(
+					"Items should either be Weapons or consumable.");
         }
     }
 
@@ -180,7 +193,11 @@ public class Player extends Creature implements Camera {
         frame.mainTerm().bufferString(0, 0, "Inventarliste:");
         for (int i = 0; i < inventar.size(); i++) {
             Item it = inventar.get(i);
-            frame.mainTerm().bufferString(0, 2 + i, "[" + ((char) (97 + i)) + "] " + it.face() + " - " + it.getName());
+			frame.mainTerm().bufferString(
+					0,
+					2 + i,
+					"[" + ((char) (97 + i)) + "] " + it.face() + " - "
+							+ it.getName());
         }
         frame.mainTerm().refreshScreen();
         try {
@@ -218,7 +235,8 @@ public class Player extends Creature implements Camera {
         try {
             Screen.showImage(frame.mainTerm(), "src/sources/endscreen.txt");
         } catch (InterruptedException ex) {
-            Logger.getLogger(Player.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			Logger.getLogger(Player.class.getName()).log(
+					java.util.logging.Level.SEVERE, null, ex);
         }
         System.exit(0);
     }
