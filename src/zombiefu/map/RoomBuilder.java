@@ -3,7 +3,7 @@ package zombiefu.map;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.HashMap;
-import zombiefu.util.ZombieTools;
+import zombiefu.util.Creator;
 import jade.core.World;
 import jade.gen.map.MapGenerator;
 import jade.util.Dice;
@@ -20,7 +20,7 @@ public class RoomBuilder extends MapGenerator {
 	public static void setCharSet(String input) {
 		charSet = new HashMap<Character, Color>();
 		passSet = new HashMap<Character, Boolean>();
-		String[] settings = ZombieTools.getStrings(input);
+		String[] settings = Creator.getStrings(input);
 		for (int i = 0; i < settings.length; i++) {
 			String[] setting = settings[i].split(" ");
 			if (setting.length > 2) {
@@ -42,7 +42,7 @@ public class RoomBuilder extends MapGenerator {
 	public RoomBuilder(String input, String charset) {
 		try {
 			setCharSet(charset);
-			this.screen = ZombieTools.readLevel(input);
+			this.screen = Creator.readLevel(input);
 			this.height = screen.length;
 			this.width = screen[0].length;
 		} catch (IOException e) {

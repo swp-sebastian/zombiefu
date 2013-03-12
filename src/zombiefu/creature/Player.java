@@ -1,25 +1,19 @@
 package zombiefu.creature;
 
 import jade.core.World;
-import java.awt.Color;
-import java.util.Collection;
-
 import zombiefu.items.Waffe;
 import jade.fov.RayCaster;
-import jade.fov.ViewField;
 import jade.ui.Camera;
-import jade.ui.TermPanel;
 import jade.util.datatype.ColoredChar;
-import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 import zombiefu.fov.ViewEverything;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
+import zombiefu.util.Creator;
 import zombiefu.util.TargetIsNotInThisWorldException;
 import zombiefu.util.ZombieTools;
 
@@ -226,7 +220,7 @@ public class Player extends Creature implements Camera {
     protected void killed(Creature killer) {
         // TODO: Im Endscreen dynamisch Informationen anzeigen.
         try {
-            ZombieTools.showImage(frame.mainTerm(), "src/sources/endscreen.txt");
+            Creator.showImage(frame.mainTerm(), "src/sources/endscreen.txt");
         } catch (InterruptedException ex) {
             Logger.getLogger(Player.class.getName()).log(
                                                          java.util.logging.Level.SEVERE, null, ex);
