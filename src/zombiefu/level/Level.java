@@ -86,6 +86,7 @@ public class Level extends World {
         }
     }
 
+
     private void fillWithItems() {
         addActor(new HealingItem(ColoredChar.create('☕', new Color(80, 0, 0)),
                 "Kaffee", 40));

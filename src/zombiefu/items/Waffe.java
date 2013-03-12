@@ -55,4 +55,5 @@ public class Waffe extends Item {
     public Waffentyp getTyp() {
         return wtyp;
     }
+
 }
