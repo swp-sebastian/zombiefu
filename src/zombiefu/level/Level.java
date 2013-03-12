@@ -79,16 +79,6 @@ public class Level extends World {
         removeExpired();
     }
 
-<<<<<<< HEAD
-	public void fillWithItems() {
-		addActor(new HealingItem(ColoredChar.create('K', new Color(80, 0, 0)),
-				"Kaffee", 40));
-		addActor(new Waffe(ColoredChar.create('S', new Color(90, 90, 90)),
-				"Kettensäge", 15));
-		addActor(new Waffe(ColoredChar.create('S', new Color(90, 90, 90)),
-				"Flammenwerfer", 40, Waffentyp.FERNKAMPF));
-	}
-=======
     public void fillWithEnemies() throws TargetIsNotInThisWorldException {
         int oldEnemies = getActors(Monster.class).size();
         int semester = getPlayer().getSemester();
@@ -98,7 +88,7 @@ public class Level extends World {
             addActor(new Zombie());
         }
     }
->>>>>>> walfisch/master
+
 
     private void fillWithItems() {
         addActor(new HealingItem(ColoredChar.create('☕', new Color(80, 0, 0)),
