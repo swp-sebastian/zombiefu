@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import zombiefu.creature.Player;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
-import zombiefu.util.Screen;
+import zombiefu.level.Level;
 import zombiefu.util.ZombieTools;
 import zombiefu.ui.ZombieFrame;
 
@@ -16,8 +16,7 @@ public class ZombieFU {
     public static void main(String[] args) throws InterruptedException {
 
         // Der Frame, der drei TermPanels erzeugt
-        ZombieFrame frame = new ZombieFrame(
-                "The Final Exam - Die Anwesenheitspflicht schlägt zurück");
+        ZombieFrame frame = new ZombieFrame("The Final Exam - Die Anwesenheitspflicht schlägt zurück");
         TermPanel term = frame.mainTerm();
 
         // Der neue Spieler
@@ -34,10 +33,10 @@ public class ZombieFU {
         ZombieTools.registerPlayer(player);
 
         // Startscreen
-        Screen.showImage(term, "src/sources/startscreen.txt");
+	ZombieTools.showImage(term, "src/sources/startscreen.txt");
 
         // Storytext
-        Screen.showImage(term, "src/sources/story.txt");
+	ZombieTools.showImage(term, "src/sources/story.txt");
 
         // Story initialisieren
         ZombieTools.createStoryForPlayer(player);
