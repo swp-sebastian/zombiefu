@@ -18,7 +18,7 @@ public class MensaCard extends Item {
     private int guthaben;
 
     public MensaCard(int g) {
-        super(ColoredChar.create('$', new Color(255, 215, 0)));
+        super(ColoredChar.create('€', new Color(255, 215, 0)));
         guthaben = g;
     }
 

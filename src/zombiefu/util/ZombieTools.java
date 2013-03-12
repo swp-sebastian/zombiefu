@@ -28,6 +28,10 @@ public class ZombieTools {
     public static void createStoryForPlayer(Player player) {
         Level world = createWorld();
         world.addActor(player);
+		try {
+			world.fillWithEnemies();
+		} catch (TargetIsNotInThisWorldException e) {
+		}
     }
 
     public static void createBidirectionalTeleporter(World world1,
@@ -73,7 +77,8 @@ public class ZombieTools {
     }
 
     public static List<Direction> getAllowedDirections() {
-        return Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTH);
+		return Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.WEST,
+				Direction.NORTH);
     }
 
     public static Direction getRandomDirection() {
@@ -127,7 +132,8 @@ public class ZombieTools {
     }
     
     public static Color getRandomColor(Dice d) {
-        return new Color(d.nextInt(0, 255),d.nextInt(0, 255),d.nextInt(0, 255));
+		return new Color(d.nextInt(0, 255), d.nextInt(0, 255),
+				d.nextInt(0, 255));
     }
     
     public static Color getRandomColor() {
