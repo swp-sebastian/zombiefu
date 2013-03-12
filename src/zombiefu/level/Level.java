@@ -15,6 +15,7 @@ import zombiefu.creature.Zombie;
 import zombiefu.items.Item;
 import zombiefu.items.HealingItem;
 import zombiefu.items.Waffe;
+import zombiefu.items.Waffentyp;
 import zombiefu.map.RoomBuilder;
 import zombiefu.util.TargetIsNotInThisWorldException;
 
@@ -82,6 +83,8 @@ public class Level extends World {
 				"Kaffee", 40));
 		addActor(new Waffe(ColoredChar.create('⚩', new Color(90, 90, 90)),
 				"Kettensäge", 15));
+		addActor(new Waffe(ColoredChar.create('S', new Color(90, 90, 90)),
+				"Flammenwerfer", 40, Waffentyp.FERNKAMPF));
 	}
 
 	public void refresh(TermPanel term) {

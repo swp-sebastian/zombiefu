@@ -1,6 +1,7 @@
 package zombiefu.creature;
 
 import jade.core.Actor;
+import jade.fov.RayCaster;
 import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import zombiefu.items.Waffe;
+import zombiefu.items.Waffentyp;
 import zombiefu.util.ZombieTools;
 
 public abstract class Creature extends Actor {
@@ -98,46 +100,53 @@ public abstract class Creature extends Actor {
 
     protected abstract Direction getAttackDirection();
 
-    private void createDetonation(Coordinate c) {
+    private void createDetonation(Coordinate c, double blastRadius) {
+        ZombieTools.sendMessage("Detonation nocht nicht implementiert. Sorry.");
+        /*
+         RayCaster rayCaster = new RayCaster();
+         Collection<Coordinate> viewField = rayCaster.getViewField(world(), c, blastRadius);
+         for (Iterator<Coordinate> it = viewField.iterator(); it.hasNext();) {
+         Coordinate coord = it.next();
+         world().setTile(ColoredChar.create('D'), coord.x(), coord.y());
+         }
+         */
     }
 
     private Coordinate findTargetInDirection(Direction dir, int maxDistance) {
-        Coordinate detPos = pos();
+        Coordinate nPos = pos();
         int dcounter = 0;
         do {
-            detPos = detPos.getTranslated(dir);
+            System.out.println(nPos);
+            nPos = nPos.getTranslated(dir);
+            if (world().insideBounds(nPos)) {
+                return nPos.getTranslated(ZombieTools.getReversedDirection(dir));
+            }
             dcounter++;
-        } while (world().getActorsAt(Creature.class, detPos).isEmpty() || dcounter == maxDistance);
-        return detPos;
+        } while (world().getActorsAt(Creature.class, nPos).isEmpty() && dcounter < maxDistance);
+        return nPos;
     }
 
     public void attack() {
         Direction dir;
-        switch (getActiveWeapon().getTyp()) {
-            case NAHKAMPF:
-                dir = getAttackDirection();
-                if (dir != null) {
-                    attack(dir);
-                }
-                break;
-            case FERNKAMPF:
-                dir = getAttackDirection();
-                if (dir != null) {
-                    attack(findTargetInDirection(dir, getActiveWeapon().getRange()));
-                }
-                break;
-            case GRANATE:
-                dir = getAttackDirection();
-                if (dir != null) {
-                    createDetonation(findTargetInDirection(dir, getActiveWeapon().getRange()));
-                }
-                break;
-            case UMKREIS:
-                for (Iterator<Direction> it = Arrays.asList(Direction.values()).iterator(); it.hasNext();) {
-                    dir = it.next();
-                    attack(dir);
-                }
-                break;
+        Waffentyp typ = getActiveWeapon().getTyp();
+        if (typ != Waffentyp.UMKREIS) {
+            dir = getAttackDirection();
+            if (dir == null) {
+                return;
+            }
+        } else {
+            dir = Direction.ORIGIN;
+        }
+        Coordinate ziel;
+        if (typ.isRanged()) {
+            ziel = findTargetInDirection(dir, getActiveWeapon().getRange());
+        } else {
+            ziel = pos().getTranslated(dir);
+        }
+        if(typ.isDirected()) {
+            attack(ziel);
+        } else {
+            createDetonation(ziel, getActiveWeapon().getBlastRadius());            
         }
     }
 

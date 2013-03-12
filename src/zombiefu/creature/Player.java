@@ -38,7 +38,7 @@ public class Player extends Creature implements Camera {
 
     public Player(ZombieFrame frame, ColoredChar face, String name,
                   int healthPoints, int attackValue, int defenseValue,
-                  int intelligenceValue, Waffe w) {
+                  int intelligenceValue, ArrayList<Waffe> w) {
 
         super(face, name, healthPoints, attackValue, defenseValue);
 
@@ -51,8 +51,7 @@ public class Player extends Creature implements Camera {
         this.semester = 1;
 
         this.inventar = new ArrayList<ConsumableItem>();
-        this.waffen = new ArrayList<Waffe>();
-        waffen.add(w);
+        this.waffen = w;
 
         fov = new RayCaster();
     }
@@ -159,7 +158,8 @@ public class Player extends Creature implements Camera {
                                         + intelligenceValue);
         frame.bottomTerm().bufferString(0,
                                         1,
-                                        "Pi-Gebäude" + " | € " + money + " | ECTS " + ects + " | Sem "
+                                        "Coord: (" + pos().x() + "|" + pos().y() + ")"
+                                        + " | € " + money + " | ECTS " + ects + " | Sem "
                                         + semester);
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
