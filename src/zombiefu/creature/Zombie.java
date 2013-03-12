@@ -13,7 +13,7 @@ public class Zombie extends Monster {
     public Zombie() {
         super(ColoredChar.create('\u263F', Color.GREEN), "Zombie", Dice.global
                 .nextInt(1, 20), Dice.global.nextInt(1, 20), Dice.global
-                .nextInt(1, 20), new Waffe("Kralle", 2, ColoredChar.create('|')), new Dijkstra());
+                .nextInt(1, 20), new Waffe(ColoredChar.create('|'), "Kralle", 2), new Dijkstra());
     }
 
     @Override

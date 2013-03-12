@@ -8,6 +8,7 @@ import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -104,4 +105,11 @@ public class ZombieTools {
         activePlayer = pl;
     }
     
+    public static Color getRandomColor(Dice d) {
+        return new Color(d.nextInt(0, 255),d.nextInt(0, 255),d.nextInt(0, 255));
+    }
+    
+    public static Color getRandomColor() {
+        return getRandomColor(Dice.global);
+    }
 }

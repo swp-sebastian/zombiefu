@@ -11,8 +11,7 @@ public class DozentZombie extends Monster {
     public DozentZombie() {
         super(ColoredChar.create('\u265E', Color.RED), "Prof. Jung",
                 Dice.global.nextInt(20, 50), Dice.global.nextInt(20, 50),
-                Dice.global.nextInt(20, 50), new Waffe("Feuerlöscher", 3,
-                ColoredChar.create('⚕',new Color(255,0,0))));
+                Dice.global.nextInt(20, 50), new Waffe(ColoredChar.create('⚕', new Color(255, 0, 0)), "Feuerlöscher", 3));
     }
 
     @Override
