@@ -19,6 +19,7 @@ import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
+import zombiefu.util.Screen;
 import zombiefu.util.ZombieTools;
 
 public class Player extends Creature implements Camera {
@@ -169,7 +170,6 @@ public class Player extends Creature implements Camera {
             Item it = inventar.get(i);
             frame.mainTerm().bufferString(0, 2 + i, "[" + ((char) (97 + i)) + "] " + it.face() + " - " + it.getName());
         }
-        frame.mainTerm().bufferCameras();
         frame.mainTerm().refreshScreen();
         try {
             int key = ((int) frame.mainTerm().getKey()) - 97;
@@ -198,5 +198,20 @@ public class Player extends Creature implements Camera {
         inventar.remove(it);
         it.expire();
         refreshStats();
+    }
+
+    @Override
+    protected void killed(Creature killer) {
+        // TODO: Im Endscreen dynamisch Informationen anzeigen.
+        try {
+            Screen.showImage(frame.mainTerm(), "src/sources/endscreen.txt");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Player.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        System.exit(0);
+    }
+
+    public void addMoney(int m) {
+        this.money += m;
     }
 }
