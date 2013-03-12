@@ -59,9 +59,12 @@ public abstract class Monster extends Creature {
         return pos().distance(getPlayerPosition()) <= 10;
     }
 
+    protected Direction directionToPlayer() throws TargetNotFoundException, TargetIsNotInThisWorldException {
+        return movealg.directionTo(world(), pos(), getPlayerPosition());
+    }
+    
     protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException {
-        Direction dir = movealg.directionTo(world(), pos(), getPlayerPosition());
-        tryToMove(dir);
+        tryToMove(directionToPlayer());
     }
 
     @Override
@@ -84,7 +87,7 @@ public abstract class Monster extends Creature {
     }
 
     protected abstract Item itemDroppedOnKill();
-    
+
     @Override
     protected void killed(Creature killer) {
         Item it = itemDroppedOnKill();
@@ -93,5 +96,15 @@ public abstract class Monster extends Creature {
         }
         expire();
         ZombieTools.sendMessage(killer.getName() + " hat " + getName() + " getötet.");
+    }
+
+    @Override
+    protected Direction getAttackDirection() {
+        // TODO: Überprüfen, ob Gegner wirklich in einer Linie 
+        try {
+            return directionToPlayer();
+        } catch (TargetNotFoundException | TargetIsNotInThisWorldException ex) {
+        }        
+        return null;
     }
 }

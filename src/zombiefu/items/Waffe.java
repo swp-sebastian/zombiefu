@@ -12,6 +12,8 @@ public class Waffe extends Item {
     private boolean ranged;
     private boolean directed;
     private Waffentyp wtyp;
+    private final int blastRadius = 2; // TODO: Individuell
+    private final int range = 6; // TODO: Individuell
 
     public Waffe(ColoredChar c, String n, int d, Waffentyp w) {
     	super(c, n);
@@ -25,6 +27,18 @@ public class Waffe extends Item {
     
     public int getDamage() {
         return damage;
+    }
+    
+    public int getRange() {
+        return range;
+    }
+    
+    public int getBlastRadius() {
+        return blastRadius;
+    }
+    
+    public Waffentyp getTyp() {
+        return wtyp;
     }
     
 }
