@@ -9,6 +9,7 @@ import jade.util.datatype.ColoredChar;
 import java.awt.Color;
 import java.util.logging.Logger;
 import zombiefu.creature.DozentZombie;
+import zombiefu.creature.Monster;
 import zombiefu.creature.Player;
 import zombiefu.creature.Zombie;
 import zombiefu.items.Item;
@@ -20,7 +21,6 @@ import zombiefu.util.TargetIsNotInThisWorldException;
 public class Level extends World {
 
 	private int freeFields;
-	private int enemies;
 
 	public Level(int width, int height, Generator gen) {
 		super(width, height);
@@ -68,13 +68,13 @@ public class Level extends World {
 	}
 
 	public void fillWithEnemies() throws TargetIsNotInThisWorldException {
+		int oldEnemies = getActors(Monster.class).size();
 		int semester = getPlayer().getSemester();
-		int enemies = (int) (semester * 0.001 * freeFields+ Dice.global.nextInt(semester));
+		int newEnemies = (int) (semester * 0.005 * freeFields+ Dice.global.nextInt(semester));
 		// 6 normale Zombies kommen hinzu
-		for (int i = this.enemies; i <= enemies; i++) {
+		for (int i = oldEnemies; i <= newEnemies; i++) {
 			addActor(new Zombie());
 		}
-		this.enemies = (int) enemies;
 	}
 
 	private void fillWithItems() {
