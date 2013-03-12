@@ -18,6 +18,7 @@ import zombiefu.items.Waffe;
 import zombiefu.map.RoomBuilder;
 import zombiefu.util.DamageAnimation;
 import zombiefu.util.TargetIsNotInThisWorldException;
+import zombiefu.util.ZombieTools;
 
 public class Level extends World {
 
@@ -75,9 +76,9 @@ public class Level extends World {
         removeExpired();
     }
 
-    public void fillWithEnemies() throws TargetIsNotInThisWorldException {
+    public void fillWithEnemies() {
         int oldEnemies = getActors(Monster.class).size();
-        int semester = getPlayer().getSemester();
+        int semester = ZombieTools.activePlayer.getSemester();
         int newEnemies = (int) (semester * 0.005 * freeFields * Dice.global.nextInt(40, 60) / 50);
         // 6 normale Zombies kommen hinzu
         for (int i = oldEnemies; i <= newEnemies; i++) {
