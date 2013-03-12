@@ -89,6 +89,8 @@ public class Player extends Creature implements Camera {
                         consumeItem(it);
                     }
                     break;
+                case (char) 27:
+                    System.exit(0);
                 case 'g':
                     godMode = !godMode;
                     act();
@@ -183,7 +185,7 @@ public class Player extends Creature implements Camera {
         frame.mainTerm().refreshScreen();
         try {
             int key = ((int) frame.mainTerm().getKey()) - 97;
-            if (key >= 0 && key <= 25) {
+            if (key >= 0 && key <= 25 && key < inventar.size()) {
                 output = inventar.get(key);
             }
         } catch (InterruptedException ex) {
