@@ -29,7 +29,7 @@ public class Level extends World {
         super(width, height);
         gen.generate(this);
         fillWithItems();
-        calculatNumberOfPassableFields();
+        calculateNumberOfPassableFields();
 
         drawOrder = new ArrayList<Class<? extends Actor>>();
         drawOrder.add(DamageAnimation.class);
@@ -52,7 +52,7 @@ public class Level extends World {
         return pl;
     }
 
-    private void calculatNumberOfPassableFields() {
+    private void calculateNumberOfPassableFields() {
         for (int x = 0; x < width(); x++) {
             for (int y = 0; y < height(); y++) {
                 numberOfPassableFields += passableAt(x, y) ? 1 : 0;
