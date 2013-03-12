@@ -136,6 +136,7 @@ public class Player extends Creature implements Camera {
         world.addActor(this);
         try {
             ((Level) world).fillWithEnemies();
+            ((Level) world).fillWithItems();
         } catch (TargetIsNotInThisWorldException e) {
         }
     }
