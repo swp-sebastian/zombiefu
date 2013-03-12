@@ -9,11 +9,18 @@ import jade.util.datatype.ColoredChar;
 public class Waffe extends Item {
 
     private int damage;
+    private boolean ranged;
+    private boolean directed;
+    private Waffentyp wtyp;
 
-    public Waffe(String n, int d, ColoredChar c) {
-    	super(c);
-        name = n;
+    public Waffe(ColoredChar c, String n, int d, Waffentyp w) {
+    	super(c, n);
         damage = d;
+        wtyp = w;
+    }
+    
+    public Waffe(ColoredChar c, String n, int d) {
+        this(c, n, d, Waffentyp.NAHKAMPF);
     }
     
     public int getDamage() {
