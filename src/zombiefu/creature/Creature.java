@@ -188,7 +188,9 @@ public abstract class Creature extends NotPassableActor {
         return nPos;
     }
 
-    public void attack(Direction dir) {
+    public void attack(Direction dir) throws WeaponHasNoMunitionException {
+        if(!getActiveWeapon().hasMunition())
+            throw new WeaponHasNoMunitionException();
         Waffentyp typ = getActiveWeapon().getTyp();
         Coordinate ziel;
         if (typ.isRanged()) {
@@ -196,6 +198,7 @@ public abstract class Creature extends NotPassableActor {
         } else {
             ziel = pos().getTranslated(dir);
         }
+        getActiveWeapon().useMunition();
         if (typ.isDirected()) {
             attackCoordinate(ziel);
         } else {
@@ -204,7 +207,7 @@ public abstract class Creature extends NotPassableActor {
         }
     }
 
-    public void attack() throws NoDirectionGivenException {
+    public void attack() throws NoDirectionGivenException, WeaponHasNoMunitionException {
         Direction dir;
         if (getActiveWeapon().getTyp() != Waffentyp.UMKREIS) {
             dir = getAttackDirection();
@@ -215,7 +218,7 @@ public abstract class Creature extends NotPassableActor {
     }
 
     public void tryToMove(Direction dir)
-            throws CannotMoveToIllegalFieldException {
+            throws CannotMoveToIllegalFieldException, WeaponHasNoMunitionException {
         Guard.argumentIsNotNull(world());
         Guard.argumentIsNotNull(dir);
         if (dazed > 0) {

@@ -26,7 +26,7 @@ public abstract class Item extends PassableActor {
     protected void pickedUpByPlayer(Player player) {
             ZombieGame.newMessage("Du hast '" + getName() + "' aufgehoben.");
             System.out.println(player.getName() + " hat " + getName() + " gefunden.");
-            player.toInventar(this);        
+            player.obtainItem(this);        
     }
     
     public void act() {

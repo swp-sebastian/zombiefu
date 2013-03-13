@@ -21,7 +21,7 @@ import zombiefu.ui.ZombieFrame;
 import zombiefu.util.ConfigHelper;
 
 /**
- *
+ * 
  * @author tomas
  */
 public class ZombieGame {
@@ -50,7 +50,8 @@ public class ZombieGame {
             for (int x = 0; x < frame.mainTerm().DEFAULT_COLS; x++) {
                 for (int y = 0; y < frame.mainTerm().DEFAULT_ROWS; y++) {
                     if (y >= start.length || x >= start[0].length) {
-                        frame.mainTerm().bufferChar(x, y, ColoredChar.create(' '));
+                        frame.mainTerm().bufferChar(x, y,
+                                ColoredChar.create(' '));
                     } else {
                         frame.mainTerm().bufferChar(x, y, start[y][x]);
                     }
@@ -65,12 +66,9 @@ public class ZombieGame {
 
     public static void initialize() {
         Level firstLevel = ConfigHelper.getFirstLevel();
-        ArrayList<Waffe> waffen = new ArrayList<Waffe>();
-        waffen.add(ConfigHelper.newWaffeByName("SuperFist"));
-        player = new Player(ColoredChar.create('\u263B',
-                                               Color.decode("0x7D26CD")),
-                            settings.name, 100, 10, 10, 10,
-                            waffen);
+        ArrayList<String> waffen = new ArrayList<String>();
+        waffen.add("SuperFist");
+        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, 100, 10, 10, 10,waffen);
 
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
@@ -104,18 +102,23 @@ public class ZombieGame {
 
     public static void refreshBottomFrame() {
         frame.bottomTerm().clearBuffer();
-        frame.bottomTerm().bufferString(0,
+        frame.bottomTerm().bufferString(
+                0,
                 0,
                 "Waffe: " + player.getActiveWeapon().getName() + " ("
-                + player.getActiveWeapon().getDamage() + ") " + " | HP: "
-                + player.getHealthPoints() + "/" + player.getMaximalHealthPoints() + " | A: "
-                + player.getAttackValue() + " | D: " + player.getDefenseValue() + " | I: "
-                + player.getIntelligenceValue());
-        frame.bottomTerm().bufferString(0,
+                        + player.getActiveWeapon().getMunitionToString()
+                        + " / " + player.getActiveWeapon().getDamage() + ") "
+                        + " | HP: " + player.getHealthPoints() + "/"
+                        + player.getMaximalHealthPoints() + " | A: "
+                        + player.getAttackValue() + " | D: "
+                        + player.getDefenseValue() + " | I: "
+                        + player.getIntelligenceValue());
+        frame.bottomTerm().bufferString(
+                0,
                 1,
                 "Coord: (" + player.pos().x() + "|" + player.pos().y() + ")"
-                + " | € " + player.getMoney() + " | ECTS " + player.getECTS() + " | Sem "
-                + player.getSemester());
+                        + " | € " + player.getMoney() + " | ECTS "
+                        + player.getECTS() + " | Sem " + player.getSemester());
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
     }
@@ -136,7 +139,8 @@ public class ZombieGame {
         return frame.mainTerm().getKey();
     }
 
-    public static Direction askPlayerForDirection() throws NoDirectionGivenException {
+    public static Direction askPlayerForDirection()
+            throws NoDirectionGivenException {
         setTopFrameContent("Bitte gib die Richtung an.");
         Direction d = null;
         try {
@@ -164,7 +168,7 @@ public class ZombieGame {
                     0,
                     2 + i,
                     "[" + ((char) (97 + i)) + "] " + it.face() + " - "
-                    + it.getName());
+                            + it.getName());
         }
         frame.mainTerm().refreshScreen();
         try {
