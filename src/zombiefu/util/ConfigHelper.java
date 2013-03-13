@@ -1,7 +1,6 @@
 package zombiefu.util;
 
 import jade.core.World;
-import jade.ui.TermPanel;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
@@ -11,16 +10,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import zombiefu.creature.Door;
-import zombiefu.creature.Player;
 import zombiefu.itembuilder.HealingItemBuilder;
 import zombiefu.itembuilder.ItemBuilder;
+import zombiefu.itembuilder.KeyCardBuilder;
 import zombiefu.itembuilder.WaffenBuilder;
-import zombiefu.items.HealingItem;
 import zombiefu.items.Item;
-import zombiefu.items.KeyCard;
 import zombiefu.items.Teleporter;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
@@ -30,7 +26,9 @@ import zombiefu.map.RoomBuilder;
 public class ConfigHelper {
 
     private static HashMap<String, ItemBuilder> items;
+    private static HashMap<String, Door> doors;
     private static HashMap<String, Level> levels;
+    private static HashMap<String, LinkedList<String[]>> levelDoorMap;
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
     private static HashMap<Character, Boolean> visibleSet;
@@ -68,21 +66,20 @@ public class ConfigHelper {
                     munition = Integer.decode(st[4]);
                 }
                 if (st[3].equals("Nahkampf")) {
-                    waffenbuilder = new WaffenBuilder(chr, st[0], Integer.decode(st[5]),
-                            Waffentyp.NAHKAMPF, munition);
+                    waffenbuilder = new WaffenBuilder(chr, st[0],
+                            Integer.decode(st[5]), Waffentyp.NAHKAMPF, munition);
                 } else if (st[3].equals("Fernkampf")) {
-                    waffenbuilder =
-                            new WaffenBuilder(chr, st[0], Integer.decode(st[5]),
-                            Waffentyp.FERNKAMPF, munition, Integer.decode(st[6]));
+                    waffenbuilder = new WaffenBuilder(chr, st[0],
+                            Integer.decode(st[5]), Waffentyp.FERNKAMPF,
+                            munition, Integer.decode(st[6]));
                 } else if (st[3].equals("Umkreis")) {
-                    waffenbuilder =
-                            new WaffenBuilder(chr, st[0], Integer.decode(st[5]),
-                            Waffentyp.UMKREIS, munition, Double.parseDouble(st[6]));
+                    waffenbuilder = new WaffenBuilder(chr, st[0],
+                            Integer.decode(st[5]), Waffentyp.UMKREIS, munition,
+                            Double.parseDouble(st[6]));
                 } else {
-                    waffenbuilder =
-                            new WaffenBuilder(chr, st[0], Integer.decode(st[5]),
-                            Waffentyp.GRANATE, munition, Double.parseDouble(st[6]),
-                            Integer.decode(st[7]));
+                    waffenbuilder = new WaffenBuilder(chr, st[0],
+                            Integer.decode(st[5]), Waffentyp.GRANATE, munition,
+                            Double.parseDouble(st[6]), Integer.decode(st[7]));
                 }
                 items.put(st[0], waffenbuilder);
             } catch (Exception e) {
@@ -90,15 +87,30 @@ public class ConfigHelper {
         }
 
         // Lade HealingItems
-        String[] healingItems = getStrings(ZombieGame.getItemDirectory() + "HealingItems.txt");
+        String[] healingItems = getStrings(ZombieGame.getItemDirectory()
+                + "HealingItems.txt");
         for (String s : healingItems) {
             try {
                 String[] st = s.split(" ");
                 items.put(
                         st[0],
-                        new HealingItemBuilder(ColoredChar.create(st[2].charAt(0),
-                        Color.decode("0x" + st[3])), st[0], Integer
-                        .decode(st[1])));
+                        new HealingItemBuilder(ColoredChar.create(
+                                st[2].charAt(0), Color.decode("0x" + st[3])),
+                                st[0], Integer.decode(st[1])));
+            } catch (Exception e) {
+            }
+        }
+
+        // Lade KeyCards
+        String[] keyCards = getStrings(ZombieGame.getItemDirectory()
+                + "KeyCards.txt");
+        for (String s : keyCards) {
+            try {
+                String[] st = s.split(" ");
+                items.put(
+                        st[0],
+                        new KeyCardBuilder(ColoredChar.create(st[1].charAt(0),
+                                Color.decode("0x" + st[2])), doors.get(st[0])));
             } catch (Exception e) {
             }
         }
@@ -106,16 +118,37 @@ public class ConfigHelper {
 
     private static void initLevels() {
         levels = new HashMap<String, Level>();
+        doors = new HashMap<String, Door>();
+        levelDoorMap = new HashMap<String, LinkedList<String[]>>();
+        String[] levelStrings = getStrings(ZombieGame.getSourceDirectory()
+                + "levels.txt");
+        for (String s : levelStrings){
+                levelDoorMap.put(s, new LinkedList<String[]>());
+        }
+        // Lade alle Türen
+        String[] tempDoors = getStrings(ZombieGame.getSourceDirectory()
+                + "doors.txt");
+        for (String s : tempDoors) {
+            try {
+                String[] st = s.split(" ");
+                ColoredChar face = ColoredChar.create(st[4].charAt(0),
+                        Color.decode("0x" + st[5]));
+                Door door = new Door(face, st[1]);
+                doors.put(door.getName(), door);
+                levelDoorMap.get(st[0]).add(new String[]{door.getName(),st[2],st[3]});
+            } catch (Exception e) {
+            }
+        }
 
         // Lade alle Level
-        String[] levelStrings = getStrings(ZombieGame.getSourceDirectory() + "levels.txt");
         for (String s : levelStrings) {
             Level level = createLevelFromFile(s);
             levels.put(s, level);
         }
 
         // Lade Teleporter
-        String[] teles = getStrings(ZombieGame.getSourceDirectory() + "teleporters.txt");
+        String[] teles = getStrings(ZombieGame.getSourceDirectory()
+                + "teleporters.txt");
         for (String s : teles) {
             try {
                 String[] d = s.split(" ");
@@ -140,14 +173,16 @@ public class ConfigHelper {
         charSet = new HashMap<Character, Color>();
         passSet = new HashMap<Character, Boolean>();
         visibleSet = new HashMap<Character, Boolean>();
-        String[] settings = getStrings(ZombieGame.getSourceDirectory() + "CharSet.txt");
+        String[] settings = getStrings(ZombieGame.getSourceDirectory()
+                + "CharSet.txt");
         for (int i = 0; i < settings.length; i++) {
             String[] setting = settings[i].split(" ");
             try {
                 charSet.put(setting[0].charAt(0),
                         Color.decode("0x" + setting[3]));
                 passSet.put(setting[0].charAt(0), setting[1].equals("passable"));
-                visibleSet.put(setting[0].charAt(0), setting[2].equals("visible"));
+                visibleSet.put(setting[0].charAt(0),
+                        setting[2].equals("visible"));
             } catch (Exception e) {
             }
         }
@@ -198,7 +233,8 @@ public class ConfigHelper {
     }
 
     public static Level getFirstLevel() {
-        return getLevelByName(getFirstWordOfFile(ZombieGame.getSourceDirectory() + "levels.txt"));
+        return getLevelByName(getFirstWordOfFile(ZombieGame
+                .getSourceDirectory() + "levels.txt"));
     }
 
     public static boolean isValidChar(char c) {
@@ -207,7 +243,8 @@ public class ConfigHelper {
 
     public static char getDefaultChar() {
         if (defaultChar == null) {
-            defaultChar = getFirstWordOfFile(ZombieGame.getSourceDirectory() + "CharSet.txt").charAt(0);
+            defaultChar = getFirstWordOfFile(
+                    ZombieGame.getSourceDirectory() + "CharSet.txt").charAt(0);
         }
         return defaultChar;
     }
@@ -225,7 +262,7 @@ public class ConfigHelper {
             } catch (Exception e) {
             }
         }
-        
+
         // Lese Map ein
         String[] level = getStrings(baseDir + mapName + ".map");
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
@@ -242,6 +279,9 @@ public class ConfigHelper {
         // Baue Level
         RoomBuilder builder = new RoomBuilder(chars);
         Level lev = new Level(builder.width(), builder.height(), builder);
+        for (String[] s:levelDoorMap.get(mapName)){
+            lev.addActor(doors.get(s[0]), Integer.decode(s[1]), Integer.decode(s[2]));
+        }
 
         // Setze statische Items auf das Level:
         for (int x = 0; x < lev.width(); x++) {

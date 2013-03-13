@@ -75,10 +75,6 @@ public class ZombieGame {
         Level firstLevel = ConfigHelper.getFirstLevel();
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
-        Door d = new Door("hallo");
-
-        firstLevel.addActor(d);
-        firstLevel.addActor(new KeyCard(d));
         frame.mainTerm().registerCamera(player, 40, 17);
     }
 

@@ -9,8 +9,8 @@ public class KeyCard extends ConsumableItem {
 
     private final Door door;
 
-    public KeyCard(Door door) {
-        super(ColoredChar.create('S'), "KeyCard (" + door.getName() + ")");
+    public KeyCard(ColoredChar face, Door door) {
+        super(face, "KeyCard (" + door.getName() + ")");
         this.door = door;
     }
 
