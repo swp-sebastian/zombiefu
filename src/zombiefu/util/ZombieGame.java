@@ -42,13 +42,7 @@ public class ZombieGame {
     	KeyEdit.read(sourceDir + input);
     }
 
-    public static void createPlayer(String name) {
-        ArrayList<Waffe> waffen = new ArrayList<Waffe>();
-        waffen.add(ConfigHelper.newWaffeByName("SuperFist"));
-        player = new Player(ColoredChar.create('\u263B',
-                Color.decode("0x7D26CD")), name, 100, 10, 10, 10,
-                waffen);
-    }
+    
 
     public static void showStaticImage(String file) {
         try {
@@ -70,8 +64,13 @@ public class ZombieGame {
         }
     }
 
-    public static void initialize() {
+    public static void initialize(String name) {
         Level firstLevel = ConfigHelper.getFirstLevel();
+        ArrayList<Waffe> waffen = new ArrayList<Waffe>();
+        waffen.add(ConfigHelper.newWaffeByName("SuperFist"));
+        player = new Player(ColoredChar.create('\u263B',
+                Color.decode("0x7D26CD")), name, 100, 10, 10, 10,
+                waffen);
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
         frame.mainTerm().registerCamera(player, 40, 17);
