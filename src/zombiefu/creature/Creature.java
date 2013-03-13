@@ -19,7 +19,7 @@ import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
-public abstract class Creature extends Actor {
+public abstract class Creature extends NotPassableActor {
 
     protected int healthPoints;
     protected int attackValue;
@@ -212,7 +212,7 @@ public abstract class Creature extends Actor {
         if (!world().insideBounds(targetField) || !world().passableAt(targetField)) {
             throw new CannotMoveToIllegalFieldException();
         }
-        Creature creat = world().getActorAt(Creature.class, pos().getTranslated(dir));
+        NotPassableActor creat = world().getActorAt(NotPassableActor.class, pos().getTranslated(dir));
         if (creat == null) {
             move(dir);
         } else if (creat instanceof Monster && this instanceof Monster) {
