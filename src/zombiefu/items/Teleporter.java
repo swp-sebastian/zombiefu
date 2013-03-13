@@ -9,10 +9,10 @@ import jade.util.datatype.Coordinate;
 import java.awt.Color;
 
 public class Teleporter extends Actor {
-    
+
     private World targetWorld;
     private Coordinate targetCoord;
-    
+
     public Teleporter(ColoredChar face, World w, Coordinate c) {
         super(face);
         this.targetWorld = w;
@@ -20,7 +20,7 @@ public class Teleporter extends Actor {
     }
 
     public Teleporter(World w, Coordinate c) {
-        this(ColoredChar.create('\u25A0', Color.decode("0x8B4513")),w,c);
+        this(ColoredChar.create('\u25A0', Color.decode("0x8B4513")), w, c);
     }
 
     @Override
