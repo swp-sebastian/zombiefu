@@ -77,7 +77,7 @@ public class ZombieGame {
         Door d = new Door("hallo");
 
         firstLevel.addActor(d);
-        firstLevel.addActor(new KeyCard(d));
+        firstLevel.addActor(new KeyCard(ColoredChar.create('S'),d));
         frame.mainTerm().registerCamera(player, 40, 17);
     }
 
