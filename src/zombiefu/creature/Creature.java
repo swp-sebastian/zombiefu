@@ -19,7 +19,7 @@ import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
-public abstract class Creature extends Actor {
+public abstract class Creature extends NotPassableActor {
 
     protected int healthPoints;
     protected int attackValue;
@@ -76,7 +76,8 @@ public abstract class Creature extends Actor {
         return name;
     }
 
-    protected abstract Direction getAttackDirection() throws NoDirectionGivenException;
+    protected abstract Direction getAttackDirection()
+            throws NoDirectionGivenException;
 
     public void attackCreature(Creature cr) {
         if (this.equals(cr)) {
@@ -93,15 +94,21 @@ public abstract class Creature extends Actor {
             return;
         }
 
-        System.out.println(getName() + " attacks " + cr.getName() + " with " + getActiveWeapon().getName() + " (Damage: " + getActiveWeapon().getDamage() + "). Attack value: " + attackValue + ", Defense Value: " + cr.defenseValue);
+        System.out.println(getName() + " attacks " + cr.getName() + " with "
+                + getActiveWeapon().getName() + " (Damage: "
+                + getActiveWeapon().getDamage() + "). Attack value: "
+                + attackValue + ", Defense Value: " + cr.defenseValue);
 
         // Calculate damage
-        int damage = (int) (((double) getActiveWeapon().getDamage()) * ((double) attackValue / (double) cr.defenseValue) * (double) Dice.global.nextInt(20, 40) / 30);
+        int damage = (int) (((double) getActiveWeapon().getDamage())
+                * ((double) attackValue / (double) cr.defenseValue)
+                * (double) Dice.global.nextInt(20, 40) / 30);
         if (damage == 0) {
             damage = 1;
         }
 
-        ZombieGame.newMessage(getName() + " hat " + cr.getName() + " " + damage + " Schadenspunkte hinzugefügt.");
+        ZombieGame.newMessage(getName() + " hat " + cr.getName() + " " + damage
+                + " Schadenspunkte hinzugefügt.");
 
         cr.hurt(damage, this);
     }
@@ -110,7 +117,8 @@ public abstract class Creature extends Actor {
         Guard.argumentIsNotNull(coord);
         DamageAnimation anim = new DamageAnimation();
         world().addActor(anim, coord);
-        Collection<Creature> actors = world().getActorsAt(Creature.class, coord);
+        Collection<Creature> actors = world()
+                .getActorsAt(Creature.class, coord);
         if (actors.isEmpty()) {
             ZombieGame.newMessage("Niemanden getroffen!");
         } else {
@@ -123,19 +131,24 @@ public abstract class Creature extends Actor {
         anim.expire();
     }
 
-    private void createDetonation(Coordinate c, double blastRadius, boolean includeCenter) {
+    private void createDetonation(Coordinate c, double blastRadius,
+            boolean includeCenter) {
         // TODO: Verschönern (mit RayCaster)
         Collection<Creature> targets = new HashSet<Creature>();
         Collection<DamageAnimation> anims = new HashSet<DamageAnimation>();
         int blastMax = (int) Math.ceil(blastRadius);
-        for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world().width() - 1); x++) {
-            for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world().height() - 1); y++) {
+        for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x()
+                + blastMax, world().width() - 1); x++) {
+            for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y()
+                    + blastMax, world().height() - 1); y++) {
                 Coordinate neu = new Coordinate(x, y);
-                if (neu.distance(c) <= blastRadius && (includeCenter || !c.equals(neu))) {
+                if (neu.distance(c) <= blastRadius
+                        && (includeCenter || !c.equals(neu))) {
                     DamageAnimation anim = new DamageAnimation();
                     anims.add(anim);
                     world().addActor(anim, neu);
-                    Collection<Creature> actors = world().getActorsAt(Creature.class, neu);
+                    Collection<Creature> actors = world().getActorsAt(
+                            Creature.class, neu);
                     Iterator<Creature> it = actors.iterator();
                     while (it.hasNext()) {
                         Creature next = it.next();
@@ -166,10 +179,12 @@ public abstract class Creature extends Actor {
         do {
             nPos = nPos.getTranslated(dir);
             if (!world().insideBounds(nPos) || !world().passableAt(nPos)) {
-                return nPos.getTranslated(ZombieTools.getReversedDirection(dir));
+                return nPos
+                        .getTranslated(ZombieTools.getReversedDirection(dir));
             }
             dcounter++;
-        } while (world().getActorsAt(Creature.class, nPos).isEmpty() && dcounter < maxDistance);
+        } while (world().getActorsAt(Creature.class, nPos).isEmpty()
+                && dcounter < maxDistance);
         return nPos;
     }
 
@@ -184,7 +199,8 @@ public abstract class Creature extends Actor {
         if (typ.isDirected()) {
             attackCoordinate(ziel);
         } else {
-            createDetonation(ziel, getActiveWeapon().getBlastRadius(), typ.isRanged());
+            createDetonation(ziel, getActiveWeapon().getBlastRadius(),
+                    typ.isRanged());
         }
     }
 
@@ -198,7 +214,8 @@ public abstract class Creature extends Actor {
         attack(dir);
     }
 
-    public void tryToMove(Direction dir) throws CannotMoveToImpassableFieldException {
+    public void tryToMove(Direction dir)
+            throws CannotMoveToIllegalFieldException {
         Guard.argumentIsNotNull(world());
         Guard.argumentIsNotNull(dir);
         if (dazed > 0) {
@@ -209,18 +226,22 @@ public abstract class Creature extends Actor {
             return;
         }
         Coordinate targetField = pos().getTranslated(dir);
-        if (!world().passableAt(targetField)) {
-            throw new CannotMoveToImpassableFieldException();
+        if (!world().insideBounds(targetField)
+                || !world().passableAt(targetField)) {
+            throw new CannotMoveToIllegalFieldException();
         }
-        Creature creat = world().getActorAt(Creature.class, pos().getTranslated(dir));
-        if (creat == null) {
+        NotPassableActor actor = world().getActorAt(NotPassableActor.class,
+                pos().getTranslated(dir));
+        if (actor == null) {
             move(dir);
-        } else if (creat instanceof Monster && this instanceof Monster) {
-            throw new CannotMoveToImpassableFieldException();
+        } else if (!(actor instanceof Player) && this instanceof Monster) {
+            throw new CannotMoveToIllegalFieldException();
+        } else if (!(actor instanceof Creature) && this instanceof Player) {
+            throw new CannotMoveToIllegalFieldException();
         } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
             attack(dir);
         } else {
-            throw new CannotMoveToImpassableFieldException();
+            throw new CannotMoveToIllegalFieldException();
         }
     }
 

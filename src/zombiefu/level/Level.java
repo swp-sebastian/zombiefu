@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import zombiefu.creature.Monster;
 import zombiefu.creature.Player;
 import zombiefu.creature.Zombie;
+import zombiefu.creature.Door;
 import zombiefu.items.Item;
 import zombiefu.items.HealingItem;
 import zombiefu.items.Teleporter;
@@ -37,6 +38,7 @@ public class Level extends World {
         drawOrder.add(Player.class);
         drawOrder.add(Monster.class);
         drawOrder.add(Item.class);
+        drawOrder.add(Door.class);
         drawOrder.add(Teleporter.class);
     }
 
