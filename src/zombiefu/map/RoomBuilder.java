@@ -62,7 +62,7 @@ public class RoomBuilder extends MapGenerator {
 						world.setTile(
 								ColoredChar.create(screen[x][y].ch(),
 										charSet.get(screen[x][y].ch())),
-								passSet.get(screen[x][y].ch()), y, x);
+								passSet.get(screen[x][y].ch()), visibleSet.get(screen[x][y].ch()), y, x);
 					} else
 						world.setTile(screen[x][y], y, x);
 				} catch (NullPointerException e) {

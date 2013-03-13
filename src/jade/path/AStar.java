@@ -92,7 +92,7 @@ public class AStar extends PathFinder
         List<Node> neighbors = new ArrayList<Node>();
         for(int x = next.x() - 1; x <= next.x() + 1; x++)
             for(int y = next.y() - 1; y <= next.y() + 1; y++)
-                if(world.passableAt(x, y))
+                if(world.transparentAt(x, y))
                     neighbors.add(nodes.get(x, y));
         return neighbors;
     }
