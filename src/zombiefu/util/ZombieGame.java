@@ -35,7 +35,7 @@ public class ZombieGame {
     private static Player player;
 
     public static void createGame(String[] args, String name) {
-        settings = new KeyEdit(args, "src");
+        settings = new KeyEdit(args, "src/sources");
         frame = new ZombieFrame(name);
     }
 
