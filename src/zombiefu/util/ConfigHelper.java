@@ -215,6 +215,17 @@ public class ConfigHelper {
     public static Level createLevelFromFile(String mapName) {
         String baseDir = ZombieGame.getMapDirectory();
 
+        // Lese ItemMap ein
+        HashMap<Character, String> itemMap = new HashMap<Character, String>();
+        String[] items = getStrings(baseDir + mapName + ".itm");
+        for (String st : items) {
+            String[] s = st.split(" ");
+            try {
+                itemMap.put(s[0].charAt(0), s[1]);
+            } catch (Exception e) {
+            }
+        }
+        
         // Lese Map ein
         String[] level = getStrings(baseDir + mapName + ".map");
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
@@ -232,21 +243,10 @@ public class ConfigHelper {
         RoomBuilder builder = new RoomBuilder(chars);
         Level lev = new Level(builder.width(), builder.height(), builder);
 
-        // Lese ItemMap ein
-        HashMap<Character, String> itemMap = new HashMap<Character, String>();
-        String[] items = getStrings(baseDir + mapName + ".itm");
-        for (String st : items) {
-            String[] s = st.split(" ");
-            try {
-                itemMap.put(s[0].charAt(0), s[1]);
-            } catch (Exception e) {
-            }
-        }
-
         // Setze statische Items auf das Level:
         for (int x = 0; x < lev.width(); x++) {
             for (int y = 0; y < lev.height(); y++) {
-                char c = lev.tileAt(x, y).ch();
+                char c = level[y].charAt(x);
                 if (itemMap.containsKey(c)) {
                     lev.addActor(newItemByName(itemMap.get(c)), x, y);
                 }
