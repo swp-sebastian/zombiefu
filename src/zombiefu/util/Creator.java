@@ -54,23 +54,30 @@ public class Creator {
                 String[] st = s.split(" ");
                 ColoredChar chr = ColoredChar.create(st[1].charAt(0),
                         Color.decode("0x" + st[2]));
-                if (st[3].equals("Nahkampf"))
-                    itemMap.put(st[0],
-                            new Waffe(chr, st[0], Integer.decode(st[4]),
-                                    Waffentyp.NAHKAMPF));
-                else if (st[3].equals("Fernkampf"))
-                    itemMap.put(st[0],
-                            new Waffe(chr, st[0], Integer.decode(st[4]),
-                                    Waffentyp.FERNKAMPF, Integer.decode(st[5])));
-                else if (st[3].equals("Umkreis"))
-                    itemMap.put(st[0],
-                            new Waffe(chr, st[0], Integer.decode(st[4]),
-                                    Waffentyp.UMKREIS, Double.parseDouble(st[5])));
-                else
-                    itemMap.put(st[0],
-                            new Waffe(chr, st[0], Integer.decode(st[4]),
-                                    Waffentyp.GRANATE, Double.parseDouble(st[5]),
-                                    Integer.decode(st[6])));
+                Waffe waffe;
+                if (st[3].equals("Nahkampf")) {
+                    waffe = new Waffe(chr, st[0], Integer.decode(st[5]),
+                            Waffentyp.NAHKAMPF);
+                } else if (st[3].equals("Fernkampf")) {
+                    waffe =
+                            new Waffe(chr, st[0], Integer.decode(st[5]),
+                            Waffentyp.FERNKAMPF, Integer.decode(st[6]));
+                } else if (st[3].equals("Umkreis")) {
+                    waffe =
+                            new Waffe(chr, st[0], Integer.decode(st[5]),
+                            Waffentyp.UMKREIS, Double.parseDouble(st[6]));
+                } else {
+                    waffe =
+                            new Waffe(chr, st[0], Integer.decode(st[5]),
+                            Waffentyp.GRANATE, Double.parseDouble(st[6]),
+                            Integer.decode(st[7]));
+                }
+                if (st[4].equals("unbegrenzt")) {
+                    waffe.setUnlimitedMunition(true);
+                } else {
+                    waffe.addMunition(Integer.decode(st[4]));
+                }
+                itemMap.put(st[0], waffe);
             } catch (Exception e) {
             }
         }
@@ -80,8 +87,8 @@ public class Creator {
                 itemMap.put(
                         st[0],
                         new HealingItem(ColoredChar.create(st[2].charAt(0),
-                                Color.decode("0x" + st[3])), st[0], Integer
-                                .decode(st[1])));
+                        Color.decode("0x" + st[3])), st[0], Integer
+                        .decode(st[1])));
             } catch (Exception e) {
             }
         }
@@ -157,11 +164,12 @@ public class Creator {
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level[i].length(); j++) {
-                if (!itemMap.containsKey(level[i].charAt(j)))
+                if (!itemMap.containsKey(level[i].charAt(j))) {
                     chars[i][j] = ColoredChar.create(level[i].charAt(j));
-                else
+                } else {
                     chars[i][j] = ColoredChar.create(getFirstWordOfFile(
                             srcs + "CharSet.txt").charAt(0));
+                }
             }
         }
         return chars;
@@ -174,15 +182,19 @@ public class Creator {
                     new FileInputStream(input), "UTF-16");
             BufferedReader text = new BufferedReader(reader);
             String temp;
-            while ((temp = text.readLine()) != null)
-                lines.add(temp);
+            while ((temp = text.readLine()) != null) {
+                if (!temp.startsWith("#")) {
+                    lines.add(temp);
+                }
+            }
             text.close();
             reader.close();
         } catch (Exception e) {
         }
         String[] erg = new String[lines.size()];
-        for (int i = 0; i < lines.size(); i++)
+        for (int i = 0; i < lines.size(); i++) {
             erg[i] = lines.get(i);
+        }
         return erg;
     }
 
@@ -220,5 +232,4 @@ public class Creator {
             System.out.println("Datei nicht gefunden.");
         }
     }
-
 }
