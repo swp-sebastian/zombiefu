@@ -286,7 +286,7 @@ public class ConfigHelper {
         LinkedList<String> lines = new LinkedList<String>();
         try {
             InputStreamReader reader = new InputStreamReader(
-                    new FileInputStream(input), "UTF-16");
+                    new FileInputStream(input), "UTF-8");
             BufferedReader text = new BufferedReader(reader);
             String temp;
             while ((temp = text.readLine()) != null) {
