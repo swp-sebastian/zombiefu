@@ -69,8 +69,8 @@ public class ConfigHelper {
                             Integer.decode(st[5]), Waffentyp.NAHKAMPF, munition);
                 } else if (st[3].equals("Fernkampf")) {
                     waffenbuilder = new WaffenBuilder(chr, st[0],
-                            Integer.decode(st[5]), Waffentyp.FERNKAMPF,
-                            munition, Integer.decode(st[6]));
+                        Integer.decode(st[5]), Waffentyp.FERNKAMPF, munition,
+                        Integer.decode(st[6]));
                 } else if (st[3].equals("Umkreis")) {
                     waffenbuilder = new WaffenBuilder(chr, st[0],
                             Integer.decode(st[5]), Waffentyp.UMKREIS, munition,
@@ -90,9 +90,9 @@ public class ConfigHelper {
                 String[] st = s.split(" ");
                 items.put(
                         st[0],
-                        new HealingItemBuilder(ColoredChar.create(
-                        st[2].charAt(0), Color.decode("0x" + st[3])),
-                        st[0], Integer.decode(st[1])));
+                    new HealingItemBuilder(ColoredChar.create(st[2].charAt(0),
+                            Color.decode("0x" + st[3])), st[0], Integer
+                            .decode(st[1])));
         }
 
         // Lade KeyCards
@@ -125,13 +125,36 @@ public class ConfigHelper {
                     Color.decode("0x" + st[5]));
             Door door = new Door(face, st[1]);
             doors.put(door.getName(), door);
-            levelDoorMap.get(st[0]).add(new String[]{door.getName(), st[2], st[3]});
+            levelDoorMap.get(st[0]).add(
+                    new String[] { door.getName(), st[2], st[3] });
         }
 
         // Lade alle Level
         for (String s : levelStrings) {
             Level level = createLevelFromFile(s);
             levels.put(s, level);
+        }
+
+        // Setze statische Items auf die Level:
+        for (String s : levelStrings) {
+            String[] level = getStrings(ZombieGame.getMapDirectory() + s
+                    + ".map");
+            Level lev = levels.get(s);
+         // Lese ItemMap ein
+            HashMap<Character, String> itemMap = new HashMap<Character, String>();
+            String[] items = getStrings(ZombieGame.getMapDirectory() + s + ".itm");
+            for (String st : items) {
+                String[] it = st.split(" ");
+                itemMap.put(it[0].charAt(0), it[1]);
+            }
+            for (int x = 0; x < lev.width(); x++) {
+                for (int y = 0; y < lev.height(); y++) {
+                    char c = level[y].charAt(x);
+                    if (itemMap.containsKey(c)) {
+                        lev.addActor(newItemByName(itemMap.get(c)), x, y);
+                    }
+                }
+            }
         }
 
         // Lade Teleporter
@@ -149,8 +172,8 @@ public class ConfigHelper {
                     Integer.decode(d[7]));
             Coordinate to1 = new Coordinate(Integer.decode(d[8]),
                     Integer.decode(d[9]));
-            createBidirectionalTeleporter(world1, from1, to2, world2,
-                    from2, to1);
+            createBidirectionalTeleporter(world1, from1, to2, world2, from2,
+                    to1);
         }
     }
 
@@ -162,11 +185,9 @@ public class ConfigHelper {
                 + "CharSet.txt");
         for (int i = 0; i < settings.length; i++) {
             String[] setting = settings[i].split(" ");
-            charSet.put(setting[0].charAt(0),
-                    Color.decode("0x" + setting[3]));
+            charSet.put(setting[0].charAt(0), Color.decode("0x" + setting[3]));
             passSet.put(setting[0].charAt(0), setting[1].equals("passable"));
-            visibleSet.put(setting[0].charAt(0),
-                    setting[2].equals("visible"));
+            visibleSet.put(setting[0].charAt(0), setting[2].equals("visible"));
         }
     }
 
@@ -241,14 +262,6 @@ public class ConfigHelper {
     public static Level createLevelFromFile(String mapName) {
         String baseDir = ZombieGame.getMapDirectory();
 
-        // Lese ItemMap ein
-        HashMap<Character, String> itemMap = new HashMap<Character, String>();
-        String[] items = getStrings(baseDir + mapName + ".itm");
-        for (String st : items) {
-            String[] s = st.split(" ");
-            itemMap.put(s[0].charAt(0), s[1]);
-        }
-
         // Lese Map ein
         String[] level = getStrings(baseDir + mapName + ".map");
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
@@ -266,17 +279,8 @@ public class ConfigHelper {
         RoomBuilder builder = new RoomBuilder(chars);
         Level lev = new Level(builder.width(), builder.height(), builder);
         for (String[] s : levelDoorMap.get(mapName)) {
-            lev.addActor(doors.get(s[0]), Integer.decode(s[1]), Integer.decode(s[2]));
-        }
-
-        // Setze statische Items auf das Level:
-        for (int x = 0; x < lev.width(); x++) {
-            for (int y = 0; y < lev.height(); y++) {
-                char c = level[y].charAt(x);
-                if (itemMap.containsKey(c)) {
-                    lev.addActor(newItemByName(itemMap.get(c)), x, y);
-                }
-            }
+            lev.addActor(doors.get(s[0]), Integer.decode(s[1]),
+                    Integer.decode(s[2]));
         }
 
         return lev;
