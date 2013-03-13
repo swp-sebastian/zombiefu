@@ -2,6 +2,7 @@ package zombiefu.util;
 
 import jade.core.World;
 import jade.ui.TermPanel;
+import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import java.awt.Color;
@@ -10,8 +11,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 import zombiefu.creature.Player;
+import zombiefu.itembuilder.HealingItemBuilder;
+import zombiefu.itembuilder.ItemBuilder;
+import zombiefu.itembuilder.WaffenBuilder;
 import zombiefu.items.HealingItem;
 import zombiefu.items.Item;
 import zombiefu.items.Teleporter;
@@ -22,7 +28,7 @@ import zombiefu.map.RoomBuilder;
 
 public class ConfigHelper {
 
-    private static HashMap<String, Item> items;
+    private static HashMap<String, ItemBuilder> items;
     private static HashMap<String, Level> levels;
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
@@ -44,7 +50,7 @@ public class ConfigHelper {
 
     private static void initItems() {
         String baseDir = ZombieGame.getItemDirectory();
-        HashMap<String, Item> itemMap = new HashMap<String, Item>();
+        items = new HashMap<String, ItemBuilder>();
 
         // Lade Waffen
         String[] waffen = getStrings(baseDir + "Waffen.txt");
@@ -53,42 +59,43 @@ public class ConfigHelper {
                 String[] st = s.split(" ");
                 ColoredChar chr = ColoredChar.create(st[1].charAt(0),
                         Color.decode("0x" + st[2]));
-                Waffe waffe;
-                if (st[3].equals("Nahkampf")) {
-                    waffe = new Waffe(chr, st[0], Integer.decode(st[5]),
-                            Waffentyp.NAHKAMPF);
-                } else if (st[3].equals("Fernkampf")) {
-                    waffe =
-                            new Waffe(chr, st[0], Integer.decode(st[5]),
-                            Waffentyp.FERNKAMPF, Integer.decode(st[6]));
-                } else if (st[3].equals("Umkreis")) {
-                    waffe =
-                            new Waffe(chr, st[0], Integer.decode(st[5]),
-                            Waffentyp.UMKREIS, Double.parseDouble(st[6]));
+                WaffenBuilder waffenbuilder;
+                int munition;
+                if (st[4].equals("unbegrenzt")) {
+                    munition = -1;
                 } else {
-                    waffe =
-                            new Waffe(chr, st[0], Integer.decode(st[5]),
-                            Waffentyp.GRANATE, Double.parseDouble(st[6]),
+                    munition = Integer.decode(st[4]);
+                }
+                if (st[3].equals("Nahkampf")) {
+                    waffenbuilder = new WaffenBuilder(chr, st[0], Integer.decode(st[5]),
+                            Waffentyp.NAHKAMPF, munition);
+                } else if (st[3].equals("Fernkampf")) {
+                    waffenbuilder =
+                            new WaffenBuilder(chr, st[0], Integer.decode(st[5]),
+                            Waffentyp.FERNKAMPF, munition, Integer.decode(st[6]));
+                } else if (st[3].equals("Umkreis")) {
+                    waffenbuilder =
+                            new WaffenBuilder(chr, st[0], Integer.decode(st[5]),
+                            Waffentyp.UMKREIS, munition, Double.parseDouble(st[6]));
+                } else {
+                    waffenbuilder =
+                            new WaffenBuilder(chr, st[0], Integer.decode(st[5]),
+                            Waffentyp.GRANATE, munition, Double.parseDouble(st[6]),
                             Integer.decode(st[7]));
                 }
-                if (st[4].equals("unbegrenzt")) {
-                    waffe.setUnlimitedMunition(true);
-                } else {
-                    waffe.addMunition(Integer.decode(st[4]));
-                }
-                itemMap.put(st[0], waffe);
+                items.put(st[0], waffenbuilder);
             } catch (Exception e) {
             }
         }
 
         // Lade HealingItems
-        String[] healingItems = getStrings(ZombieGame.getSourceDirectory() + "HealingItems.txt");
+        String[] healingItems = getStrings(ZombieGame.getItemDirectory() + "HealingItems.txt");
         for (String s : healingItems) {
             try {
                 String[] st = s.split(" ");
-                itemMap.put(
+                items.put(
                         st[0],
-                        new HealingItem(ColoredChar.create(st[2].charAt(0),
+                        new HealingItemBuilder(ColoredChar.create(st[2].charAt(0),
                         Color.decode("0x" + st[3])), st[0], Integer
                         .decode(st[1])));
             } catch (Exception e) {
@@ -145,11 +152,20 @@ public class ConfigHelper {
         }
     }
 
-    private static Item getItemByName(String s) {
+    public static Item newItemByName(String s) {
         if (items == null) {
             initItems();
         }
-        return items.get(s);
+        ItemBuilder i = items.get(s);
+        Guard.argumentIsNotNull(i);
+        return items.get(s).buildItem();
+    }
+
+    public static Waffe newWaffeByName(String s) {
+        Item w = newItemByName(s);
+        Guard.argumentIsNotNull(w);
+        Guard.verifyState(w instanceof Waffe);
+        return (Waffe) w;
     }
 
     private static Level getLevelByName(String s) {
@@ -183,7 +199,7 @@ public class ConfigHelper {
     public static Level getFirstLevel() {
         return getLevelByName(getFirstWordOfFile(ZombieGame.getSourceDirectory() + "levels.txt"));
     }
-    
+
     public static boolean isValidChar(char c) {
         return getCharSet().containsKey(c);
     }
@@ -231,7 +247,7 @@ public class ConfigHelper {
             for (int y = 0; y < lev.height(); y++) {
                 char c = lev.tileAt(x, y).ch();
                 if (itemMap.containsKey(c)) {
-                    lev.addActor(getItemByName(itemMap.get(c)), x, y);
+                    lev.addActor(newItemByName(itemMap.get(c)), x, y);
                 }
             }
         }
