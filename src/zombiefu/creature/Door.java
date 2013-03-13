@@ -7,8 +7,8 @@ public class Door extends NotPassableActor {
 
     private final String name;
     
-    public Door(String name) {
-        super(ColoredChar.create('D'));
+    public Door(ColoredChar face, String name) {
+        super(face);
         this.name = name;
     }
 
