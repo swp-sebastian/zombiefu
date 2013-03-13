@@ -234,9 +234,10 @@ public abstract class Creature extends NotPassableActor {
                 pos().getTranslated(dir));
         if (actor == null) {
             move(dir);
-        } else if (actor instanceof Monster && this instanceof Monster) {
+        } else if (!(actor instanceof Player) && this instanceof Monster) {
             throw new CannotMoveToIllegalFieldException();
-        } else if (!(actor instanceof Creature)) {throw new CannotMoveToIllegalFieldException();
+        } else if (!(actor instanceof Creature) && this instanceof Player) {
+            throw new CannotMoveToIllegalFieldException();
         } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
             attack(dir);
         } else {
