@@ -36,7 +36,7 @@ public class ZombieGame {
 
     public static void createPlayer(String name) {
         ArrayList<Waffe> waffen = new ArrayList<Waffe>();
-        waffen.add(new Waffe(ColoredChar.create('S'), "SuperFist", 100));
+        waffen.add(ConfigHelper.newWaffeByName("SuperFist"));
         player = new Player(ColoredChar.create('\u263B',
                 Color.decode("0x7D26CD")), name, 100, 10, 10, 10,
                 waffen);

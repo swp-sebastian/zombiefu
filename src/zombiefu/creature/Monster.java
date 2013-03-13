@@ -16,6 +16,7 @@ import zombiefu.ki.MoveAlgorithm;
 import zombiefu.ki.TargetNotFoundException;
 import zombiefu.util.NoDirectionGivenException;
 import zombiefu.ki.TargetIsNotInThisWorldException;
+import zombiefu.util.ConfigHelper;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
@@ -38,7 +39,7 @@ public abstract class Monster extends Creature {
 
     public Monster(ColoredChar face, MoveAlgorithm m) {
         super(face);
-        waffe = new Waffe(ColoredChar.create('|'), "Faust", 1);
+        waffe = null;
         movealg = m;
     }
 
