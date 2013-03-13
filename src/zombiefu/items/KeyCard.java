@@ -15,12 +15,13 @@ public class KeyCard extends ConsumableItem {
     }
 
     public void getConsumedBy(Player pl) throws CannotBeConsumedException {
-        if (pl.world()==door.world()){
-            
-        }
-        else{
+        if (pl.world() != door.world()) {
+        } else if (door.pos().distance(pl.pos()) > 1) {
             ZombieGame.newMessage("Der Schlüssel kann nicht benutzt werden.");
             throw new CannotBeConsumedException();
+        }
+        else {
+            pl.world().removeActor(door);
         }
 
     }
