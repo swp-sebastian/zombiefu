@@ -1,0 +1,3 @@
+# Benutzung:
+# Tür Farbe Character
+TestDoor S 000000
