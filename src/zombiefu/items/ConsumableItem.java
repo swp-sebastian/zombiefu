@@ -17,5 +17,5 @@ public abstract class ConsumableItem extends Item {
         super(face, s);
     }
 
-    public abstract void getConsumedBy(Player pl);
+    public abstract void getConsumedBy(Player pl) throws CannotBeConsumedException;
 }
