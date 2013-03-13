@@ -22,6 +22,7 @@ public class KeyCard extends ConsumableItem {
         }
         else {
             pl.world().removeActor(door);
+            ZombieGame.newMessage("Du konntest die Tür "+door.getName()+" aufschließen.");
         }
 
     }
