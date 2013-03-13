@@ -10,7 +10,7 @@ public class Door extends Actor {
     private final String name;
     
     public Door(String name) {
-        super(ColoredChar.create('D', Color.decode("0x8B4513")));
+        super(ColoredChar.create('D'));
         this.name = name;
     }
 

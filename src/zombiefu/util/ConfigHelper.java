@@ -11,9 +11,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
+
+import zombiefu.creature.Door;
 import zombiefu.creature.Player;
 import zombiefu.items.HealingItem;
 import zombiefu.items.Item;
+import zombiefu.items.KeyCard;
 import zombiefu.items.Teleporter;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
@@ -31,6 +34,9 @@ public class ConfigHelper {
 
     public static void createStoryForPlayer(Player player) {
         Level level = getLevelByName(getFirstWordOfFile(ZombieGame.getSourceDirectory() + "levels.txt"));
+        Door d = new Door("hallo");
+        level.addActor(d, 2,12);
+        level.addActor(new KeyCard(d),5,12);
         level.addActor(player);
         level.fillWithEnemies();
     }
