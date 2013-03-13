@@ -26,9 +26,9 @@ public class Player extends Creature implements Camera {
     private ArrayList<ConsumableItem> inventar;
     private ArrayList<Waffe> waffen;
 
-    public Player(ColoredChar face, String name,
-            int healthPoints, int attackValue, int defenseValue,
-            int intelligenceValue, ArrayList<Waffe> w) {
+    public Player(ColoredChar face, String name, int healthPoints,
+            int attackValue, int defenseValue, int intelligenceValue,
+            ArrayList<Waffe> w) {
 
         super(face, name, healthPoints, attackValue, defenseValue);
 
@@ -76,54 +76,54 @@ public class Player extends Creature implements Camera {
             char key;
             key = ZombieGame.askPlayerForKey();
             switch (key) {
-                case 'q':
-                    switchWeapon(true);
-                    ZombieGame.refreshBottomFrame();
+            case 'q':
+                switchWeapon(true);
+                ZombieGame.refreshBottomFrame();
+                act();
+                break;
+            case 'e':
+                switchWeapon(false);
+                ZombieGame.refreshBottomFrame();
+                act();
+                break;
+            case 'f':
+                if (fov instanceof RayCaster) {
+                    fov = new ViewEverything();
+                } else {
+                    fov = new RayCaster();
+                }
+                ZombieGame.refreshMainFrame();
+                act();
+                break;
+            case 'i':
+                ConsumableItem it = ZombieGame.askPlayerForItem();
+                if (it == null) {
                     act();
-                    break;
-                case 'e':
-                    switchWeapon(false);
-                    ZombieGame.refreshBottomFrame();
+                } else {
+                    consumeItem(it);
+                }
+                break;
+            case (char) 27:
+                System.exit(0);
+            case 'g':
+                godMode = !godMode;
+                act();
+                break;
+            case '\n':
+                try {
+                    attack();
+                } catch (NoDirectionGivenException ex) {
                     act();
-                    break;
-                case 'f':
-                    if (fov instanceof RayCaster) {
-                        fov = new ViewEverything();
-                    } else {
-                        fov = new RayCaster();
-                    }
-                    ZombieGame.refreshMainFrame();
+                }
+                break;
+            default:
+                Direction dir = Direction.keyToDir(key);
+                if (dir != null) {
+                    tryToMove(dir);
+                } else {
                     act();
-                    break;
-                case 'i':
-                    ConsumableItem it = ZombieGame.askPlayerForItem();
-                    if (it == null) {
-                        act();
-                    } else {
-                        consumeItem(it);
-                    }
-                    break;
-                case (char) 27:
-                    System.exit(0);
-                case 'g':
-                    godMode = !godMode;
-                    act();
-                    break;
-                case '\n':
-                    try {
-                        attack();
-                    } catch (NoDirectionGivenException ex) {
-                        act();
-                    }
-                    break;
-                default:
-                    Direction dir = Direction.keyToDir(key);
-                    if (dir != null) {
-                        tryToMove(dir);
-                    } else {
-                        act();
-                    }
-                    break;
+                }
+                break;
             }
         } catch (InterruptedException e) {
         } catch (CannotMoveToImpassableFieldException ex) {
@@ -153,7 +153,8 @@ public class Player extends Creature implements Camera {
         } else if (i instanceof ConsumableItem) {
             inventar.add((ConsumableItem) i);
         } else {
-            throw new IllegalStateException("Items should either be Weapons or consumable.");
+            throw new IllegalStateException(
+                    "Items should either be Weapons or consumable.");
         }
     }
 
@@ -162,8 +163,11 @@ public class Player extends Creature implements Camera {
         return waffen.get(0);
     }
 
-    public void heal(int i) {
+    public void heal(int i) throws MaximumHealthPointException {
         System.out.print(getName() + " hat " + i + " HP geheilt. ");
+        if (healthPoints==maximalHealthPoints){
+            throw new MaximumHealthPointException();
+        }
         healthPoints += i;
         if (healthPoints >= maximalHealthPoints) {
             healthPoints = maximalHealthPoints;
@@ -176,9 +180,9 @@ public class Player extends Creature implements Camera {
         System.out.println(getName() + " benutzt Item " + it.getName());
         try {
             it.getConsumedBy(this);
-        } catch (CannotBeConsumedException ex) {
             inventar.remove(it);
             it.expire();
+        } catch (CannotBeConsumedException ex) {
         }
         ZombieGame.refreshBottomFrame();
     }

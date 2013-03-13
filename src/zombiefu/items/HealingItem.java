@@ -1,6 +1,7 @@
 package zombiefu.items;
 
 import jade.util.datatype.ColoredChar;
+import zombiefu.creature.MaximumHealthPointException;
 import zombiefu.creature.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
@@ -16,7 +17,12 @@ public class HealingItem extends ConsumableItem {
 
     @Override
     public void getConsumedBy(Player pl) {
-        ZombieGame.newMessage("'" + getName() + "' hat dich geheilt.");
-        pl.heal(heilkraft);
+        try {
+            pl.heal(heilkraft);
+            ZombieGame.newMessage("'" + getName() + "' hat dich geheilt.");
+        } catch (MaximumHealthPointException e) {
+            ZombieGame.newMessage("Du brauchst dich nicht zu heilen.");
+            
+        }
     }
 }
