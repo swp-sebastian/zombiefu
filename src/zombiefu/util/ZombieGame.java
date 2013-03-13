@@ -18,6 +18,7 @@ import zombiefu.items.KeyCard;
 import zombiefu.items.Waffe;
 import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
+import zombiefu.util.ConfigHelper;
 
 /**
  *
@@ -34,6 +35,11 @@ public class ZombieGame {
 
     public static void createGame(String name) {
         frame = new ZombieFrame(name);
+    }
+
+    public static void keyInit(String input){
+    	String[] config = ConfigHelper.getStrings(sourceDir + input);
+    	KeyEdit.read(config);
     }
 
     public static void createPlayer(String name) {
@@ -72,7 +78,7 @@ public class ZombieGame {
         Door d = new Door("hallo");
         firstLevel.addActor(d, 2, 12);
         firstLevel.addActor(new KeyCard(d), 5, 12);
-        
+
         frame.mainTerm().registerCamera(player, 40, 17);
     }
 

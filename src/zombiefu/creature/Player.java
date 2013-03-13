@@ -13,6 +13,7 @@ import zombiefu.items.CannotBeConsumedException;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
+import zombiefu.util.KeyEdit;
 import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.ZombieGame;
 
@@ -75,6 +76,51 @@ public class Player extends Creature implements Camera {
         try {
             char key;
             key = ZombieGame.askPlayerForKey();
+    
+            if (key==KeyEdit.prevItem){	//ganzer if-else mist extrem unschön
+                switchWeapon(true); //kommt daher, da case nur constant expressions kennt
+                ZombieGame.refreshBottomFrame(); //final hat auch nicht geholfen, wer ahnung hat: bitte beheben
+                act();
+            }
+            else if (key==KeyEdit.nextItem){
+                switchWeapon(false);
+                ZombieGame.refreshBottomFrame();
+                act();
+            }
+            else if (key==KeyEdit.showItems){
+                ConsumableItem it = ZombieGame.askPlayerForItem();
+                if (it == null) {
+                    act();
+                } else {
+                    consumeItem(it);
+                }
+            }
+            else if (key==KeyEdit.hit){
+                try {
+                    attack();
+                } catch (NoDirectionGivenException ex) {
+                    act();
+                }
+            }
+            else {
+                Direction dire;
+                if (key==KeyEdit.up){
+                	dire = Direction.NORTH;
+                	tryToMove(dire);
+                }
+                else if (key==KeyEdit.down){
+                	dire = Direction.SOUTH;
+                	tryToMove(dire);
+                }
+                else if (key==KeyEdit.left){
+                	dire = Direction.WEST;
+                	tryToMove(dire);
+                }
+                else if (key==KeyEdit.right){
+                	dire = Direction.EAST;
+                	tryToMove(dire);
+                }
+                else {
             switch (key) {
             case 'q':
                 switchWeapon(true);
@@ -124,6 +170,8 @@ public class Player extends Creature implements Camera {
                     act();
                 }
                 break;
+            }
+            }
             }
         } catch (InterruptedException e) {
         } catch (CannotMoveToImpassableFieldException ex) {
