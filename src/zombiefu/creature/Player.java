@@ -16,6 +16,7 @@ import zombiefu.level.Level;
 import zombiefu.util.KeyEdit;
 import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.ZombieGame;
+import zombiefu.util.ZombieTools;
 import zombiefu.util.Action;
 
 public class Player extends Creature implements Camera {
@@ -98,7 +99,7 @@ public class Player extends Creature implements Camera {
                 act();
             }
 
-            Action action = KeyEdit.getAction(key);
+            Action action = ZombieTools.keyToAction(ZombieGame.getSettings().keybindings, key);
 
             if (action != null) {
 

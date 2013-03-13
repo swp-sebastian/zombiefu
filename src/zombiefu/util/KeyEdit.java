@@ -7,47 +7,37 @@ import java.util.HashMap;
 import zombiefu.util.Action;
 
 public class KeyEdit {
-    private static Properties props;
-    private static String name;
-    private static HashMap<Character, Action> keys;
+    private Properties props;
+    public final String name;
+    public final  HashMap<Character, Action> keybindings;
 
-    public static String getPlayername(){
-        return name;
-    }
+    public KeyEdit(String[] args, String res) {
 
-    public static Action getAction(char c) {
-        // Keine Ahnung wie wir sonst <Enter> erkennen.
-        if (Character.getNumericValue(c) == -1) {
-            // Und das wäre <SPC>, wir binden das zu '_'
-            if (c == ' ') {
-                return keys.get(new Character('_'));
-            }
-            return keys.get(new Character(' '));
-        }
-
-        return keys.get(Character.valueOf(c));
-    }
-
-    public static void read(String config){
         props = new Properties();
         try {
-            props.load(new FileInputStream(config));
-            System.out.println("Konfigurationsdatei "+config+" geladen.");
+            props.load(new FileInputStream(res + "/config.cfg"));
+            System.out.println("Konfigurationsdatei "+res+"/config.cfg geladen.");
         } catch (IOException ex) {
-            System.out.println("Konfigurationsdatei "+config+" nicht vorhanden.");
+            System.out.println("Konfigurationsdatei "+res+"/config.cfg  nicht vorhanden.");
         }
 
         name = props.getProperty("name", System.getProperty("user.name"));
 
-        keys = new HashMap<Character, Action>();
+        keybindings = new HashMap<Character, Action>();
 
-        keys.put(Character.valueOf(props.getProperty("controls.up", "w").charAt(0)), Action.UP);
-        keys.put(Character.valueOf(props.getProperty("controls.down", "s").charAt(0)), Action.DOWN);
-        keys.put(Character.valueOf(props.getProperty("controls.left", "a").charAt(0)), Action.LEFT);
-        keys.put(Character.valueOf(props.getProperty("controls.right", "d").charAt(0)), Action.RIGHT);
-        keys.put(Character.valueOf(props.getProperty("controls.attack", Character.toString(' ')).charAt(0)), Action.ATTACK);
-        keys.put(Character.valueOf(props.getProperty("controls.nextweapon", "e").charAt(0)), Action.NEXT_WEAPON);
-        keys.put(Character.valueOf(props.getProperty("controls.prevweapon", "q").charAt(0)), Action.PREV_WEAPON);
-        keys.put(Character.valueOf(props.getProperty("controls.inventory", "i").charAt(0)), Action.INVENTORY);
+        keybindings.put(Character.valueOf(props.getProperty("controls.up", "w").charAt(0)), Action.UP);
+        keybindings.put(Character.valueOf(props.getProperty("controls.down", "s").charAt(0)), Action.DOWN);
+        keybindings.put(Character.valueOf(props.getProperty("controls.left", "a").charAt(0)), Action.LEFT);
+        keybindings.put(Character.valueOf(props.getProperty("controls.right", "d").charAt(0)), Action.RIGHT);
+        keybindings.put(Character.valueOf(props.getProperty("controls.attack", Character.toString(' ')).charAt(0)), Action.ATTACK);
+        keybindings.put(Character.valueOf(props.getProperty("controls.nextweapon", "e").charAt(0)), Action.NEXT_WEAPON);
+        keybindings.put(Character.valueOf(props.getProperty("controls.prevweapon", "q").charAt(0)), Action.PREV_WEAPON);
+        keybindings.put(Character.valueOf(props.getProperty("controls.inventory", "i").charAt(0)), Action.INVENTORY);
     }
+
+    // Spielername
+    public String getPlayername(){
+        return name;
+    }
+
 }

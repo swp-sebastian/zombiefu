@@ -16,9 +16,8 @@ public class ZombieFU {
 
     public static void main(String[] args) {
 
-        ZombieGame.createGame("The Final Exam - Die Anwesenheitspflicht schlägt zurück");
-        ZombieGame.keyInit("config.cfg");
-        ZombieGame.createPlayer(KeyEdit.getPlayername());
+        ZombieGame.createGame(args, "The Final Exam - Die Anwesenheitspflicht schlägt zurück");
+        ZombieGame.createPlayer();
 
         ZombieGame.showStaticImage("startscreen");
         ZombieGame.showStaticImage("story");

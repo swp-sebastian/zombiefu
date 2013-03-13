@@ -11,8 +11,10 @@ import static jade.util.datatype.Direction.WEST;
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
 import zombiefu.creature.Player;
 import zombiefu.ui.ZombieFrame;
+import zombiefu.util.Action;
 
 public class ZombieTools {
 
@@ -49,4 +51,23 @@ public class ZombieTools {
     public static Color getRandomColor() {
         return getRandomColor(Dice.global);
     }
+
+    // getAction :: char -> Action
+    // Konvertiert key press in konfigurierte Action
+    public static Action keyToAction(HashMap<Character, Action> keybindings, char c) {
+        // Keine Ahnung wie wir sonst <Enter> erkennen.
+        if (Character.getNumericValue(c) == -1) {
+            // Und das wäre <SPC>, wir binden das zu '_'
+            if (c == ' ') {
+                return keybindings.get(new Character('_'));
+            }
+            return keybindings.get(new Character(' '));
+        }
+
+        return keybindings.get(Character.valueOf(c));
+    }
+
+
+
+
 }

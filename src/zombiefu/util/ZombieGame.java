@@ -30,23 +30,24 @@ public class ZombieGame {
     private static final String screenDir = "src/sources/screens/";
     private static final String itemDir = "src/sources/items/";
     private static final String mapDir = "src/sources/maps/";
+    private static KeyEdit settings;
     private static ZombieFrame frame;
     private static Player player;
 
-    public static void createGame(String name) {
+    public static void createGame(String[] args, String name) {
+        settings = new KeyEdit(args, "src");
         frame = new ZombieFrame(name);
     }
 
-    public static void keyInit(String input){
-        //	String[] config = ConfigHelper.getStrings(sourceDir + input);
-    	KeyEdit.read(sourceDir + input);
+    public static KeyEdit getSettings() {
+        return settings;
     }
 
-    public static void createPlayer(String name) {
+    public static void createPlayer() {
         ArrayList<Waffe> waffen = new ArrayList<Waffe>();
         waffen.add(ConfigHelper.newWaffeByName("SuperFist"));
         player = new Player(ColoredChar.create('\u263B',
-                Color.decode("0x7D26CD")), name, 100, 10, 10, 10,
+                Color.decode("0x7D26CD")), settings.name, 100, 10, 10, 10,
                 waffen);
     }
 
