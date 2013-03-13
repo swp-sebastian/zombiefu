@@ -178,6 +178,8 @@ public class Player extends Creature implements Camera {
 
     public void toInventar(Item i) {
         if (i instanceof Waffe) {
+            Waffe w = (Waffe) i;
+            
             waffen.add((Waffe) i);
         } else if (i instanceof ConsumableItem) {
             inventar.add((ConsumableItem) i);
