@@ -55,7 +55,7 @@ public class Dijkstra implements MoveAlgorithm {
             for (Direction d : dirs) {
                 Coordinate nachbar = vertex.getTranslated(d);
 
-                if (!w.passableAt(nachbar) || !w.getActorsAt(Monster.class, nachbar).isEmpty() || previous[nachbar.x()][nachbar.y()] != null) {
+                if (!w.insideBounds(nachbar) || !w.passableAt(nachbar) || !w.getActorsAt(Monster.class, nachbar).isEmpty() || previous[nachbar.x()][nachbar.y()] != null) {
                     continue;
                 }
                 queue.add(nachbar);

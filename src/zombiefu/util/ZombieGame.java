@@ -10,9 +10,11 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import zombiefu.creature.Door;
 import zombiefu.creature.Player;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
+import zombiefu.items.KeyCard;
 import zombiefu.items.Waffe;
 import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
@@ -66,6 +68,11 @@ public class ZombieGame {
         Level firstLevel = ConfigHelper.getFirstLevel();
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
+
+        Door d = new Door("hallo");
+        firstLevel.addActor(d, 2, 12);
+        firstLevel.addActor(new KeyCard(d), 5, 12);
+        
         frame.mainTerm().registerCamera(player, 40, 17);
     }
 
