@@ -198,7 +198,7 @@ public abstract class Creature extends Actor {
         attack(dir);
     }
 
-    public void tryToMove(Direction dir) throws CannotMoveToImpassableFieldException {
+    public void tryToMove(Direction dir) throws CannotMoveToIllegalFieldException {
         Guard.argumentIsNotNull(world());
         Guard.argumentIsNotNull(dir);
         if (dazed > 0) {
@@ -209,18 +209,18 @@ public abstract class Creature extends Actor {
             return;
         }
         Coordinate targetField = pos().getTranslated(dir);
-        if (!world().passableAt(targetField)) {
-            throw new CannotMoveToImpassableFieldException();
+        if (!world().insideBounds(targetField) || !world().passableAt(targetField)) {
+            throw new CannotMoveToIllegalFieldException();
         }
         Creature creat = world().getActorAt(Creature.class, pos().getTranslated(dir));
         if (creat == null) {
             move(dir);
         } else if (creat instanceof Monster && this instanceof Monster) {
-            throw new CannotMoveToImpassableFieldException();
+            throw new CannotMoveToIllegalFieldException();
         } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
             attack(dir);
         } else {
-            throw new CannotMoveToImpassableFieldException();
+            throw new CannotMoveToIllegalFieldException();
         }
     }
 

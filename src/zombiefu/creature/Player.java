@@ -126,7 +126,7 @@ public class Player extends Creature implements Camera {
                 break;
             }
         } catch (InterruptedException e) {
-        } catch (CannotMoveToImpassableFieldException ex) {
+        } catch (CannotMoveToIllegalFieldException ex) {
             act();
         }
     }
