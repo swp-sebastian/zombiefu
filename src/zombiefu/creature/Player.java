@@ -13,8 +13,10 @@ import zombiefu.items.CannotBeConsumedException;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
+import zombiefu.util.KeyEdit;
 import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.ZombieGame;
+import zombiefu.util.Action;
 
 public class Player extends Creature implements Camera {
 
@@ -73,20 +75,11 @@ public class Player extends Creature implements Camera {
     @Override
     public void act() {
         try {
-            char key;
-            key = ZombieGame.askPlayerForKey();
-            switch (key) {
-            case 'q':
-                switchWeapon(true);
-                ZombieGame.refreshBottomFrame();
-                act();
-                break;
-            case 'e':
-                switchWeapon(false);
-                ZombieGame.refreshBottomFrame();
-                act();
-                break;
-            case 'f':
+            char key = ZombieGame.askPlayerForKey();
+
+            // Diese Keys haben noch keine Property sie sind fürs Debuggen und
+            // werden später abgeschaltet. FIX (macht sgs)
+            if (key == 'f') {
                 if (fov instanceof RayCaster) {
                     fov = new ViewEverything();
                 } else {
@@ -94,36 +87,71 @@ public class Player extends Creature implements Camera {
                 }
                 ZombieGame.refreshMainFrame();
                 act();
-                break;
-            case 'i':
-                ConsumableItem it = ZombieGame.askPlayerForItem();
-                if (it == null) {
-                    act();
-                } else {
-                    consumeItem(it);
-                }
-                break;
-            case (char) 27:
+            }
+
+            if (key == 27) {
                 System.exit(0);
-            case 'g':
+            }
+
+            if (key == 'g') {
                 godMode = !godMode;
                 act();
-                break;
-            case '\n':
-                try {
-                    attack();
-                } catch (NoDirectionGivenException ex) {
+            }
+
+            Action action = KeyEdit.getAction(key);
+
+            if (action != null) {
+
+                switch (action) {
+
+                case PREV_WEAPON:
+                    switchWeapon(true);
+                    ZombieGame.refreshBottomFrame();
                     act();
-                }
-                break;
-            default:
-                Direction dir = Direction.keyToDir(key);
-                if (dir != null) {
-                    tryToMove(dir);
-                } else {
+                    break;
+
+                case NEXT_WEAPON:
+                    switchWeapon(false);
+                    ZombieGame.refreshBottomFrame();
                     act();
+                    break;
+
+                case INVENTORY:
+                    ConsumableItem it = ZombieGame.askPlayerForItem();
+                    if (it == null) {
+                        act();
+                    } else {
+                        consumeItem(it);
+                    }
+                    break;
+
+                case ATTACK:
+                    try {
+                        attack();
+                    } catch (NoDirectionGivenException ex) {
+                        act();
+                    }
+                    break;
+
+                case UP:
+                    tryToMove(Direction.NORTH);
+                    break;
+
+                case DOWN:
+                    tryToMove(Direction.SOUTH);
+                    break;
+
+                case LEFT:
+                    tryToMove(Direction.WEST);
+                    break;
+
+                case RIGHT:
+                    tryToMove(Direction.EAST);
+                    break;
+
+                default:
+                    break;
                 }
-                break;
             }
         } catch (InterruptedException e) {
         } catch (CannotMoveToIllegalFieldException ex) {
