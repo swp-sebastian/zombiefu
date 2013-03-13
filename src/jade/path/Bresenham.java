@@ -33,6 +33,8 @@ public class Bresenham extends PathFinder
             {
                 x += ix;
                 int y = (int)(slope * (x - start.x()) + start.y() + .5f);
+                if(!world.insideBounds(x, y))
+                    break;
                 path.add(new Coordinate(x, y));
                 if(!world.transparentAt(x, y))
                     break;
@@ -47,6 +49,8 @@ public class Bresenham extends PathFinder
             {
                 y += iy;
                 int x = (int)(slope * (y - start.y()) + start.x() + .5f);
+                if(!world.insideBounds(x, y))
+                    break;
                 path.add(new Coordinate(x, y));
                 if(!world.transparentAt(x, y))
                     break;
