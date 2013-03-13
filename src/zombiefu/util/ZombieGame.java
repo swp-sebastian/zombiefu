@@ -38,8 +38,8 @@ public class ZombieGame {
     }
 
     public static void keyInit(String input){
-    	String[] config = ConfigHelper.getStrings(sourceDir + input);
-    	KeyEdit.read(config);
+        //	String[] config = ConfigHelper.getStrings(sourceDir + input);
+    	KeyEdit.read(sourceDir + input);
     }
 
     public static void createPlayer(String name) {
