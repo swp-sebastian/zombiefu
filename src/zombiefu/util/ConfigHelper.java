@@ -54,7 +54,6 @@ public class ConfigHelper {
         // Lade Waffen
         String[] waffen = getStrings(baseDir + "Waffen.txt");
         for (String s : waffen) {
-            try {
                 String[] st = s.split(" ");
                 ColoredChar chr = ColoredChar.create(st[1].charAt(0),
                         Color.decode("0x" + st[2]));
@@ -82,37 +81,29 @@ public class ConfigHelper {
                             Double.parseDouble(st[6]), Integer.decode(st[7]));
                 }
                 items.put(st[0], waffenbuilder);
-            } catch (Exception e) {
-            }
         }
 
         // Lade HealingItems
         String[] healingItems = getStrings(ZombieGame.getItemDirectory()
                 + "HealingItems.txt");
         for (String s : healingItems) {
-            try {
                 String[] st = s.split(" ");
                 items.put(
                         st[0],
                         new HealingItemBuilder(ColoredChar.create(
-                                st[2].charAt(0), Color.decode("0x" + st[3])),
-                                st[0], Integer.decode(st[1])));
-            } catch (Exception e) {
-            }
+                        st[2].charAt(0), Color.decode("0x" + st[3])),
+                        st[0], Integer.decode(st[1])));
         }
 
         // Lade KeyCards
         String[] keyCards = getStrings(ZombieGame.getItemDirectory()
                 + "KeyCards.txt");
         for (String s : keyCards) {
-            try {
                 String[] st = s.split(" ");
                 items.put(
                         st[0],
                         new KeyCardBuilder(ColoredChar.create(st[1].charAt(0),
-                                Color.decode("0x" + st[2])), doors.get(st[0])));
-            } catch (Exception e) {
-            }
+                        Color.decode("0x" + st[2])), getDoorByName(st[0])));
         }
     }
 
@@ -122,22 +113,19 @@ public class ConfigHelper {
         levelDoorMap = new HashMap<String, LinkedList<String[]>>();
         String[] levelStrings = getStrings(ZombieGame.getSourceDirectory()
                 + "levels.txt");
-        for (String s : levelStrings){
-                levelDoorMap.put(s, new LinkedList<String[]>());
+        for (String s : levelStrings) {
+            levelDoorMap.put(s, new LinkedList<String[]>());
         }
         // Lade alle Türen
         String[] tempDoors = getStrings(ZombieGame.getSourceDirectory()
                 + "doors.txt");
         for (String s : tempDoors) {
-            try {
-                String[] st = s.split(" ");
-                ColoredChar face = ColoredChar.create(st[4].charAt(0),
-                        Color.decode("0x" + st[5]));
-                Door door = new Door(face, st[1]);
-                doors.put(door.getName(), door);
-                levelDoorMap.get(st[0]).add(new String[]{door.getName(),st[2],st[3]});
-            } catch (Exception e) {
-            }
+            String[] st = s.split(" ");
+            ColoredChar face = ColoredChar.create(st[4].charAt(0),
+                    Color.decode("0x" + st[5]));
+            Door door = new Door(face, st[1]);
+            doors.put(door.getName(), door);
+            levelDoorMap.get(st[0]).add(new String[]{door.getName(), st[2], st[3]});
         }
 
         // Lade alle Level
@@ -150,22 +138,19 @@ public class ConfigHelper {
         String[] teles = getStrings(ZombieGame.getSourceDirectory()
                 + "teleporters.txt");
         for (String s : teles) {
-            try {
-                String[] d = s.split(" ");
-                Level world1 = levels.get(d[0]);
-                Coordinate from1 = new Coordinate(Integer.decode(d[1]),
-                        Integer.decode(d[2]));
-                Coordinate to2 = new Coordinate(Integer.decode(d[3]),
-                        Integer.decode(d[4]));
-                Level world2 = levels.get(d[5]);
-                Coordinate from2 = new Coordinate(Integer.decode(d[6]),
-                        Integer.decode(d[7]));
-                Coordinate to1 = new Coordinate(Integer.decode(d[8]),
-                        Integer.decode(d[9]));
-                createBidirectionalTeleporter(world1, from1, to2, world2,
-                        from2, to1);
-            } catch (Exception e) {
-            }
+            String[] d = s.split(" ");
+            Level world1 = levels.get(d[0]);
+            Coordinate from1 = new Coordinate(Integer.decode(d[1]),
+                    Integer.decode(d[2]));
+            Coordinate to2 = new Coordinate(Integer.decode(d[3]),
+                    Integer.decode(d[4]));
+            Level world2 = levels.get(d[5]);
+            Coordinate from2 = new Coordinate(Integer.decode(d[6]),
+                    Integer.decode(d[7]));
+            Coordinate to1 = new Coordinate(Integer.decode(d[8]),
+                    Integer.decode(d[9]));
+            createBidirectionalTeleporter(world1, from1, to2, world2,
+                    from2, to1);
         }
     }
 
@@ -177,14 +162,11 @@ public class ConfigHelper {
                 + "CharSet.txt");
         for (int i = 0; i < settings.length; i++) {
             String[] setting = settings[i].split(" ");
-            try {
-                charSet.put(setting[0].charAt(0),
-                        Color.decode("0x" + setting[3]));
-                passSet.put(setting[0].charAt(0), setting[1].equals("passable"));
-                visibleSet.put(setting[0].charAt(0),
-                        setting[2].equals("visible"));
-            } catch (Exception e) {
-            }
+            charSet.put(setting[0].charAt(0),
+                    Color.decode("0x" + setting[3]));
+            passSet.put(setting[0].charAt(0), setting[1].equals("passable"));
+            visibleSet.put(setting[0].charAt(0),
+                    setting[2].equals("visible"));
         }
     }
 
@@ -209,6 +191,13 @@ public class ConfigHelper {
             initLevels();
         }
         return levels.get(s);
+    }
+
+    private static Door getDoorByName(String s) {
+        if (doors == null) {
+            initLevels();
+        }
+        return doors.get(s);
     }
 
     public static HashMap<Character, Color> getCharSet() {
@@ -257,10 +246,7 @@ public class ConfigHelper {
         String[] items = getStrings(baseDir + mapName + ".itm");
         for (String st : items) {
             String[] s = st.split(" ");
-            try {
-                itemMap.put(s[0].charAt(0), s[1]);
-            } catch (Exception e) {
-            }
+            itemMap.put(s[0].charAt(0), s[1]);
         }
 
         // Lese Map ein
@@ -279,7 +265,7 @@ public class ConfigHelper {
         // Baue Level
         RoomBuilder builder = new RoomBuilder(chars);
         Level lev = new Level(builder.width(), builder.height(), builder);
-        for (String[] s:levelDoorMap.get(mapName)){
+        for (String[] s : levelDoorMap.get(mapName)) {
             lev.addActor(doors.get(s[0]), Integer.decode(s[1]), Integer.decode(s[2]));
         }
 
@@ -310,7 +296,7 @@ public class ConfigHelper {
             }
             text.close();
             reader.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
         }
         String[] erg = new String[lines.size()];
         for (int i = 0; i < lines.size(); i++) {
@@ -334,12 +320,8 @@ public class ConfigHelper {
     }
 
     private static String getFirstWordOfFile(String input) {
-        try {
-            String firstLine = getStrings(input)[0];
-            return firstLine.split(" ")[0];
-        } catch (Exception e) {
-            return null;
-        }
+        String firstLine = getStrings(input)[0];
+        return firstLine.split(" ")[0];
     }
 
     public static ColoredChar[][] getImage(String imageName) throws IOException {
