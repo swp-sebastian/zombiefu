@@ -7,6 +7,7 @@ import jade.ui.Camera;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
 import zombiefu.fov.ViewEverything;
 import zombiefu.items.CannotBeConsumedException;
@@ -17,6 +18,7 @@ import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 import zombiefu.util.Action;
+import zombiefu.util.ConfigHelper;
 
 public class Player extends Creature implements Camera {
 
@@ -26,11 +28,12 @@ public class Player extends Creature implements Camera {
     private int semester;
     private int maximalHealthPoints;
     private ArrayList<ConsumableItem> inventar;
-    private ArrayList<Waffe> waffen;
+    private HashMap<String, Waffe> waffen;
+    private ArrayList<String> waffenListe;
 
     public Player(ColoredChar face, String name, int healthPoints,
             int attackValue, int defenseValue, int intelligenceValue,
-            ArrayList<Waffe> w) {
+            ArrayList<String> waffe) {
 
         super(face, name, healthPoints, attackValue, defenseValue);
 
@@ -42,7 +45,12 @@ public class Player extends Creature implements Camera {
         this.semester = 1;
 
         this.inventar = new ArrayList<ConsumableItem>();
-        this.waffen = w;
+        this.waffen = new HashMap<String, Waffe>();
+        this.waffenListe = new ArrayList<String>();
+        for (String wName : waffe) {
+            waffen.put(wName, ConfigHelper.newWaffeByName(wName));
+            waffenListe.add(wName);
+        }
 
         this.sichtweite = 20;
         this.fov = new RayCaster();
@@ -104,68 +112,71 @@ public class Player extends Creature implements Camera {
 
                 switch (action) {
 
-                case PREV_WEAPON:
-                    switchWeapon(true);
-                    ZombieGame.refreshBottomFrame();
-                    act();
-                    break;
-
-                case NEXT_WEAPON:
-                    switchWeapon(false);
-                    ZombieGame.refreshBottomFrame();
-                    act();
-                    break;
-
-                case INVENTORY:
-                    ConsumableItem it = ZombieGame.askPlayerForItem();
-                    if (it == null) {
+                    case PREV_WEAPON:
+                        switchWeapon(true);
+                        ZombieGame.refreshBottomFrame();
                         act();
-                    } else {
-                        consumeItem(it);
-                    }
-                    break;
+                        break;
 
-                case ATTACK:
-                    try {
-                        attack();
-                    } catch (NoDirectionGivenException ex) {
+                    case NEXT_WEAPON:
+                        switchWeapon(false);
+                        ZombieGame.refreshBottomFrame();
                         act();
-                    }
-                    break;
+                        break;
 
-                case UP:
-                    tryToMove(Direction.NORTH);
-                    break;
+                    case INVENTORY:
+                        ConsumableItem it = ZombieGame.askPlayerForItem();
+                        if (it == null) {
+                            act();
+                        } else {
+                            consumeItem(it);
+                        }
+                        break;
 
-                case DOWN:
-                    tryToMove(Direction.SOUTH);
-                    break;
+                    case ATTACK:
+                        try {
+                            attack();
+                        } catch (NoDirectionGivenException ex) {
+                            act();
+                        }
+                        break;
 
-                case LEFT:
-                    tryToMove(Direction.WEST);
-                    break;
+                    case UP:
+                        tryToMove(Direction.NORTH);
+                        break;
 
-                case RIGHT:
-                    tryToMove(Direction.EAST);
-                    break;
+                    case DOWN:
+                        tryToMove(Direction.SOUTH);
+                        break;
 
-                default:
-                    break;
+                    case LEFT:
+                        tryToMove(Direction.WEST);
+                        break;
+
+                    case RIGHT:
+                        tryToMove(Direction.EAST);
+                        break;
+
+                    default:
+                        break;
                 }
             }
         } catch (InterruptedException e) {
         } catch (CannotMoveToIllegalFieldException ex) {
+            act();
+        } catch (WeaponHasNoMunitionException ex) {
+            ZombieGame.newMessage("Du hast keine Munition für " + getActiveWeapon().getName());
             act();
         }
     }
 
     public void switchWeapon(boolean backwards) {
         if (backwards) {
-            Waffe tmp = waffen.remove(waffen.size() - 1);
-            waffen.add(0, tmp);
+            String tmp = waffenListe.remove(waffen.size() - 1);
+            waffenListe.add(0, tmp);
         } else {
-            Waffe tmp = waffen.remove(0);
-            waffen.add(tmp);
+            String tmp = waffenListe.remove(0);
+            waffenListe.add(tmp);
         }
     }
 
@@ -175,11 +186,16 @@ public class Player extends Creature implements Camera {
         ((Level) world).fillWithEnemies();
     }
 
-    public void toInventar(Item i) {
+    public void obtainItem(Item i) {
         if (i instanceof Waffe) {
             Waffe w = (Waffe) i;
-
-            waffen.add((Waffe) i);
+            if (waffenListe.contains(w.getName())) {
+                waffen.get(w.getName()).addMunition(w.getMunition());
+                w.expire();
+            } else {
+                waffen.put(w.getName(), w);
+                waffenListe.add(w.getName());
+            }
         } else if (i instanceof ConsumableItem) {
             inventar.add((ConsumableItem) i);
         } else {
@@ -190,12 +206,12 @@ public class Player extends Creature implements Camera {
 
     @Override
     public Waffe getActiveWeapon() {
-        return waffen.get(0);
+        return waffen.get(waffenListe.get(0));
     }
 
     public void heal(int i) throws MaximumHealthPointException {
         System.out.print(getName() + " hat " + i + " HP geheilt. ");
-        if (healthPoints==maximalHealthPoints){
+        if (healthPoints == maximalHealthPoints) {
             throw new MaximumHealthPointException();
         }
         healthPoints += i;

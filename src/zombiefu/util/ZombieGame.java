@@ -44,8 +44,9 @@ public class ZombieGame {
     }
 
     public static void createPlayer() {
-        ArrayList<Waffe> waffen = new ArrayList<Waffe>();
-        waffen.add(ConfigHelper.newWaffeByName("SuperFist"));
+        ArrayList<String> waffen = new ArrayList<String>();
+        waffen.add("SuperFist");
+        
         player = new Player(ColoredChar.create('\u263B',
                 Color.decode("0x7D26CD")), settings.name, 100, 10, 10, 10,
                 waffen);
@@ -108,6 +109,7 @@ public class ZombieGame {
         frame.bottomTerm().bufferString(0,
                 0,
                 "Waffe: " + player.getActiveWeapon().getName() + " ("
+                + player.getActiveWeapon().getMunitionToString() + " / "
                 + player.getActiveWeapon().getDamage() + ") " + " | HP: "
                 + player.getHealthPoints() + "/" + player.getMaximalHealthPoints() + " | A: "
                 + player.getAttackValue() + " | D: " + player.getDefenseValue() + " | I: "

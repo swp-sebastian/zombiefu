@@ -32,6 +32,10 @@ public class Waffe extends Item {
         return range;
     }
 
+    public int getMunition() {
+        return munition;
+    }
+
     public double getBlastRadius() {
         return blastRadius;
     }
@@ -47,8 +51,11 @@ public class Waffe extends Item {
     public void addMunition(int m) {
         if (munition == -1) {
             return;
+        } else if (m == -1) {
+            munition = -1;
+        } else {
+            munition += m;
         }
-        munition += m;
     }
 
     public void useMunition() {
@@ -65,5 +72,12 @@ public class Waffe extends Item {
             munition = 0;
         }
     }
-    
+
+    public String getMunitionToString() {
+        if (munition == -1) {
+            return "∞";
+        } else {
+            return String.valueOf(munition);
+        }
+    }
 }
