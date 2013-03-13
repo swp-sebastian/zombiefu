@@ -13,7 +13,6 @@ import zombiefu.items.CannotBeConsumedException;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
-import zombiefu.util.KeyEdit;
 import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
@@ -179,7 +178,7 @@ public class Player extends Creature implements Camera {
     public void toInventar(Item i) {
         if (i instanceof Waffe) {
             Waffe w = (Waffe) i;
-            
+
             waffen.add((Waffe) i);
         } else if (i instanceof ConsumableItem) {
             inventar.add((ConsumableItem) i);
