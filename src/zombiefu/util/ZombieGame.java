@@ -30,16 +30,16 @@ public class ZombieGame {
     private static final String screenDir = "src/sources/screens/";
     private static final String itemDir = "src/sources/items/";
     private static final String mapDir = "src/sources/maps/";
-    private static KeyEdit settings;
+    private static ZombieSettings settings;
     private static ZombieFrame frame;
     private static Player player;
 
     public static void createGame(String[] args, String name) {
-        settings = new KeyEdit(args, "src/sources");
+        settings = new ZombieSettings(args, "src/sources");
         frame = new ZombieFrame(name);
     }
 
-    public static KeyEdit getSettings() {
+    public static ZombieSettings getSettings() {
         return settings;
     }
 

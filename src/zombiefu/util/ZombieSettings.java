@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import zombiefu.util.Action;
 
-public class KeyEdit {
+public class ZombieSettings {
     private Properties props;
     public final String name;
     public final  HashMap<Character, Action> keybindings;
 
-    public KeyEdit(String[] args, String res) {
+    public ZombieSettings(String[] args, String res) {
 
         props = new Properties();
         try {
@@ -34,10 +34,4 @@ public class KeyEdit {
         keybindings.put(Character.valueOf(props.getProperty("controls.prevweapon", "q").charAt(0)), Action.PREV_WEAPON);
         keybindings.put(Character.valueOf(props.getProperty("controls.inventory", "i").charAt(0)), Action.INVENTORY);
     }
-
-    // Spielername
-    public String getPlayername(){
-        return name;
-    }
-
 }
