@@ -147,10 +147,6 @@ public class Player extends Creature implements Camera {
         ((Level) world).fillWithEnemies();
     }
 
-    public void changeWorld(String level) {
-        changeWorld(Level.levelFromFile(level));
-    }
-
     public void toInventar(Item i) {
         if (i instanceof Waffe) {
             waffen.add((Waffe) i);

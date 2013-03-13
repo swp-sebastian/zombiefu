@@ -18,16 +18,19 @@ import zombiefu.items.Teleporter;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.level.Level;
+import zombiefu.map.RoomBuilder;
 
-public class Creator {
+public class ConfigHelper {
 
-    private static final String srcs = "src/sources/";
-    public static final HashMap<String, Item> items = createItems();
-    public static final HashMap<Character, String> itemMap = createItemMap();
-    public static final HashMap<String, Level> world = createWorld();
+    private static HashMap<String, Item> items;
+    private static HashMap<String, Level> levels;
+    private static HashMap<Character, Color> charSet;
+    private static HashMap<Character, Boolean> passSet;
+    private static HashMap<Character, Boolean> visibleSet;
+    private static Character defaultChar;
 
     public static void createStoryForPlayer(Player player) {
-        Level level = world.get(getFirstWordOfFile(srcs + "levels.txt"));
+        Level level = getLevelByName(getFirstWordOfFile(ZombieGame.getSourceDirectory() + "levels.txt"));
         level.addActor(player);
         level.fillWithEnemies();
     }
@@ -45,10 +48,12 @@ public class Creator {
         world2.addActor(tel2, from2);
     }
 
-    private static HashMap<String, Item> createItems() {
+    private static void initItems() {
+        String baseDir = ZombieGame.getItemDirectory();
         HashMap<String, Item> itemMap = new HashMap<String, Item>();
-        String[] waffen = getStrings(srcs + "Waffen.txt");
-        String[] healingItems = getStrings(srcs + "HealingItems.txt");
+
+        // Lade Waffen
+        String[] waffen = getStrings(baseDir + "Waffen.txt");
         for (String s : waffen) {
             try {
                 String[] st = s.split(" ");
@@ -81,6 +86,9 @@ public class Creator {
             } catch (Exception e) {
             }
         }
+
+        // Lade HealingItems
+        String[] healingItems = getStrings(ZombieGame.getSourceDirectory() + "HealingItems.txt");
         for (String s : healingItems) {
             try {
                 String[] st = s.split(" ");
@@ -92,60 +100,29 @@ public class Creator {
             } catch (Exception e) {
             }
         }
-        return itemMap;
     }
 
-    private static HashMap<Character, String> createItemMap() {
-        String[] items = getStrings(srcs + "Items.txt");
-        HashMap<Character, String> itemMap = new HashMap<Character, String>();
-        for (String st : items) {
-            String[] s = st.split(" ");
-            try {
-                itemMap.put(s[0].charAt(0), s[1]);
-            } catch (Exception e) {
-            }
-        }
-        return itemMap;
-    }
+    private static void initLevels() {
+        levels = new HashMap<String, Level>();
 
-    private static void addItems(Level lev, String[] s) {
-        for (int y = 0; y < s.length; y++) {
-            for (int x = 0; x < s[y].length(); x++) {
-                char c = s[y].charAt(x);
-                if (itemMap.containsKey(c)) {
-                    lev.addActor(items.get(itemMap.get(c)), x, y);
-                }
-            }
+        // Lade alle Level
+        String[] levelStrings = getStrings(ZombieGame.getSourceDirectory() + "levels.txt");
+        for (String s : levelStrings) {
+            Level level = createLevelFromFile(s);
+            levels.put(s, level);
         }
-    }
 
-    private static String getFirstWordOfFile(String input) {
-        try {
-            String firstLine = getStrings(input)[0];
-            return firstLine.split(" ")[0];
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private static HashMap<String, Level> createWorld() {
-        String[] levels = getStrings(srcs + "levels.txt");
-        String[] teles = getStrings(srcs + "teleporters.txt");
-        HashMap<String, Level> nameOfLevels = new HashMap<String, Level>();
-        for (String s : levels) {
-            Level level = Level.levelFromFile(srcs + s + ".txt");
-            addItems(level, getStrings(srcs + s + ".txt"));
-            nameOfLevels.put(s, level);
-        }
+        // Lade Teleporter
+        String[] teles = getStrings(ZombieGame.getSourceDirectory() + "teleporters.txt");
         for (String s : teles) {
             try {
                 String[] d = s.split(" ");
-                Level world1 = nameOfLevels.get(d[0]);
+                Level world1 = levels.get(d[0]);
                 Coordinate from1 = new Coordinate(Integer.decode(d[1]),
                         Integer.decode(d[2]));
                 Coordinate to2 = new Coordinate(Integer.decode(d[3]),
                         Integer.decode(d[4]));
-                Level world2 = nameOfLevels.get(d[5]);
+                Level world2 = levels.get(d[5]);
                 Coordinate from2 = new Coordinate(Integer.decode(d[6]),
                         Integer.decode(d[7]));
                 Coordinate to1 = new Coordinate(Integer.decode(d[8]),
@@ -155,24 +132,113 @@ public class Creator {
             } catch (Exception e) {
             }
         }
-        return nameOfLevels;
     }
 
-    public static ColoredChar[][] readLevel(String input) throws IOException {
-        String[] level = getStrings(input);
-        HashMap<Character, String> itemMap = createItemMap();
+    private static void initCharSet() {
+        charSet = new HashMap<Character, Color>();
+        passSet = new HashMap<Character, Boolean>();
+        visibleSet = new HashMap<Character, Boolean>();
+        String[] settings = getStrings(ZombieGame.getSourceDirectory() + "CharSet.txt");
+        for (int i = 0; i < settings.length; i++) {
+            String[] setting = settings[i].split(" ");
+            try {
+                charSet.put(setting[0].charAt(0),
+                        Color.decode("0x" + setting[3]));
+                passSet.put(setting[0].charAt(0), setting[1].equals("passable"));
+                visibleSet.put(setting[0].charAt(0), setting[2].equals("visible"));
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private static Item getItemByName(String s) {
+        if (items == null) {
+            initItems();
+        }
+        return items.get(s);
+    }
+
+    private static Level getLevelByName(String s) {
+        if (levels == null) {
+            initLevels();
+        }
+        return levels.get(s);
+    }
+
+    public static HashMap<Character, Color> getCharSet() {
+        if (charSet == null) {
+            initCharSet();
+        }
+        return charSet;
+    }
+
+    public static HashMap<Character, Boolean> getPassSet() {
+        if (passSet == null) {
+            initCharSet();
+        }
+        return passSet;
+    }
+
+    public static HashMap<Character, Boolean> getVisibleSet() {
+        if (visibleSet == null) {
+            initCharSet();
+        }
+        return visibleSet;
+    }
+
+    public static boolean isValidChar(char c) {
+        return getCharSet().containsKey(c);
+    }
+
+    public static char getDefaultChar() {
+        if (defaultChar == null) {
+            defaultChar = getFirstWordOfFile(ZombieGame.getSourceDirectory() + "CharSet.txt").charAt(0);
+        }
+        return defaultChar;
+    }
+
+    public static Level createLevelFromFile(String mapName) {
+        String baseDir = ZombieGame.getMapDirectory();
+
+        // Lese Map ein
+        String[] level = getStrings(baseDir + mapName + ".map");
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level[i].length(); j++) {
-                if (!itemMap.containsKey(level[i].charAt(j))) {
+                if (isValidChar(level[i].charAt(j))) {
                     chars[i][j] = ColoredChar.create(level[i].charAt(j));
                 } else {
-                    chars[i][j] = ColoredChar.create(getFirstWordOfFile(
-                            srcs + "CharSet.txt").charAt(0));
+                    chars[i][j] = ColoredChar.create(getDefaultChar());
                 }
             }
         }
-        return chars;
+
+        // Baue Level
+        RoomBuilder builder = new RoomBuilder(chars);
+        Level lev = new Level(builder.width(), builder.height(), builder);
+
+        // Lese ItemMap ein
+        HashMap<Character, String> itemMap = new HashMap<Character, String>();
+        String[] items = getStrings(baseDir + mapName + ".itm");
+        for (String st : items) {
+            String[] s = st.split(" ");
+            try {
+                itemMap.put(s[0].charAt(0), s[1]);
+            } catch (Exception e) {
+            }
+        }
+
+        // Setze statische Items auf das Level:
+        for (int x = 0; x < lev.width(); x++) {
+            for (int y = 0; y < lev.height(); y++) {
+                char c = lev.tileAt(x, y).ch();
+                if (itemMap.containsKey(c)) {
+                    lev.addActor(getItemByName(itemMap.get(c)), x, y);
+                }
+            }
+        }
+
+        return lev;
     }
 
     public static String[] getStrings(String input) {
@@ -200,7 +266,7 @@ public class Creator {
 
     // Liest eine Datei im UTF-16 Format ein und gibt das 2-dim Feld in
     // ColoredChars zurück
-    public static ColoredChar[][] readFile(String input) throws IOException {
+    private static ColoredChar[][] readFile(String input) throws IOException {
         String[] level = getStrings(input);
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
         for (int i = 0; i < level.length; i++) {
@@ -212,24 +278,16 @@ public class Creator {
         return chars;
     }
 
-    public static void showImage(TermPanel term, String input)
-            throws InterruptedException {
+    private static String getFirstWordOfFile(String input) {
         try {
-            ColoredChar[][] start = readFile(input);
-            term.clearBuffer();
-            for (int x = 0; x < term.DEFAULT_COLS; x++) {
-                for (int y = 0; y < term.DEFAULT_ROWS; y++) {
-                    if (y >= start.length || x >= start[0].length) {
-                        term.bufferChar(x, y, ColoredChar.create(' '));
-                    } else {
-                        term.bufferChar(x, y, start[y][x]);
-                    }
-                }
-            }
-            term.refreshScreen();
-            term.getKey();
-        } catch (IOException e) {
-            System.out.println("Datei nicht gefunden.");
+            String firstLine = getStrings(input)[0];
+            return firstLine.split(" ")[0];
+        } catch (Exception e) {
+            return null;
         }
+    }
+
+    public static ColoredChar[][] getImage(String imageName) throws IOException {
+        return readFile(ZombieGame.getScreenDirectory() + imageName + ".scr");
     }
 }
