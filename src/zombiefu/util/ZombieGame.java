@@ -29,6 +29,11 @@ public class ZombieGame {
     public static void createGame(String name) {
         frame = new ZombieFrame(name);
     }
+    
+    public static void keyInit(String input){
+    	String[] config = Creator.getStrings(sourceDir + input);
+    	KeyEdit.read(config);
+    }
 
     public static void createPlayer(String name) {
         ArrayList<Waffe> waffen = new ArrayList<Waffe>();
