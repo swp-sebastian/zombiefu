@@ -13,6 +13,7 @@ public class RoomBuilder extends MapGenerator {
 
 	private static HashMap<Character, Color> charSet; // Das CharSet
 	private static HashMap<Character, Boolean> passSet; // Das Passable-Set
+	private static HashMap<Character,Boolean> visibleSet; // Das Visible-Set
 	private ColoredChar[][] screen; // Das Gelände
 	private int width;
 	private int height;
@@ -20,14 +21,16 @@ public class RoomBuilder extends MapGenerator {
 	public static void setCharSet(String input) {
 		charSet = new HashMap<Character, Color>();
 		passSet = new HashMap<Character, Boolean>();
+		visibleSet = new HashMap<Character,Boolean>();
 		String[] settings = Creator.getStrings(input);
 		for (int i = 0; i < settings.length; i++) {
 			String[] setting = settings[i].split(" ");
-			if (setting.length > 2) {
+			try{
 				charSet.put(setting[0].charAt(0),
-						Color.decode("0x" + setting[2]));
+						Color.decode("0x" + setting[3]));
 				passSet.put(setting[0].charAt(0), setting[1].equals("passable"));
-			}
+				visibleSet.put(setting[0].charAt(0), setting[2].equals("visible"));
+			}catch (Exception e){}
 		}
 	}
 
