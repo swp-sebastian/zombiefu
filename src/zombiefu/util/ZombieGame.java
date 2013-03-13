@@ -9,12 +9,12 @@ import jade.util.datatype.Direction;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import zombiefu.creature.Player;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.items.Waffe;
+import zombiefu.level.Level;
 import zombiefu.ui.ZombieFrame;
 
 /**
@@ -58,14 +58,14 @@ public class ZombieGame {
             frame.mainTerm().refreshScreen();
             frame.mainTerm().getKey();
         } catch (IOException ex) {
-            Logger.getLogger(ZombieGame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
-            Logger.getLogger(ZombieGame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public static void initialize() {
-        ConfigHelper.createStoryForPlayer(player);
+        Level firstLevel = ConfigHelper.getFirstLevel();
+        firstLevel.addActor(player);
+        firstLevel.fillWithEnemies();
         frame.mainTerm().registerCamera(player, 40, 17);
     }
 

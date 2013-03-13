@@ -29,13 +29,7 @@ public class ConfigHelper {
     private static HashMap<Character, Boolean> visibleSet;
     private static Character defaultChar;
 
-    public static void createStoryForPlayer(Player player) {
-        Level level = getLevelByName(getFirstWordOfFile(ZombieGame.getSourceDirectory() + "levels.txt"));
-        level.addActor(player);
-        level.fillWithEnemies();
-    }
-
-    public static void createBidirectionalTeleporter(World world1,
+    private static void createBidirectionalTeleporter(World world1,
             Coordinate from1, Coordinate to2, World world2, Coordinate from2,
             Coordinate to1) {
         /*
@@ -186,6 +180,10 @@ public class ConfigHelper {
         return visibleSet;
     }
 
+    public static Level getFirstLevel() {
+        return getLevelByName(getFirstWordOfFile(ZombieGame.getSourceDirectory() + "levels.txt"));
+    }
+    
     public static boolean isValidChar(char c) {
         return getCharSet().containsKey(c);
     }
