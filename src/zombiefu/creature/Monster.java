@@ -54,7 +54,7 @@ public abstract class Monster extends Creature {
             try {
                 tryToMove(d);
                 return;
-            } catch (CannotMoveToImpassableFieldException ex) {
+            } catch (CannotMoveToIllegalFieldException ex) {
             }
         }
         throw new NoPlaceToMoveException();
@@ -82,7 +82,7 @@ public abstract class Monster extends Creature {
     protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException {
         try {
             tryToMove(directionToPlayer());
-        } catch (CannotMoveToImpassableFieldException ex) {
+        } catch (CannotMoveToIllegalFieldException ex) {
             Logger.getLogger(Monster.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

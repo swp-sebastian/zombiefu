@@ -8,9 +8,9 @@ package zombiefu.creature;
  *
  * @author tomas
  */
-class CannotMoveToImpassableFieldException extends Exception {
+class CannotMoveToIllegalFieldException extends Exception {
 
-    public CannotMoveToImpassableFieldException() {
+    public CannotMoveToIllegalFieldException() {
     }
     
 }
