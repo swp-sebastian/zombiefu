@@ -38,11 +38,6 @@ public class Level extends World {
         drawOrder.add(Teleporter.class);
     }
 
-    public static Level levelFromFile(String file) {
-        RoomBuilder builder = new RoomBuilder(file, "src/sources/CharSet.txt");
-        return new Level(builder.width(), builder.height(), builder);
-    }
-
     public Player getPlayer() throws TargetIsNotInThisWorldException {
         Player pl = super.getActor(Player.class);
         if (pl == null) {

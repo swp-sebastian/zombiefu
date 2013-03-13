@@ -7,6 +7,7 @@ package zombiefu.util;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,9 @@ import zombiefu.ui.ZombieFrame;
 public class ZombieGame {
 
     private static final String sourceDir = "src/sources/";
+    private static final String screenDir = "src/sources/screens/";
+    private static final String itemDir = "src/sources/items/";
+    private static final String mapDir = "src/sources/maps/";
     private static ZombieFrame frame;
     private static Player player;
 
@@ -40,14 +44,28 @@ public class ZombieGame {
 
     public static void showStaticImage(String file) {
         try {
-            Creator.showImage(frame.mainTerm(), sourceDir + file);
+            ColoredChar[][] start = ConfigHelper.getImage(file);
+            frame.mainTerm().clearBuffer();
+            for (int x = 0; x < frame.mainTerm().DEFAULT_COLS; x++) {
+                for (int y = 0; y < frame.mainTerm().DEFAULT_ROWS; y++) {
+                    if (y >= start.length || x >= start[0].length) {
+                        frame.mainTerm().bufferChar(x, y, ColoredChar.create(' '));
+                    } else {
+                        frame.mainTerm().bufferChar(x, y, start[y][x]);
+                    }
+                }
+            }
+            frame.mainTerm().refreshScreen();
+            frame.mainTerm().getKey();
+        } catch (IOException ex) {
+            Logger.getLogger(ZombieGame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
             Logger.getLogger(ZombieGame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public static void initialize() {
-        Creator.createStoryForPlayer(player);
+        ConfigHelper.createStoryForPlayer(player);
         frame.mainTerm().registerCamera(player, 40, 17);
     }
 
@@ -152,9 +170,25 @@ public class ZombieGame {
         return output;
     }
 
+    public static String getSourceDirectory() {
+        return sourceDir;
+    }
+
+    public static String getItemDirectory() {
+        return itemDir;
+    }
+
+    public static String getMapDirectory() {
+        return mapDir;
+    }
+
+    public static String getScreenDirectory() {
+        return screenDir;
+    }
+
     public static void endGame() {
         // TODO: Im Endscreen dynamisch Informationen anzeigen.
-        showStaticImage("endscreen.txt");
+        showStaticImage("endscreen");
         System.exit(0);
     }
 }

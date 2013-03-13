@@ -1,7 +1,6 @@
 package zombiefu.items;
 
 import jade.util.datatype.ColoredChar;
-import zombiefu.items.Item;
 
 /**
  *
@@ -15,6 +14,7 @@ public class Waffe extends Item {
     protected Waffentyp wtyp;
     protected double blastRadius;
     protected int range;
+    protected int munition;
 
     public Waffe(ColoredChar c, String n, int d, Waffentyp w, double radius, int range) {
         super(c, n);
@@ -22,6 +22,7 @@ public class Waffe extends Item {
         this.wtyp = w;
         this.blastRadius = radius;
         this.range = range;
+        this.munition = 0;
     }
 
     public Waffe(ColoredChar c, String n, int d, Waffentyp w, double radius) {
@@ -56,4 +57,29 @@ public class Waffe extends Item {
         return wtyp;
     }
 
+    public boolean hasMunition() {
+        return munition != 0;
+    }
+
+    public void addMunition(int m) {
+        if (munition == -1) {
+            return;
+        }
+        munition += m;
+    }
+
+    public void useMunition() {
+        if (munition == -1) {
+            return;
+        }
+        munition -= 1;
+    }
+
+    public void setUnlimitedMunition(boolean unlim) {
+        if (unlim) {
+            munition = -1;
+        } else if (munition == -1) {
+            munition = 0;
+        }
+    }
 }

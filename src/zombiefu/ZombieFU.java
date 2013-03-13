@@ -6,7 +6,7 @@ import jade.util.datatype.ColoredChar;
 import java.util.ArrayList;
 import zombiefu.creature.Player;
 import zombiefu.items.Waffe;
-import zombiefu.util.Creator;
+import zombiefu.util.ConfigHelper;
 import zombiefu.util.ZombieTools;
 import zombiefu.ui.ZombieFrame;
 import zombiefu.util.ZombieGame;
@@ -18,8 +18,8 @@ public class ZombieFU {
         ZombieGame.createGame("The Final Exam - Die Anwesenheitspflicht schlägt zurück");
         ZombieGame.createPlayer("John Dorian");
         
-        ZombieGame.showStaticImage("startscreen.txt");
-        ZombieGame.showStaticImage("story.txt");
+        ZombieGame.showStaticImage("startscreen");
+        ZombieGame.showStaticImage("story");
 
         ZombieGame.initialize();
         
