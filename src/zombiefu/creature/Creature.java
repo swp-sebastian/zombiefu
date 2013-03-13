@@ -183,7 +183,7 @@ public abstract class Creature extends NotPassableActor {
                         .getTranslated(ZombieTools.getReversedDirection(dir));
             }
             dcounter++;
-        } while (world().getActorsAt(Creature.class, nPos).isEmpty()
+        } while (world().getActorsAt(NotPassableActor.class, nPos).isEmpty()
                 && dcounter < maxDistance);
         return nPos;
     }
