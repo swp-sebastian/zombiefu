@@ -8,7 +8,7 @@ package zombiefu.creature;
  *
  * @author tomas
  */
-class NoPlaceToMoveException extends Exception {
+public class NoPlaceToMoveException extends Exception {
 
     public NoPlaceToMoveException() {
     }

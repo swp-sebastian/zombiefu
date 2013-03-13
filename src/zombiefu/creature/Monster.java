@@ -55,6 +55,7 @@ public abstract class Monster extends Creature {
                 tryToMove(d);
                 return;
             } catch (CannotMoveToIllegalFieldException ex) {
+            } catch (WeaponHasNoMunitionException ex) {
             }
         }
         throw new NoPlaceToMoveException();
@@ -79,7 +80,7 @@ public abstract class Monster extends Creature {
         return movealg.directionTo(world(), pos(), getPlayerPosition());
     }
 
-    protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException {
+    protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
         try {
             tryToMove(directionToPlayer());
         } catch (CannotMoveToIllegalFieldException ex) {
@@ -96,6 +97,7 @@ public abstract class Monster extends Creature {
             }
         } catch (TargetIsNotInThisWorldException ex) {
         } catch (TargetNotFoundException ex) {
+        } catch (WeaponHasNoMunitionException ex) {
         }
         try {
             moveRandomly();
