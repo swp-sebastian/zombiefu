@@ -7,7 +7,9 @@ import jade.ui.Camera;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import zombiefu.fov.ViewEverything;
+import zombiefu.items.CannotBeConsumedException;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
@@ -176,9 +178,12 @@ public class Player extends Creature implements Camera {
     private void consumeItem(ConsumableItem it) {
         ZombieGame.newMessage("Du benutzt '" + it.getName() + "'.");
         System.out.println(getName() + " benutzt Item " + it.getName());
-        it.getConsumedBy(this);
-        inventar.remove(it);
-        it.expire();
+        try {
+            it.getConsumedBy(this);
+        } catch (CannotBeConsumedException ex) {
+            inventar.remove(it);
+            it.expire();
+        }
         ZombieGame.refreshBottomFrame();
     }
 
