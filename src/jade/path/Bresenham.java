@@ -34,7 +34,7 @@ public class Bresenham extends PathFinder
                 x += ix;
                 int y = (int)(slope * (x - start.x()) + start.y() + .5f);
                 path.add(new Coordinate(x, y));
-                if(!world.passableAt(x, y))
+                if(!world.transparentAt(x, y))
                     break;
             }
         }
@@ -48,7 +48,7 @@ public class Bresenham extends PathFinder
                 y += iy;
                 int x = (int)(slope * (y - start.y()) + start.x() + .5f);
                 path.add(new Coordinate(x, y));
-                if(!world.passableAt(x, y))
+                if(!world.transparentAt(x, y))
                     break;
             }
         }
