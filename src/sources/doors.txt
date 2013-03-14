@@ -1,3 +1,3 @@
 # Benutzung:
 # Raum Name x-Koord y-Koord Character Farbe
-raum1 TestDoor 33 32 D FFFFFF
+raum1 TestDoor 33 33 D FFFFFF

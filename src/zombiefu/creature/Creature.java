@@ -242,6 +242,9 @@ public abstract class Creature extends NotPassableActor {
             move(dir);
         } else if (!(actor instanceof Player) && this instanceof Monster) {
             throw new CannotMoveToIllegalFieldException();
+        } else if (actor instanceof Door && this instanceof Player) {
+            ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
+            throw new CannotMoveToIllegalFieldException();
         } else if (!(actor instanceof Creature) && this instanceof Player) {
             throw new CannotMoveToIllegalFieldException();
         } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
