@@ -47,7 +47,7 @@ public class Player extends Creature implements Camera {
 
         this.maximalHealthPoints = healthPoints;
         this.intelligenceValue = intelligenceValue;
-        this.godMode = true;
+        this.godMode = false;
         this.money = 10;
         this.ects = 0;
         this.semester = 1;
