@@ -2,11 +2,6 @@ package zombiefu.util;
 
 import jade.util.Dice;
 import jade.util.datatype.Direction;
-import static jade.util.datatype.Direction.EAST;
-import static jade.util.datatype.Direction.NORTH;
-import static jade.util.datatype.Direction.ORIGIN;
-import static jade.util.datatype.Direction.SOUTH;
-import static jade.util.datatype.Direction.WEST;
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
