@@ -4,6 +4,7 @@
  */
 package zombiefu.util;
 
+import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.awt.Color;
@@ -143,7 +144,7 @@ public class ZombieGame {
         try {
             return frame.mainTerm().getKey();
         } catch (InterruptedException ex) {
-            ZombieTools.stopWithFatalError("InterruptedException: kein Key bekommen?");
+            Guard.verifyState(false);
             return 0;
         }
     }

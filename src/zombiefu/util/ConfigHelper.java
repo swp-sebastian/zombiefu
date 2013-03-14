@@ -295,7 +295,7 @@ public class ConfigHelper {
                         } else if (m.group(1).equals("shop")) {
                             actor = getShopByName(m.group(2));
                         } else {
-                            ZombieTools.stopWithFatalError("createLevelFromFile(): Ungültiges Item: " + itemName);
+                            Guard.validateArgument(false);
                         }
                     } else {
                         actor = newItemByName(itemName);
