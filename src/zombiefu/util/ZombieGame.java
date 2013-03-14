@@ -19,6 +19,7 @@ import zombiefu.itembuilder.ItemBuilder;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
+import zombiefu.player.Attribut;
 import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
 
@@ -68,7 +69,7 @@ public class ZombieGame {
         Level firstLevel = ConfigHelper.getFirstLevel();
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
-        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, discipline, 100, 10, 10, 10, waffen);
+        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, discipline, 100, 5, 5, 5, waffen);
 
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
@@ -265,6 +266,10 @@ public class ZombieGame {
         return output;
         //      } catch (InterruptedException ex) {
         //      }
+    }
+
+    public static Attribut askPlayerForAttrbuteToRaise() {
+        return Attribut.ATTACK;
     }
 
     public static File getSourceDirectory() {
