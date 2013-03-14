@@ -23,6 +23,7 @@ import zombiefu.itembuilder.WaffenBuilder;
 import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
 import zombiefu.actor.Teleporter;
+import zombiefu.itembuilder.ShopBuilder;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.level.Level;
@@ -32,7 +33,7 @@ public class ConfigHelper {
 
     private static HashMap<String, ItemBuilder> items;
     private static HashMap<String, Door> doors;
-    private static HashMap<String, Shop> shops;
+    private static HashMap<String, ShopBuilder> shops;
     private static HashMap<String, Level> levels;
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
@@ -188,9 +189,9 @@ public class ConfigHelper {
         return doors.get(s);
     }
 
-    private static Shop getShopByName(String s) {
+    private static Shop newShopByName(String s) {
         if (shops == null) {
-            shops = new HashMap<String, Shop>();
+            shops = new HashMap<String, ShopBuilder>();
         }
         if (!shops.containsKey(s)) {
             String[] shop = getStrings(new File(ZombieGame.getShopDirectory(), s + ".shop"));
@@ -200,10 +201,10 @@ public class ConfigHelper {
                 String[] it = shop[i].split(" ");
                 items.put(getItemBuilderByName(it[0]), Integer.valueOf(it[1]));
             }
-            shops.put(s, new Shop(ColoredChar.create(charInfo[0].charAt(0), Color.decode("0x" + charInfo[1])), s, items));
+            shops.put(s, new ShopBuilder(ColoredChar.create(charInfo[0].charAt(0), Color.decode("0x" + charInfo[1])), s, items));
 
         }
-        return shops.get(s);
+        return shops.get(s).buildShop();
     }
 
     private static KeyCard getKeyCardByName(String s) {
@@ -296,7 +297,7 @@ public class ConfigHelper {
                         } else if (m.group(1).equals("key")) {
                             actor = getKeyCardByName(m.group(2));
                         } else if (m.group(1).equals("shop")) {
-                            actor = getShopByName(m.group(2));
+                            actor = newShopByName(m.group(2));
                         } else {
                             Guard.validateArgument(false);
                         }
