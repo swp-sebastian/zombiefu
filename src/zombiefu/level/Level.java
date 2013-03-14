@@ -26,20 +26,27 @@ import zombiefu.util.ZombieGame;
 public class Level extends World {
 
     private int numberOfPassableFields;
+    private String name;
 
-    public Level(int width, int height, Generator gen) {
+    public Level(int width, int height, Generator gen, String name) {
         super(width, height);
         gen.generate(this);
         fillWithItems();
         calculateNumberOfPassableFields();
+        
+        this.name = name;
 
         drawOrder = new ArrayList<Class<? extends Actor>>();
         drawOrder.add(DamageAnimation.class);
         drawOrder.add(Player.class);
         drawOrder.add(Monster.class);
         drawOrder.add(Item.class);
-        drawOrder.add(Door.class);
         drawOrder.add(Teleporter.class);
+        drawOrder.add(Door.class);
+    }
+    
+    public String getName() {
+        return name;
     }
 
     public Player getPlayer() throws TargetIsNotInThisWorldException {
