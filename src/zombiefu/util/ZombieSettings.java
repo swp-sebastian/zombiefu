@@ -19,9 +19,9 @@ public class ZombieSettings {
 
         try {
             props.load(new FileInputStream(res + "/config.cfg"));
-            System.out.println("Konfigurationsdatei "+res+"/config.cfg geladen.");
+            ZombieTools.log("ZombieSettings: Konfigurationsdatei "+res+"/config.cfg geladen.");
         } catch (IOException ex) {
-            System.out.println("Konfigurationsdatei "+res+"/config.cfg  nicht vorhanden.");
+            ZombieTools.log("ZombieSettings: Konfigurationsdatei "+res+"/config.cfg  nicht vorhanden.");
         }
 
         // Den Spielernamen öffentlich machen.
@@ -52,7 +52,7 @@ public class ZombieSettings {
         while(itr.hasNext()) {
             File f = (File) itr.next();
             if (!f.canRead()) {
-                    System.out.println("Fehler: Verzeichnis "+ f + " nicht existent oder nicht lesbar.");
+                    ZombieTools.logError("Fehler: Verzeichnis "+ f + " nicht existent oder nicht lesbar.");
                     System.exit(1);
                 }
         }

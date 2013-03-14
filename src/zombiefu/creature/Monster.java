@@ -102,7 +102,7 @@ public abstract class Monster extends Creature {
         try {
             moveRandomly();
         } catch (NoPlaceToMoveException ex) {
-            System.out.println(getName() + ": Cannot move - doing nothing");
+            ZombieTools.log(getName() + ": Cannot move - doing nothing");
             return;
         }
     }

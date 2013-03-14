@@ -225,12 +225,10 @@ public class Player extends Creature implements Camera {
         if (healthPoints >= maximalHealthPoints) {
             healthPoints = maximalHealthPoints;
         }
-        System.out.println("HP: " + healthPoints);
     }
 
     private void consumeItem(ConsumableItem it) {
         ZombieGame.newMessage("Du benutzt '" + it.getName() + "'.");
-        System.out.println(getName() + " benutzt Item " + it.getName());
         try {
             it.getConsumedBy(this);
             inventar.remove(it);
