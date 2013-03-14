@@ -302,8 +302,10 @@ public class ConfigHelper {
                         }
                     } else {
                         actor = newItemByName(itemName);
-                    }
-                    lev.addActor(actor, x, y);
+                    }try{
+                    lev.addActor(actor, x, y);}
+                    catch (Exception e) {System.out.println(mapName);
+                        System.out.println(actor);}
                 }
             }
         }
