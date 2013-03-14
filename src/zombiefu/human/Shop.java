@@ -23,8 +23,10 @@ public class Shop extends Human {
         ZombieGame.newMessage("Willkommen im Mensa-Shop. Hier unser Angebot:");
         ItemBuilder item = ZombieGame.askPlayerForItemToBuy(items);
         try {
-            pl.pay(items.get(item));
-            pl.obtainItem(item.buildItem());
+            if (item!=null){
+                pl.pay(items.get(item));
+                pl.obtainItem(item.buildItem());
+            }
             ZombieGame.newMessage("Bitte beehren sie uns bald wieder.");
         } catch (CanNotAffordException ex) {
             ZombieGame.newMessage("Das kannst Du Dir nicht leisten.");

@@ -157,13 +157,13 @@ public class ConfigHelper {
         }
         ItemBuilder i = items.get(s);
         Guard.argumentIsNotNull(i);
-        return i;       
+        return i;
     }
 
     public static Item newItemByName(String s) {
         return getItemBuilderByName(s).buildItem();
     }
-    
+
     public static Waffe newWaffeByName(String s) {
         Item w = newItemByName(s);
         Guard.argumentIsNotNull(w);
@@ -249,7 +249,15 @@ public class ConfigHelper {
     public static Level createLevelFromFile(String mapName) {
 
         ZombieTools.log("createLevelFromFile(" + mapName + ")");
-
+        
+        // Lese ItemMap ein
+        ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
+        HashMap<Character, String> itemMap = new HashMap<Character, String>();
+        String[] items = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".itm"));
+        for (String st : items) {
+            String[] it = st.split(" ");
+            itemMap.put(it[0].charAt(0), it[1]);
+        }
         // Lese Map ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Maps aus Mapfile");
         String[] level = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".map"));
@@ -258,8 +266,10 @@ public class ConfigHelper {
             for (int j = 0; j < level[i].length(); j++) {
                 if (isValidChar(level[i].charAt(j))) {
                     chars[i][j] = ColoredChar.create(level[i].charAt(j));
-                } else {
+                } else if (itemMap.containsKey(level[i].charAt(j))){
                     chars[i][j] = ColoredChar.create(getDefaultChar());
+                } else {
+                    chars[i][j] = ColoredChar.create(level[i].charAt(j),Color.WHITE);
                 }
             }
         }
@@ -269,20 +279,13 @@ public class ConfigHelper {
         RoomBuilder builder = new RoomBuilder(chars);
         Level lev = new Level(builder.width(), builder.height(), builder, mapName);
 
-        // Lese ItemMap ein
-        ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
-        HashMap<Character, String> itemMap = new HashMap<Character, String>();
-        String[] items = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".itm"));
-        for (String st : items) {
-            String[] it = st.split(" ");
-            itemMap.put(it[0].charAt(0), it[1]);
-        }
-
         // Lade statische Items auf Map
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lade statische Items");
         for (int x = 0; x < lev.width(); x++) {
             for (int y = 0; y < lev.height(); y++) {
-                char c = level[y].charAt(x);
+                char c;
+                try {c = level[y].charAt(x);}
+                catch (StringIndexOutOfBoundsException exc) {c = ' ';}
                 if (itemMap.containsKey(c)) {
                     String itemName = itemMap.get(c);
                     Actor actor = null;
@@ -295,7 +298,7 @@ public class ConfigHelper {
                         } else if (m.group(1).equals("shop")) {
                             actor = getShopByName(m.group(2));
                         } else {
-                            ZombieTools.stopWithFatalError("createLevelFromFile(): Ungültiges Item: " + itemName);
+                            Guard.validateArgument(false);
                         }
                     } else {
                         actor = newItemByName(itemName);
@@ -316,8 +319,9 @@ public class ConfigHelper {
             BufferedReader text = new BufferedReader(reader);
             String temp;
             while ((temp = text.readLine()) != null) {
-                if (!temp.startsWith("#")) {
-                    lines.add(temp);
+                if (!temp.startsWith("//")) {
+                    // End of Line comments done right?
+                    lines.add(temp.replaceFirst("\\s*\\/\\/.*$", ""));
                 }
             }
             text.close();
