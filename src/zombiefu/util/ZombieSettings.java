@@ -44,7 +44,7 @@ public class ZombieSettings {
         paths.put("items", new File(props.getProperty("dir.items")));
         paths.put("screens", new File(props.getProperty("dir.screens")));
 
-        System.out.println(paths.toString());
+        // TODO: Überprüfen, ob Pfade lesbar sind.
     }
 
 

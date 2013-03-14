@@ -8,6 +8,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.awt.Color;
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import zombiefu.creature.Door;
@@ -21,15 +22,11 @@ import zombiefu.ui.ZombieFrame;
 import zombiefu.util.ConfigHelper;
 
 /**
- * 
+ *
  * @author tomas
  */
 public class ZombieGame {
 
-    private static final String sourceDir = "src/sources/";
-    private static final String screenDir = "src/sources/screens/";
-    private static final String itemDir = "src/sources/items/";
-    private static final String mapDir = "src/sources/maps/";
     private static ZombieSettings settings;
     private static ZombieFrame frame;
     private static Player player;
@@ -182,20 +179,20 @@ public class ZombieGame {
         return output;
     }
 
-    public static String getSourceDirectory() {
-        return sourceDir;
+    public static File getSourceDirectory() {
+        return settings.paths.get("base");
     }
 
-    public static String getItemDirectory() {
-        return itemDir;
+    public static File getItemDirectory() {
+        return settings.paths.get("items");
     }
 
-    public static String getMapDirectory() {
-        return mapDir;
+    public static File getMapDirectory() {
+        return settings.paths.get("maps");
     }
 
-    public static String getScreenDirectory() {
-        return screenDir;
+    public static File getScreenDirectory() {
+        return settings.paths.get("screens");
     }
 
     public static void endGame() {

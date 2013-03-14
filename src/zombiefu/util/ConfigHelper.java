@@ -6,6 +6,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,11 +49,10 @@ public class ConfigHelper {
     }
 
     private static void initItems() {
-        String baseDir = ZombieGame.getItemDirectory();
         items = new HashMap<String, ItemBuilder>();
 
         // Lade Waffen
-        String[] waffen = getStrings(baseDir + "Waffen.txt");
+        String[] waffen = getStrings(new File(ZombieGame.getItemDirectory(), "Waffen.txt"));
         for (String s : waffen) {
                 String[] st = s.split(" ");
                 ColoredChar chr = ColoredChar.create(st[1].charAt(0),
@@ -84,8 +84,7 @@ public class ConfigHelper {
         }
 
         // Lade HealingItems
-        String[] healingItems = getStrings(ZombieGame.getItemDirectory()
-                + "HealingItems.txt");
+        String[] healingItems = getStrings(new File(ZombieGame.getItemDirectory(), "HealingItems.txt"));
         for (String s : healingItems) {
                 String[] st = s.split(" ");
                 items.put(
@@ -96,8 +95,7 @@ public class ConfigHelper {
         }
 
         // Lade KeyCards
-        String[] keyCards = getStrings(ZombieGame.getItemDirectory()
-                + "KeyCards.txt");
+        String[] keyCards = getStrings(new File(ZombieGame.getItemDirectory(), "KeyCards.txt"));
         for (String s : keyCards) {
                 String[] st = s.split(" ");
                 items.put(
@@ -111,14 +109,12 @@ public class ConfigHelper {
         levels = new HashMap<String, Level>();
         doors = new HashMap<String, Door>();
         levelDoorMap = new HashMap<String, LinkedList<String[]>>();
-        String[] levelStrings = getStrings(ZombieGame.getSourceDirectory()
-                + "levels.txt");
+        String[] levelStrings = getStrings(new File(ZombieGame.getSourceDirectory(), "levels.txt"));
         for (String s : levelStrings) {
             levelDoorMap.put(s, new LinkedList<String[]>());
         }
         // Lade alle Türen
-        String[] tempDoors = getStrings(ZombieGame.getSourceDirectory()
-                + "doors.txt");
+        String[] tempDoors = getStrings(new File(ZombieGame.getSourceDirectory(), "doors.txt"));
         for (String s : tempDoors) {
             String[] st = s.split(" ");
             ColoredChar face = ColoredChar.create(st[4].charAt(0),
@@ -137,12 +133,11 @@ public class ConfigHelper {
 
         // Setze statische Items auf die Level:
         for (String s : levelStrings) {
-            String[] level = getStrings(ZombieGame.getMapDirectory() + s
-                    + ".map");
+            String[] level = getStrings(new File(ZombieGame.getMapDirectory(), s + ".map"));
             Level lev = levels.get(s);
          // Lese ItemMap ein
             HashMap<Character, String> itemMap = new HashMap<Character, String>();
-            String[] items = getStrings(ZombieGame.getMapDirectory() + s + ".itm");
+            String[] items = getStrings(new File(ZombieGame.getMapDirectory(), s + ".itm"));
             for (String st : items) {
                 String[] it = st.split(" ");
                 itemMap.put(it[0].charAt(0), it[1]);
@@ -158,8 +153,7 @@ public class ConfigHelper {
         }
 
         // Lade Teleporter
-        String[] teles = getStrings(ZombieGame.getSourceDirectory()
-                + "teleporters.txt");
+        String[] teles = getStrings(new File(ZombieGame.getSourceDirectory(), "teleporters.txt"));
         for (String s : teles) {
             String[] d = s.split(" ");
             Level world1 = levels.get(d[0]);
@@ -181,8 +175,7 @@ public class ConfigHelper {
         charSet = new HashMap<Character, Color>();
         passSet = new HashMap<Character, Boolean>();
         visibleSet = new HashMap<Character, Boolean>();
-        String[] settings = getStrings(ZombieGame.getSourceDirectory()
-                + "CharSet.txt");
+        String[] settings = getStrings(new File(ZombieGame.getSourceDirectory(), "CharSet.txt"));
         for (int i = 0; i < settings.length; i++) {
             String[] setting = settings[i].split(" ");
             charSet.put(setting[0].charAt(0), Color.decode("0x" + setting[3]));
@@ -243,8 +236,7 @@ public class ConfigHelper {
     }
 
     public static Level getFirstLevel() {
-        return getLevelByName(getFirstWordOfFile(ZombieGame
-                .getSourceDirectory() + "levels.txt"));
+        return getLevelByName(getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "levels.txt")));
     }
 
     public static boolean isValidChar(char c) {
@@ -253,17 +245,14 @@ public class ConfigHelper {
 
     public static char getDefaultChar() {
         if (defaultChar == null) {
-            defaultChar = getFirstWordOfFile(
-                    ZombieGame.getSourceDirectory() + "CharSet.txt").charAt(0);
+            defaultChar = getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "CharSet.txt")).charAt(0);
         }
         return defaultChar;
     }
 
     public static Level createLevelFromFile(String mapName) {
-        String baseDir = ZombieGame.getMapDirectory();
-
         // Lese Map ein
-        String[] level = getStrings(baseDir + mapName + ".map");
+        String[] level = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".map"));
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level[i].length(); j++) {
@@ -286,7 +275,7 @@ public class ConfigHelper {
         return lev;
     }
 
-    public static String[] getStrings(String input) {
+    public static String[] getStrings(File input) {
         LinkedList<String> lines = new LinkedList<String>();
         try {
             InputStreamReader reader = new InputStreamReader(
@@ -311,7 +300,7 @@ public class ConfigHelper {
 
     // Liest eine Datei im UTF-16 Format ein und gibt das 2-dim Feld in
     // ColoredChars zurück
-    private static ColoredChar[][] readFile(String input) throws IOException {
+    private static ColoredChar[][] readFile(File input) throws IOException {
         String[] level = getStrings(input);
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
         for (int i = 0; i < level.length; i++) {
@@ -323,12 +312,12 @@ public class ConfigHelper {
         return chars;
     }
 
-    private static String getFirstWordOfFile(String input) {
+    private static String getFirstWordOfFile(File input) {
         String firstLine = getStrings(input)[0];
         return firstLine.split(" ")[0];
     }
 
     public static ColoredChar[][] getImage(String imageName) throws IOException {
-        return readFile(ZombieGame.getScreenDirectory() + imageName + ".scr");
+        return readFile(new File(ZombieGame.getScreenDirectory(), imageName + ".scr"));
     }
 }
