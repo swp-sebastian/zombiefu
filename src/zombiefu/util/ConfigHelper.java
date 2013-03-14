@@ -65,7 +65,7 @@ public class ConfigHelper {
         String[] waffen = getStrings(new File(ZombieGame.getItemDirectory(), "Waffen.txt"));
         for (String s : waffen) {
             String[] st = s.split(" ");
-            if(st.length < 8) {
+            if (st.length < 8) {
                 ZombieTools.logError("initItems(): Ungültige Zeile in Waffen.txt: " + s);
                 continue;
             }
@@ -85,9 +85,9 @@ public class ConfigHelper {
             Waffentyp wtyp = Waffentyp.getTypeFromString(st[3]);
             double radius = Double.parseDouble(st[6]);
             int range = Integer.decode(st[7]);
-            
+
             Set<Discipline> experts = new HashSet<Discipline>();
-            for(int i = 8; i < st.length; i++) {
+            for (int i = 8; i < st.length; i++) {
                 experts.add(Discipline.getTypeFromString(st[i]));
             }
             items.put(st[0], new WaffenBuilder(face, name, damage, wtyp, experts, munition, radius, range));
@@ -235,7 +235,7 @@ public class ConfigHelper {
         return visibleSet;
     }
 
-    public static Level getFirstLevel() {
+    public static Level getGlobalMap() {
         return getLevelByName(getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "levels.txt")));
     }
 

@@ -89,7 +89,7 @@ public class Level extends World {
         }
     }
 
-    private void fillWithItems() {
+    protected void fillWithItems() {
     }
 
     public void refresh(TermPanel term) {

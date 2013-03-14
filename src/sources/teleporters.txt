@@ -1,3 +1,3 @@
-//Weltkarte 33 33 95 78 Info_Ebene1_test 95 79 33 34
+Weltkarte 33 33 95 78 Info_Ebene1_test 95 79 33 34
 raum1 33 33 33 2 raum2 33 1 33 32
 raum2 66 8 2 7 raum3 1 7 65 8
