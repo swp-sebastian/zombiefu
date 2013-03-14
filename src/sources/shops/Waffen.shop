@@ -1,0 +1,5 @@
+// Erste Zeile ist für ColoredChar:
+M FF00FF
+// Restliche Zeilen sind Inventar, also Name und Preis eines ConsumableItem
+Nuklearrakete 1000
+Feuerlöscher 20
