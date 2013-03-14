@@ -249,26 +249,7 @@ public class ConfigHelper {
     public static Level createLevelFromFile(String mapName) {
 
         ZombieTools.log("createLevelFromFile(" + mapName + ")");
-
-        // Lese Map ein
-        ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Maps aus Mapfile");
-        String[] level = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".map"));
-        ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
-        for (int i = 0; i < level.length; i++) {
-            for (int j = 0; j < level[i].length(); j++) {
-                if (isValidChar(level[i].charAt(j))) {
-                    chars[i][j] = ColoredChar.create(level[i].charAt(j));
-                } else {
-                    chars[i][j] = ColoredChar.create(getDefaultChar());
-                }
-            }
-        }
-
-        // Baue Level
-        ZombieTools.log("createLevelFromFile(" + mapName + "): Erzeuge Level");
-        RoomBuilder builder = new RoomBuilder(chars);
-        Level lev = new Level(builder.width(), builder.height(), builder, mapName);
-
+        
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
         HashMap<Character, String> itemMap = new HashMap<Character, String>();
@@ -277,6 +258,26 @@ public class ConfigHelper {
             String[] it = st.split(" ");
             itemMap.put(it[0].charAt(0), it[1]);
         }
+        // Lese Map ein
+        ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Maps aus Mapfile");
+        String[] level = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".map"));
+        ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
+        for (int i = 0; i < level.length; i++) {
+            for (int j = 0; j < level[i].length(); j++) {
+                if (isValidChar(level[i].charAt(j))) {
+                    chars[i][j] = ColoredChar.create(level[i].charAt(j));
+                } else if (itemMap.containsKey(level[i].charAt(j))){
+                    chars[i][j] = ColoredChar.create(getDefaultChar());
+                } else {
+                    chars[i][j] = ColoredChar.create(level[i].charAt(j),Color.WHITE);
+                }
+            }
+        }
+
+        // Baue Level
+        ZombieTools.log("createLevelFromFile(" + mapName + "): Erzeuge Level");
+        RoomBuilder builder = new RoomBuilder(chars);
+        Level lev = new Level(builder.width(), builder.height(), builder, mapName);
 
         // Lade statische Items auf Map
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lade statische Items");

@@ -11,7 +11,6 @@
 ╠ notpassable notvisible 8B4513 Eckwand
 ╬ notpassable notvisible 8B4513 Eckwand
 ═ notpassable notvisible 8B4513 Wandteil
-T notpassable notvisible 8B4726 Baum
 ≈ notpassable visible 63B8FF Wasser
 ❀ passable visible FFFF00 Blume
 ╓ notpassable notvisible 8B4513 Tür
