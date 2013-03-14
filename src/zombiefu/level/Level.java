@@ -41,8 +41,9 @@ public class Level extends World {
         drawOrder.add(Player.class);
         drawOrder.add(Monster.class);
         drawOrder.add(Item.class);
-        drawOrder.add(Teleporter.class);
         drawOrder.add(Door.class);
+        drawOrder.add(Teleporter.class);
+        
     }
     
     public String getName() {
