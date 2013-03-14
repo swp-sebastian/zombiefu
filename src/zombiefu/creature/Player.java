@@ -169,7 +169,6 @@ public class Player extends Creature implements Camera {
             } else {
                 act();
             }
-        } catch (InterruptedException e) {
         } catch (CannotMoveToIllegalFieldException ex) {
             act();
         } catch (WeaponHasNoMunitionException ex) {

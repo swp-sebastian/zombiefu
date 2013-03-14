@@ -12,6 +12,10 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sun.rmi.runtime.Log;
 import zombiefu.creature.Player;
 import zombiefu.ui.ZombieFrame;
 import zombiefu.util.Action;
@@ -56,5 +60,9 @@ public class ZombieTools {
     // Konvertiert key press in konfigurierte Action
     public static Action keyToAction(HashMap<String, Action> keybindings, char c) {
         return keybindings.get(Character.getName(c));
+    }
+    
+    public static void log(String s) {
+        System.out.println(s);
     }
 }

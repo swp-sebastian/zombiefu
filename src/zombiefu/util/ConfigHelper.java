@@ -251,6 +251,7 @@ public class ConfigHelper {
     }
 
     public static Level createLevelFromFile(String mapName) {
+        ZombieTools.log("createLevelFromFile(" + mapName + ")");
         // Lese Map ein
         String[] level = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".map"));
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
