@@ -1,5 +1,6 @@
 package zombiefu.util;
 
+import jade.util.Guard;
 import java.util.Properties;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -61,10 +62,7 @@ public class ZombieSettings {
         Iterator itr = paths.values().iterator();
         while(itr.hasNext()) {
             File f = (File) itr.next();
-            if (!f.canRead()) {
-                System.out.println("Fehler: Verzeichnis "+ f + " nicht existent oder nicht lesbar.");
-                System.exit(1);
-            }
+            Guard.verifyState(!f.canRead());
         }
     }
 
