@@ -258,7 +258,7 @@ public class ZombieGame {
                 output = Discipline.MATHEMATICS;
                 break;
             default:
-                output = null;
+                output = askPlayerForDiscipline();
         }
         // Quick fix. TODO: sebastian denkt sich was aus.
         Guard.argumentIsNotNull(output);
@@ -284,7 +284,7 @@ public class ZombieGame {
                 output = Attribut.INTELLIGENCE;
                 break;
             default:
-                output = null;
+                output = askPlayerForAttrbuteToRaise();
         }
         // Quick fix. TODO: sebastian denkt sich was aus.
         Guard.argumentIsNotNull(output);
