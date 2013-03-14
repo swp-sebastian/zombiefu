@@ -113,9 +113,10 @@ public class ZombieGame {
         frame.bottomTerm().bufferString(
                 0,
                 1,
-                "Coord: (" + player.pos().x() + "|" + player.pos().y() + ")"
+                "Ort: " + ((Level) player.world()).getName() + "(" + player.pos().x() + "|" + player.pos().y() + ")"
                         + " | € " + player.getMoney() + " | ECTS "
-                        + player.getECTS() + " | Sem " + player.getSemester());
+                        + player.getECTS() + " | Sem " + player.getSemester() + " | GodMode: "
+                        + (player.isGod() ? "an" : "aus"));
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
     }
