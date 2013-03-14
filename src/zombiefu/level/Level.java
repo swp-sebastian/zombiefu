@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import zombiefu.creature.Monster;
 import zombiefu.creature.Player;
+import zombiefu.creature.Shop;
 import zombiefu.creature.Zombie;
 import zombiefu.creature.Door;
 import zombiefu.items.Item;
@@ -40,6 +41,7 @@ public class Level extends World {
         drawOrder.add(DamageAnimation.class);
         drawOrder.add(Player.class);
         drawOrder.add(Monster.class);
+        drawOrder.add(Shop.class);
         drawOrder.add(Item.class);
         drawOrder.add(Door.class);
         drawOrder.add(Teleporter.class);
