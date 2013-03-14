@@ -126,7 +126,7 @@ public class Player extends Creature implements Camera {
                         break;
 
                     case INVENTORY:
-                        ConsumableItem it = ZombieGame.askPlayerForItem(inventar);
+                        ConsumableItem it = ZombieGame.askPlayerForItem();
                         if (it == null) {
                             act();
                         } else {

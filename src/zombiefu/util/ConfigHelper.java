@@ -32,6 +32,7 @@ public class ConfigHelper {
 
     private static HashMap<String, ItemBuilder> items;
     private static HashMap<String, Door> doors;
+    private static HashMap<String, Shop> shops;
     private static HashMap<String, Level> levels;
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
@@ -150,15 +151,19 @@ public class ConfigHelper {
         }
     }
 
-    public static Item newItemByName(String s) {
+    public static ItemBuilder getItemBuilderByName(String s) {
         if (items == null) {
             initItems();
         }
         ItemBuilder i = items.get(s);
         Guard.argumentIsNotNull(i);
-        return items.get(s).buildItem();
+        return i;       
     }
 
+    public static Item newItemByName(String s) {
+        return getItemBuilderByName(s).buildItem();
+    }
+    
     public static Waffe newWaffeByName(String s) {
         Item w = newItemByName(s);
         Guard.argumentIsNotNull(w);
@@ -181,6 +186,24 @@ public class ConfigHelper {
             doors.put(s, new Door(s));
         }
         return doors.get(s);
+    }
+
+    private static Shop getShopByName(String s) {
+        if (shops == null) {
+            shops = new HashMap<String, Shop>();
+        }
+        if (!shops.containsKey(s)) {
+            String[] shop = getStrings(new File(ZombieGame.getShopDirectory(), s + ".shop"));
+            String[] charInfo = shop[0].split(" ");
+            HashMap<ItemBuilder, Integer> items = new HashMap<ItemBuilder, Integer>();
+            for (int i = 1; i < shop.length; i++) {
+                String[] it = shop[i].split(" ");
+                items.put(getItemBuilderByName(it[0]), Integer.valueOf(it[1]));
+            }
+            shops.put(s, new Shop(ColoredChar.create(charInfo[0].charAt(0), Color.decode("0x" + charInfo[1])), s, items));
+
+        }
+        return shops.get(s);
     }
 
     private static KeyCard getKeyCardByName(String s) {
@@ -270,7 +293,7 @@ public class ConfigHelper {
                         } else if (m.group(1).equals("key")) {
                             actor = getKeyCardByName(m.group(2));
                         } else if (m.group(1).equals("shop")) {
-                            actor = Shop.newShop(m.group(2));
+                            actor = getShopByName(m.group(2));
                         } else {
                             ZombieTools.stopWithFatalError("createLevelFromFile(): Ungültiges Item: " + itemName);
                         }
