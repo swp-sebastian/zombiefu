@@ -282,7 +282,9 @@ public class ConfigHelper {
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lade statische Items");
         for (int x = 0; x < lev.width(); x++) {
             for (int y = 0; y < lev.height(); y++) {
-                char c = level[y].charAt(x);
+                char c;
+                try {c = level[y].charAt(x);}
+                catch (StringIndexOutOfBoundsException exc) {c = ' ';}
                 if (itemMap.containsKey(c)) {
                     String itemName = itemMap.get(c);
                     Actor actor = null;
