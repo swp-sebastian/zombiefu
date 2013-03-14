@@ -84,7 +84,7 @@ public abstract class Monster extends Creature {
         try {
             tryToMove(directionToPlayer());
         } catch (CannotMoveToIllegalFieldException ex) {
-            Logger.getLogger(Monster.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Monster.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
