@@ -89,10 +89,10 @@ public abstract class Creature extends NotPassableActor {
             return;
         }
 
-        System.out.println(getName() + " attacks " + cr.getName() + " with "
+        ZombieTools.log("hurtCreature(): " + getName() + " hurts " + cr.getName() + " with "
                 + getActiveWeapon().getName() + " (Damage: "
                 + getActiveWeapon().getDamage() + "). Attack value: "
-                + attackValue + ", Defense Value: " + cr.defenseValue);
+                + attackValue + ", Defense Value: " + cr.defenseValue + ", Faktor: " + faktor);
 
         // Calculate damage
         int damage = (int) (((double) getActiveWeapon().getDamage())
@@ -251,7 +251,7 @@ public abstract class Creature extends NotPassableActor {
     protected abstract void killed(Creature killer);
 
     private void hurt(int i, Creature hurter) {
-        System.out.println(getName() + " hat " + i + " HP verloren. ");
+        ZombieTools.log(getName() + " hat " + i + " HP verloren. ");
         if (godMode) {
             return;
         }
