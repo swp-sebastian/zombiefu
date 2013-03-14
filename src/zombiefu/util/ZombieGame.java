@@ -10,10 +10,13 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.logging.Logger;
 import zombiefu.creature.Door;
 import zombiefu.creature.Player;
 import zombiefu.creature.Shop;
+import zombiefu.itembuilder.ItemBuilder;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
@@ -165,7 +168,7 @@ public class ZombieGame {
         return d;
     }
 
-    public static ConsumableItem askPlayerForItem() {
+    public static ConsumableItem askPlayerForItemInInventar() {
         ConsumableItem output = null;
         ArrayList<ConsumableItem> inventar = getPlayer().getInventar();
         if (inventar.isEmpty()) {
@@ -186,6 +189,38 @@ public class ZombieGame {
         int key = ((int) ZombieGame.askPlayerForKey()) - 97;
         if (key >= 0 && key <= 25 && key < inventar.size()) {
             output = inventar.get(key);
+        }
+        refreshMainFrame();
+        return output;
+    }
+
+    public static ItemBuilder askPlayerForItemToBuy(HashMap<ItemBuilder, Integer> itemMap) {
+        
+        if (itemMap.isEmpty()) {
+            ZombieGame.newMessage("Dieser Shop hat keine Artikel.");
+            return null;
+        }
+        
+        ItemBuilder output = null;
+        
+        ArrayList<ItemBuilder> itemSet = new ArrayList<ItemBuilder>();
+        for(ItemBuilder it: itemMap.keySet()) {
+            itemSet.add(it);
+        }
+        
+        frame.mainTerm().clearBuffer();
+        frame.mainTerm().bufferString(0, 0, "Inventarliste:");
+        for (int i = 0; i < itemSet.size(); i++) {
+            frame.mainTerm().bufferString(
+                    0,
+                    i,
+                    "[" + ((char) (97 + i)) + "] " + itemSet.get(i).face() + " - "
+                    + itemSet.get(i).getName() + " (Preis: " + itemMap.get(itemSet.get(i)) + ")");
+        }
+        frame.mainTerm().refreshScreen();
+        int key = ((int) ZombieGame.askPlayerForKey()) - 97;
+        if (key >= 0 && key <= 25 && key < itemMap.size()) {
+            output = itemSet.get(key);
         }
         refreshMainFrame();
         return output;

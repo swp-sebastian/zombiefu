@@ -126,7 +126,7 @@ public class Player extends Creature implements Camera {
                         break;
 
                     case INVENTORY:
-                        ConsumableItem it = ZombieGame.askPlayerForItem();
+                        ConsumableItem it = ZombieGame.askPlayerForItemInInventar();
                         if (it == null) {
                             act();
                         } else {
@@ -141,7 +141,7 @@ public class Player extends Creature implements Camera {
                             act();
                         }
                         break;
-                        
+
                     case HELP:
                         ZombieGame.showHelp();
                         act();
@@ -163,7 +163,7 @@ public class Player extends Creature implements Camera {
                         tryToMove(Direction.EAST);
                         break;
 
- 
+
                 }
             } else {
                 act();
@@ -244,6 +244,16 @@ public class Player extends Creature implements Camera {
 
     public void addMoney(int m) {
         this.money += m;
+    }
+
+    public void pay(int m) throws CanNotAffordException {
+        if (m > money) {
+            throw new CanNotAffordException();
+        } else {
+            this.money -= m;
+            ZombieGame.refreshBottomFrame();
+        }
+
     }
 
     @Override

@@ -33,6 +33,6 @@ public abstract class Human extends Creature {
         return null;
     }
 
-    public abstract void talk();
+    public abstract void talkToPlayer(Player pl);
     
 }
