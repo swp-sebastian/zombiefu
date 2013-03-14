@@ -268,5 +268,32 @@ public class Player extends Creature implements Camera {
 
     public void giveECTS(int e) {
         ects += e;
+        if (ects >= 30) {
+            levelUp();
+        }
+    }
+
+    public void levelUp() {
+        ects -= 30;
+        semester += 1;
+        Attribut att = ZombieGame.askPlayerForAttrbuteToRaise();
+        int step = att.getStep();
+        switch(att) {
+            case MAXHP:
+                maximalHealthPoints += step;
+                break;
+            case ATTACK:
+                attackValue += step;
+                break;
+            case DEFENSE:
+                defenseValue += step;
+                break;
+            case INTELLIGENCE:
+                intelligenceValue += step;
+                break;
+            default:
+                throw new AssertionError(att.name());            
+        }
+        
     }
 }
