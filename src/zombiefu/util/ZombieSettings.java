@@ -21,9 +21,9 @@ public class ZombieSettings {
 
         try {
             props.load(new FileInputStream(res + "/config.cfg"));
-            ZombieTools.log("ZombieSettings: Konfigurationsdatei "+res+"/config.cfg geladen.");
+            System.out.println("ZombieSettings: Konfigurationsdatei "+res+"/config.cfg geladen.");
         } catch (IOException ex) {
-            ZombieTools.log("ZombieSettings: Konfigurationsdatei " + res +
+            System.out.println("ZombieSettings: Konfigurationsdatei " + res +
                                "/config.cfg  nicht vorhanden. Benutze Defaults.");
         }
 

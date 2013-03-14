@@ -265,4 +265,8 @@ public class Player extends Creature implements Camera {
     protected Direction getAttackDirection() throws NoDirectionGivenException {
         return ZombieGame.askPlayerForDirection();
     }
+
+    public void giveECTS(int e) {
+        ects += e;
+    }
 }
