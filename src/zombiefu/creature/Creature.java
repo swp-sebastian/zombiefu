@@ -39,6 +39,9 @@ public abstract class Creature extends NotPassableActor {
         defenseValue = d;
     }
 
+    public boolean isGod() {
+        return godMode;
+    }
     public int getAttackValue() {
         return attackValue;
     }

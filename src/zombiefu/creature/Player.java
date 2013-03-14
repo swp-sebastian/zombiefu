@@ -103,6 +103,7 @@ public class Player extends Creature implements Camera {
 
             if (key == 'g') {
                 godMode = !godMode;
+                ZombieGame.refreshBottomFrame();
                 act();
             }
 
