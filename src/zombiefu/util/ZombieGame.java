@@ -165,8 +165,9 @@ public class ZombieGame {
         return d;
     }
 
-    public static ConsumableItem askPlayerForItem(ArrayList<ConsumableItem> inventar) {
+    public static ConsumableItem askPlayerForItem() {
         ConsumableItem output = null;
+        ArrayList<ConsumableItem> inventar = getPlayer().getInventar();
         if (inventar.isEmpty()) {
             ZombieGame.newMessage("Inventar ist leer.");
             return null;
@@ -197,6 +198,10 @@ public class ZombieGame {
 
     public static File getSourceDirectory() {
         return settings.paths.get("base");
+    }
+
+    public static File getShopDirectory() {
+        return settings.paths.get("shops");
     }
 
     public static File getItemDirectory() {

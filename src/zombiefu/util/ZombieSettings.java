@@ -46,6 +46,7 @@ public class ZombieSettings {
         paths.put("maps", new File(props.getProperty("dir.maps")));
         paths.put("items", new File(props.getProperty("dir.items")));
         paths.put("screens", new File(props.getProperty("dir.screens")));
+        paths.put("shops", new File(props.getProperty("dir.shops")));
 
         // Überprüfen, ob Pfade lesbar sind.
         Iterator itr = paths.values().iterator();
@@ -66,6 +67,7 @@ public class ZombieSettings {
         def.setProperty("dir.maps", res + "/maps");
         def.setProperty("dir.items", res + "/items");
         def.setProperty("dir.screens", res + "/screens");
+        def.setProperty("dir.shops", res + "/shops");
 
         // Default Playername
         def.setProperty("player.name", System.getProperty("user.name"));
