@@ -1,6 +1,6 @@
-package zombiefu.items;
+package zombiefu.actor;
 
-import zombiefu.creature.Player;
+import zombiefu.player.Player;
 import zombiefu.level.Level;
 import jade.core.Actor;
 import jade.core.World;

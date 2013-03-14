@@ -1,6 +1,5 @@
-package zombiefu.creature;
+package zombiefu.actor;
 
-import jade.core.Actor;
 import jade.fov.ViewField;
 import jade.util.Dice;
 import jade.util.Guard;
@@ -10,12 +9,15 @@ import jade.util.datatype.Direction;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import zombiefu.human.Human;
+import zombiefu.monster.Monster;
+import zombiefu.exception.CannotMoveToIllegalFieldException;
+import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.util.DamageAnimation;
-import zombiefu.util.NoDirectionGivenException;
+import zombiefu.exception.NoDirectionGivenException;
+import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
@@ -42,6 +44,7 @@ public abstract class Creature extends NotPassableActor {
     public boolean isGod() {
         return godMode;
     }
+
     public int getAttackValue() {
         return attackValue;
     }
@@ -89,10 +92,11 @@ public abstract class Creature extends NotPassableActor {
             return;
         }
 
-        ZombieTools.log("hurtCreature(): " + getName() + " hurts " + cr.getName() + " with "
-                + getActiveWeapon().getName() + " (Damage: "
-                + getActiveWeapon().getDamage() + "). Attack value: "
-                + attackValue + ", Defense Value: " + cr.defenseValue + ", Faktor: " + faktor);
+        ZombieTools.log("hurtCreature(): " + getName() + " hurts "
+                + cr.getName() + " with " + getActiveWeapon().getName()
+                + " (Damage: " + getActiveWeapon().getDamage()
+                + "). Attack value: " + attackValue + ", Defense Value: "
+                + cr.defenseValue + ", Faktor: " + faktor);
 
         // Calculate damage
         int damage = (int) (((double) getActiveWeapon().getDamage())
@@ -111,7 +115,7 @@ public abstract class Creature extends NotPassableActor {
     public void hurtCreature(Creature cr) {
         hurtCreature(cr, 1);
     }
-    
+
     public void attackCoordinate(Coordinate coord) {
         Guard.argumentIsNotNull(coord);
         DamageAnimation anim = new DamageAnimation();
@@ -186,8 +190,9 @@ public abstract class Creature extends NotPassableActor {
     }
 
     public void attack(Direction dir) throws WeaponHasNoMunitionException {
-        if(!getActiveWeapon().hasMunition())
+        if (!getActiveWeapon().hasMunition()) {
             throw new WeaponHasNoMunitionException();
+        }
         Waffentyp typ = getActiveWeapon().getTyp();
         Coordinate ziel;
         if (typ.isRanged()) {
@@ -204,7 +209,8 @@ public abstract class Creature extends NotPassableActor {
         }
     }
 
-    public void attack() throws NoDirectionGivenException, WeaponHasNoMunitionException {
+    public void attack() throws NoDirectionGivenException,
+            WeaponHasNoMunitionException {
         Direction dir;
         if (getActiveWeapon().getTyp() != Waffentyp.UMKREIS) {
             dir = getAttackDirection();
@@ -215,7 +221,8 @@ public abstract class Creature extends NotPassableActor {
     }
 
     public void tryToMove(Direction dir)
-            throws CannotMoveToIllegalFieldException, WeaponHasNoMunitionException {
+            throws CannotMoveToIllegalFieldException,
+            WeaponHasNoMunitionException {
         Guard.argumentIsNotNull(world());
         Guard.argumentIsNotNull(dir);
         if (dazed > 0) {
@@ -230,16 +237,28 @@ public abstract class Creature extends NotPassableActor {
                 || !world().passableAt(targetField)) {
             throw new CannotMoveToIllegalFieldException();
         }
+
         NotPassableActor actor = world().getActorAt(NotPassableActor.class,
                 pos().getTranslated(dir));
         if (actor == null) {
             move(dir);
-        } else if (!(actor instanceof Player) && this instanceof Monster) {
-            throw new CannotMoveToIllegalFieldException();
-        } else if (actor instanceof Door && this instanceof Player) {
-            ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
-            throw new CannotMoveToIllegalFieldException();
-        } else if (!(actor instanceof Creature) && this instanceof Player) {
+            return;
+        }
+
+        if (this instanceof Player) {
+            if (actor instanceof Door) {
+                ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
+                throw new CannotMoveToIllegalFieldException();
+            } else if (actor instanceof Human) {
+                ((Human) actor).talkToPlayer((Player) this);
+                return;
+            } else if (!(actor instanceof Monster)) {
+                throw new CannotMoveToIllegalFieldException();
+
+            }
+        }
+        
+        if (this instanceof Monster && !(actor instanceof Player)) {
             throw new CannotMoveToIllegalFieldException();
         } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
             attack(dir);

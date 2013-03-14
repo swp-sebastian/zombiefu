@@ -1,4 +1,4 @@
-package zombiefu.map;
+package zombiefu.mapgen;
 
 import jade.core.World;
 import jade.gen.map.MapGenerator;

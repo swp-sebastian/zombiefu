@@ -1,4 +1,4 @@
-package zombiefu.creature;
+package zombiefu.exception;
 
 public class MaximumHealthPointException extends Exception {
 

@@ -1,4 +1,4 @@
-package zombiefu.creature;
+package zombiefu.monster;
 
 import jade.fov.RayCaster;
 import zombiefu.items.Waffe;
@@ -8,15 +8,17 @@ import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import zombiefu.actor.Creature;
+import zombiefu.exception.CannotMoveToIllegalFieldException;
+import zombiefu.exception.NoPlaceToMoveException;
+import zombiefu.exception.WeaponHasNoMunitionException;
+import zombiefu.exception.TargetNotFoundException;
+import zombiefu.exception.NoDirectionGivenException;
+import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.items.Item;
 import zombiefu.ki.StupidMover;
 import zombiefu.ki.MoveAlgorithm;
-import zombiefu.ki.TargetNotFoundException;
-import zombiefu.util.NoDirectionGivenException;
-import zombiefu.ki.TargetIsNotInThisWorldException;
-import zombiefu.util.ConfigHelper;
+import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
@@ -84,7 +86,7 @@ public abstract class Monster extends Creature {
         try {
             tryToMove(directionToPlayer());
         } catch (CannotMoveToIllegalFieldException ex) {
-            Logger.getLogger(Monster.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Monster.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

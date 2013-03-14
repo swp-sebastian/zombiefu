@@ -1,4 +1,4 @@
-package zombiefu.creature;
+package zombiefu.player;
 
 import jade.core.World;
 import zombiefu.items.Waffe;
@@ -8,13 +8,17 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Logger;
+import zombiefu.actor.Creature;
+import zombiefu.exception.CanNotAffordException;
+import zombiefu.exception.CannotMoveToIllegalFieldException;
+import zombiefu.exception.MaximumHealthPointException;
+import zombiefu.exception.WeaponHasNoMunitionException;
+import zombiefu.exception.CannotBeConsumedException;
+import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.fov.ViewEverything;
-import zombiefu.items.CannotBeConsumedException;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
-import zombiefu.util.NoDirectionGivenException;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 import zombiefu.util.Action;
@@ -126,7 +130,7 @@ public class Player extends Creature implements Camera {
                         break;
 
                     case INVENTORY:
-                        ConsumableItem it = ZombieGame.askPlayerForItem();
+                        ConsumableItem it = ZombieGame.askPlayerForItemInInventar();
                         if (it == null) {
                             act();
                         } else {
@@ -141,7 +145,7 @@ public class Player extends Creature implements Camera {
                             act();
                         }
                         break;
-                        
+
                     case HELP:
                         ZombieGame.showHelp();
                         act();
@@ -163,7 +167,7 @@ public class Player extends Creature implements Camera {
                         tryToMove(Direction.EAST);
                         break;
 
- 
+
                 }
             } else {
                 act();
@@ -244,6 +248,16 @@ public class Player extends Creature implements Camera {
 
     public void addMoney(int m) {
         this.money += m;
+    }
+
+    public void pay(int m) throws CanNotAffordException {
+        if (m > money) {
+            throw new CanNotAffordException();
+        } else {
+            this.money -= m;
+            ZombieGame.refreshBottomFrame();
+        }
+
     }
 
     @Override

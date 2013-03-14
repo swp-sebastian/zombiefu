@@ -10,16 +10,15 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.logging.Logger;
-import zombiefu.creature.Door;
-import zombiefu.creature.Player;
+import java.util.HashMap;
+import zombiefu.exception.NoDirectionGivenException;
+import zombiefu.player.Player;
+import zombiefu.itembuilder.ItemBuilder;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
-import zombiefu.items.KeyCard;
-import zombiefu.items.Waffe;
 import zombiefu.level.Level;
+import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
-import zombiefu.util.ConfigHelper;
 
 /**
  *
@@ -127,6 +126,7 @@ public class ZombieGame {
             refreshBottomFrame();
             player.world().tick();
         }
+        System.exit(0);
     }
 
     public static void showHelp() {
@@ -143,8 +143,7 @@ public class ZombieGame {
         try {
             return frame.mainTerm().getKey();
         } catch (InterruptedException ex) {
-            Logger.getLogger(ZombieGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            System.exit(1);
+            ZombieTools.stopWithFatalError("InterruptedException: kein Key bekommen?");
             return 0;
         }
     }
@@ -164,16 +163,17 @@ public class ZombieGame {
         return d;
     }
 
-    public static ConsumableItem askPlayerForItem() {
+    public static ConsumableItem askPlayerForItemInInventar() {
         ConsumableItem output = null;
-        if (player.getInventar().isEmpty()) {
+        ArrayList<ConsumableItem> inventar = getPlayer().getInventar();
+        if (inventar.isEmpty()) {
             ZombieGame.newMessage("Inventar ist leer.");
             return null;
         }
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferString(0, 0, "Inventarliste:");
-        for (int i = 0; i < player.getInventar().size(); i++) {
-            Item it = player.getInventar().get(i);
+        for (int i = 0; i < inventar.size(); i++) {
+            Item it = inventar.get(i);
             frame.mainTerm().bufferString(
                     0,
                     2 + i,
@@ -182,8 +182,40 @@ public class ZombieGame {
         }
         frame.mainTerm().refreshScreen();
         int key = ((int) ZombieGame.askPlayerForKey()) - 97;
-        if (key >= 0 && key <= 25 && key < player.getInventar().size()) {
-            output = player.getInventar().get(key);
+        if (key >= 0 && key <= 25 && key < inventar.size()) {
+            output = inventar.get(key);
+        }
+        refreshMainFrame();
+        return output;
+    }
+
+    public static ItemBuilder askPlayerForItemToBuy(HashMap<ItemBuilder, Integer> itemMap) {
+        
+        if (itemMap.isEmpty()) {
+            ZombieGame.newMessage("Dieser Shop hat keine Artikel.");
+            return null;
+        }
+        
+        ItemBuilder output = null;
+        
+        ArrayList<ItemBuilder> itemSet = new ArrayList<ItemBuilder>();
+        for(ItemBuilder it: itemMap.keySet()) {
+            itemSet.add(it);
+        }
+        
+        frame.mainTerm().clearBuffer();
+        frame.mainTerm().bufferString(0, 0, "Inventarliste:");
+        for (int i = 0; i < itemSet.size(); i++) {
+            frame.mainTerm().bufferString(
+                    0,
+                    i,
+                    "[" + ((char) (97 + i)) + "] " + itemSet.get(i).face() + " - "
+                    + itemSet.get(i).getName() + " (Preis: " + itemMap.get(itemSet.get(i)) + ")");
+        }
+        frame.mainTerm().refreshScreen();
+        int key = ((int) ZombieGame.askPlayerForKey()) - 97;
+        if (key >= 0 && key <= 25 && key < itemMap.size()) {
+            output = itemSet.get(key);
         }
         refreshMainFrame();
         return output;
@@ -196,6 +228,10 @@ public class ZombieGame {
 
     public static File getSourceDirectory() {
         return settings.paths.get("base");
+    }
+
+    public static File getShopDirectory() {
+        return settings.paths.get("shops");
     }
 
     public static File getItemDirectory() {

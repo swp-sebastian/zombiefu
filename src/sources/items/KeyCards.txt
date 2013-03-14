@@ -1,3 +1,0 @@
-# Benutzung:
-# Türname Farbe Charakter
-TestDoor S FFFFFF
