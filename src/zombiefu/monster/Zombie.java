@@ -14,7 +14,7 @@ public class Zombie extends Monster {
     public Zombie() {
         super(ColoredChar.create('\u263F', ZombieTools.getRandomColor()), "Zombie", Dice.global
                 .nextInt(1, 20), Dice.global.nextInt(1, 20), Dice.global
-                .nextInt(1, 20), ConfigHelper.newWaffeByName("Kralle"), new Dijkstra());
+                .nextInt(1, 20), ConfigHelper.newWaffeByName("Kralle"), 1);
     }
 
     @Override
