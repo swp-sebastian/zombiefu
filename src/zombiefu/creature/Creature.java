@@ -42,6 +42,7 @@ public abstract class Creature extends NotPassableActor {
     public boolean isGod() {
         return godMode;
     }
+
     public int getAttackValue() {
         return attackValue;
     }
@@ -89,10 +90,11 @@ public abstract class Creature extends NotPassableActor {
             return;
         }
 
-        ZombieTools.log("hurtCreature(): " + getName() + " hurts " + cr.getName() + " with "
-                + getActiveWeapon().getName() + " (Damage: "
-                + getActiveWeapon().getDamage() + "). Attack value: "
-                + attackValue + ", Defense Value: " + cr.defenseValue + ", Faktor: " + faktor);
+        ZombieTools.log("hurtCreature(): " + getName() + " hurts "
+                + cr.getName() + " with " + getActiveWeapon().getName()
+                + " (Damage: " + getActiveWeapon().getDamage()
+                + "). Attack value: " + attackValue + ", Defense Value: "
+                + cr.defenseValue + ", Faktor: " + faktor);
 
         // Calculate damage
         int damage = (int) (((double) getActiveWeapon().getDamage())
@@ -111,7 +113,7 @@ public abstract class Creature extends NotPassableActor {
     public void hurtCreature(Creature cr) {
         hurtCreature(cr, 1);
     }
-    
+
     public void attackCoordinate(Coordinate coord) {
         Guard.argumentIsNotNull(coord);
         DamageAnimation anim = new DamageAnimation();
@@ -186,7 +188,7 @@ public abstract class Creature extends NotPassableActor {
     }
 
     public void attack(Direction dir) throws WeaponHasNoMunitionException {
-        if(!getActiveWeapon().hasMunition())
+        if (!getActiveWeapon().hasMunition())
             throw new WeaponHasNoMunitionException();
         Waffentyp typ = getActiveWeapon().getTyp();
         Coordinate ziel;
@@ -204,7 +206,8 @@ public abstract class Creature extends NotPassableActor {
         }
     }
 
-    public void attack() throws NoDirectionGivenException, WeaponHasNoMunitionException {
+    public void attack() throws NoDirectionGivenException,
+            WeaponHasNoMunitionException {
         Direction dir;
         if (getActiveWeapon().getTyp() != Waffentyp.UMKREIS) {
             dir = getAttackDirection();
@@ -215,7 +218,8 @@ public abstract class Creature extends NotPassableActor {
     }
 
     public void tryToMove(Direction dir)
-            throws CannotMoveToIllegalFieldException, WeaponHasNoMunitionException {
+            throws CannotMoveToIllegalFieldException,
+            WeaponHasNoMunitionException {
         Guard.argumentIsNotNull(world());
         Guard.argumentIsNotNull(dir);
         if (dazed > 0) {
@@ -237,9 +241,12 @@ public abstract class Creature extends NotPassableActor {
         } else if (!(actor instanceof Player) && this instanceof Monster) {
             throw new CannotMoveToIllegalFieldException();
         } else if (actor instanceof Door && this instanceof Player) {
-            ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
+            ZombieGame
+                    .newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
             throw new CannotMoveToIllegalFieldException();
-        } else if (!(actor instanceof Creature) && this instanceof Player) {
+        } else if (actor instanceof Shop && this instanceof Player) {
+            ((Shop) actor).talk();
+        } else if (!(actor instanceof Monster) && this instanceof Player) {
             throw new CannotMoveToIllegalFieldException();
         } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
             attack(dir);

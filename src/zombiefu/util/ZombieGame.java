@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import zombiefu.creature.Door;
 import zombiefu.creature.Player;
+import zombiefu.creature.Shop;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
@@ -69,6 +70,7 @@ public class ZombieGame {
 
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
+        firstLevel.addActor(new Shop(ColoredChar.create('M')));
         frame.mainTerm().registerCamera(player, 40, 17);
     }
 
@@ -164,16 +166,16 @@ public class ZombieGame {
         return d;
     }
 
-    public static ConsumableItem askPlayerForItem() {
+    public static ConsumableItem askPlayerForItem(ArrayList<ConsumableItem> inventar) {
         ConsumableItem output = null;
-        if (player.getInventar().isEmpty()) {
+        if (inventar.isEmpty()) {
             ZombieGame.newMessage("Inventar ist leer.");
             return null;
         }
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferString(0, 0, "Inventarliste:");
-        for (int i = 0; i < player.getInventar().size(); i++) {
-            Item it = player.getInventar().get(i);
+        for (int i = 0; i < inventar.size(); i++) {
+            Item it = inventar.get(i);
             frame.mainTerm().bufferString(
                     0,
                     2 + i,
@@ -182,8 +184,8 @@ public class ZombieGame {
         }
         frame.mainTerm().refreshScreen();
         int key = ((int) ZombieGame.askPlayerForKey()) - 97;
-        if (key >= 0 && key <= 25 && key < player.getInventar().size()) {
-            output = player.getInventar().get(key);
+        if (key >= 0 && key <= 25 && key < inventar.size()) {
+            output = inventar.get(key);
         }
         refreshMainFrame();
         return output;
