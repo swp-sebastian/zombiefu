@@ -26,27 +26,19 @@ public abstract class Monster extends Creature {
 
     protected MoveAlgorithm movealg;
     private Waffe waffe;
+    protected int ectsYield;
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w, MoveAlgorithm m) {
+    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w, int ects, int s, MoveAlgorithm m) {
         super(face, n, h, a, d);
         waffe = w;
         movealg = m;
         fov = new RayCaster();
-        sichtweite = 10;
-    }
+        sichtweite = s;
+        ectsYield = ects; 
+   }
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w) {
-        this(face, n, h, a, d, w, new StupidMover());
-    }
-
-    public Monster(ColoredChar face, MoveAlgorithm m) {
-        super(face);
-        waffe = null;
-        movealg = m;
-    }
-
-    public Monster(ColoredChar face) {
-        this(face, new StupidMover());
+    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w, int ects) {
+        this(face, n, h, a, d, w, ects, 10, new StupidMover());
     }
 
     private void moveRandomly() throws NoPlaceToMoveException {
@@ -121,6 +113,9 @@ public abstract class Monster extends Creature {
         Item it = itemDroppedOnKill();
         if (it != null) {
             world().addActor(it, pos());
+        }
+        if(ZombieGame.getPlayer() == killer) {
+            ZombieGame.getPlayer().giveECTS(ectsYield);
         }
         expire();
         ZombieGame.newMessage(killer.getName() + " hat " + getName() + " getötet.");
