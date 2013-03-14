@@ -2,6 +2,8 @@ package zombiefu.items;
 
 import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
+import java.util.Set;
+import zombiefu.player.Discipline;
 
 /**
  *
@@ -14,14 +16,16 @@ public class Waffe extends Item {
     protected double blastRadius;
     protected int range;
     protected int munition;
+    protected Set<Discipline> experts;
 
-    public Waffe(ColoredChar c, String n, int d, Waffentyp w, double radius, int range) {
+    public Waffe(ColoredChar c, String n, int d, Waffentyp w, Set<Discipline> experts, double radius, int range) {
         super(c, n);
         this.damage = d;
         this.wtyp = w;
         this.blastRadius = radius;
         this.range = range;
         this.munition = 0;
+        this.experts = experts;
     }
 
     public int getDamage() {
@@ -80,4 +84,9 @@ public class Waffe extends Item {
             return String.valueOf(munition);
         }
     }
+
+    public boolean isExpert(Discipline a) {
+        return experts.contains(a);
+    }
+            
 }

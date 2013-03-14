@@ -7,6 +7,7 @@ package zombiefu.util;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
+import jade.util.Guard;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.File;
@@ -18,6 +19,7 @@ import zombiefu.itembuilder.ItemBuilder;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
+import zombiefu.player.Attribut;
 import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
 
@@ -29,6 +31,7 @@ public class ZombieGame {
 
     private static ZombieSettings settings;
     private static ZombieFrame frame;
+    private static Discipline myDiscipline;
     private static Player player;
 
     public static void createGame(String[] args, String name) {
@@ -40,8 +43,8 @@ public class ZombieGame {
         return settings;
     }
 
-    public static void showStaticImage(String file) {
-        try {
+    public static char showStaticImage(String file) {
+        try { //bevor fortgefahren wird
             ColoredChar[][] start = ConfigHelper.getImage(file);
             frame.mainTerm().clearBuffer();
             for (int x = 0; x < frame.mainTerm().DEFAULT_COLS; x++) {
@@ -55,17 +58,18 @@ public class ZombieGame {
                 }
             }
             frame.mainTerm().refreshScreen();
-            frame.mainTerm().getKey();
         } catch (IOException ex) {
-        } catch (InterruptedException ex) {
         }
+
+        return askPlayerForKey();
     }
 
     public static void initialize() {
+        Discipline discipline = askPlayerForDiscipline();
         Level firstLevel = ConfigHelper.getFirstLevel();
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
-        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, 100, 10, 10, 10, waffen);
+        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, discipline, 100, 5, 5, 5, waffen);
 
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
@@ -83,11 +87,11 @@ public class ZombieGame {
     public static void newMessage(String s) {
         refreshMainFrame();
         setTopFrameContent(s);
-        char key = 0;
         try {
-            key = frame.mainTerm().getKey();
+            frame.mainTerm().getKey();
         } catch (InterruptedException ex) {
         }
+
         setTopFrameContent(null);
     }
 
@@ -132,7 +136,6 @@ public class ZombieGame {
 
     public static void showHelp() {
         showStaticImage("help");
-        askPlayerForKey();
         refreshMainFrame();
     }
 
@@ -191,19 +194,19 @@ public class ZombieGame {
     }
 
     public static ItemBuilder askPlayerForItemToBuy(HashMap<ItemBuilder, Integer> itemMap) {
-        
+
         if (itemMap.isEmpty()) {
             ZombieGame.newMessage("Dieser Shop hat keine Artikel.");
             return null;
         }
-        
+
         ItemBuilder output = null;
-        
+
         ArrayList<ItemBuilder> itemSet = new ArrayList<ItemBuilder>();
-        for(ItemBuilder it: itemMap.keySet()) {
+        for (ItemBuilder it : itemMap.keySet()) {
             itemSet.add(it);
         }
-        
+
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferString(0, 0, "Inventarliste:");
         for (int i = 0; i < itemSet.size(); i++) {
@@ -223,8 +226,50 @@ public class ZombieGame {
     }
 
     public static Discipline askPlayerForDiscipline() {
-        // TODO: Adrians Studiengangabfrage
-        return Discipline.MATHEMATICS;
+        char alpha = showStaticImage("discipline");
+        Discipline output;
+
+        switch (alpha) {
+            case 'a':
+                output = Discipline.POLITICAL_SCIENCE;
+                break;
+            case 'b':
+                output = Discipline.COMPUTER_SCIENCE;
+                break;
+            case 'c':
+                output = Discipline.MEDICINE;
+                break;
+            case 'd':
+                output = Discipline.PHILOSOPHY;
+                break;
+            case 'e':
+                output = Discipline.PHYSICS;
+                break;
+            case 'f':
+                output = Discipline.BUSINESS;
+                break;
+            case 'g':
+                output = Discipline.CHEMISTRY;
+                break;
+            case 'h':
+                output = Discipline.SPORTS;
+                break;
+            case 'i':
+                output = Discipline.MATHEMATICS;
+                break;
+            default:
+                output = null;
+        }
+        // Quick fix. TODO: sebastian denkt sich was aus.
+        Guard.argumentIsNotNull(output);
+        System.out.println(output);
+        return output;
+        //      } catch (InterruptedException ex) {
+        //      }
+    }
+
+    public static Attribut askPlayerForAttrbuteToRaise() {
+        return Attribut.ATTACK;
     }
 
     public static File getSourceDirectory() {

@@ -17,15 +17,19 @@ import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.util.DamageAnimation;
 import zombiefu.exception.NoDirectionGivenException;
+import zombiefu.player.Discipline;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
 public abstract class Creature extends NotPassableActor {
 
+    private static final double EXPERT_BONUS = 1.5; // Faktor
+    
     protected int healthPoints;
     protected int attackValue;
     protected int defenseValue;
+    protected Discipline discipline;
     private int dazed;
     protected String name;
     protected ViewField fov;
@@ -41,6 +45,10 @@ public abstract class Creature extends NotPassableActor {
         defenseValue = d;
     }
 
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+    
     public boolean isGod() {
         return godMode;
     }
@@ -91,17 +99,17 @@ public abstract class Creature extends NotPassableActor {
         if (getActiveWeapon() == null) {
             return;
         }
-
+        
         ZombieTools.log("hurtCreature(): " + getName() + " hurts "
                 + cr.getName() + " with " + getActiveWeapon().getName()
                 + " (Damage: " + getActiveWeapon().getDamage()
-                + "). Attack value: " + attackValue + ", Defense Value: "
+                + ", Experte: " + getActiveWeapon().isExpert(discipline) + "). Attack value: " + attackValue + ", Defense Value: "
                 + cr.defenseValue + ", Faktor: " + faktor);
 
         // Calculate damage
         int damage = (int) (((double) getActiveWeapon().getDamage())
                 * ((double) attackValue / (double) cr.defenseValue)
-                * (double) Dice.global.nextInt(20, 40) / 30 * faktor);
+                * (double) Dice.global.nextInt(20, 40) / 30 * faktor * (getActiveWeapon().isExpert(discipline) ? EXPERT_BONUS : 1.0));
         if (damage == 0) {
             damage = 1;
         }

@@ -12,7 +12,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import zombiefu.actor.Door;
@@ -23,16 +25,18 @@ import zombiefu.itembuilder.WaffenBuilder;
 import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
 import zombiefu.actor.Teleporter;
+import zombiefu.itembuilder.ShopBuilder;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.level.Level;
 import zombiefu.mapgen.RoomBuilder;
+import zombiefu.player.Discipline;
 
 public class ConfigHelper {
 
     private static HashMap<String, ItemBuilder> items;
     private static HashMap<String, Door> doors;
-    private static HashMap<String, Shop> shops;
+    private static HashMap<String, ShopBuilder> shops;
     private static HashMap<String, Level> levels;
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
@@ -61,32 +65,32 @@ public class ConfigHelper {
         String[] waffen = getStrings(new File(ZombieGame.getItemDirectory(), "Waffen.txt"));
         for (String s : waffen) {
             String[] st = s.split(" ");
-            ColoredChar chr = ColoredChar.create(st[1].charAt(0),
-                    Color.decode("0x" + st[2]));
-            WaffenBuilder waffenbuilder;
+            if(st.length < 8) {
+                ZombieTools.logError("initItems(): Ungültige Zeile in Waffen.txt: " + s);
+                continue;
+            }
+
+            ColoredChar face = ColoredChar.create(st[1].charAt(0), Color.decode("0x" + st[2]));
+
+            String name = st[0];
+            int damage = Integer.decode(st[5]);
+
             int munition;
             if (st[4].equals("unbegrenzt")) {
                 munition = -1;
             } else {
                 munition = Integer.decode(st[4]);
             }
-            if (st[3].equals("Nahkampf")) {
-                waffenbuilder = new WaffenBuilder(chr, st[0],
-                        Integer.decode(st[5]), Waffentyp.NAHKAMPF, munition);
-            } else if (st[3].equals("Fernkampf")) {
-                waffenbuilder = new WaffenBuilder(chr, st[0],
-                        Integer.decode(st[5]), Waffentyp.FERNKAMPF, munition,
-                        Integer.decode(st[6]));
-            } else if (st[3].equals("Umkreis")) {
-                waffenbuilder = new WaffenBuilder(chr, st[0],
-                        Integer.decode(st[5]), Waffentyp.UMKREIS, munition,
-                        Double.parseDouble(st[6]));
-            } else {
-                waffenbuilder = new WaffenBuilder(chr, st[0],
-                        Integer.decode(st[5]), Waffentyp.GRANATE, munition,
-                        Double.parseDouble(st[6]), Integer.decode(st[7]));
+
+            Waffentyp wtyp = Waffentyp.getTypeFromString(st[3]);
+            double radius = Double.parseDouble(st[6]);
+            int range = Integer.decode(st[7]);
+            
+            Set<Discipline> experts = new HashSet<Discipline>();
+            for(int i = 8; i < st.length; i++) {
+                experts.add(Discipline.getTypeFromString(st[i]));
             }
-            items.put(st[0], waffenbuilder);
+            items.put(st[0], new WaffenBuilder(face, name, damage, wtyp, experts, munition, radius, range));
         }
 
         // Lade HealingItems
@@ -188,9 +192,9 @@ public class ConfigHelper {
         return doors.get(s);
     }
 
-    private static Shop getShopByName(String s) {
+    private static Shop newShopByName(String s) {
         if (shops == null) {
-            shops = new HashMap<String, Shop>();
+            shops = new HashMap<String, ShopBuilder>();
         }
         if (!shops.containsKey(s)) {
             String[] shop = getStrings(new File(ZombieGame.getShopDirectory(), s + ".shop"));
@@ -200,10 +204,10 @@ public class ConfigHelper {
                 String[] it = shop[i].split(" ");
                 items.put(getItemBuilderByName(it[0]), Integer.valueOf(it[1]));
             }
-            shops.put(s, new Shop(ColoredChar.create(charInfo[0].charAt(0), Color.decode("0x" + charInfo[1])), s, items));
+            shops.put(s, new ShopBuilder(ColoredChar.create(charInfo[0].charAt(0), Color.decode("0x" + charInfo[1])), s, items));
 
         }
-        return shops.get(s);
+        return shops.get(s).buildShop();
     }
 
     private static KeyCard getKeyCardByName(String s) {
@@ -249,7 +253,7 @@ public class ConfigHelper {
     public static Level createLevelFromFile(String mapName) {
 
         ZombieTools.log("createLevelFromFile(" + mapName + ")");
-        
+
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
         HashMap<Character, String> itemMap = new HashMap<Character, String>();
@@ -266,10 +270,10 @@ public class ConfigHelper {
             for (int j = 0; j < level[i].length(); j++) {
                 if (isValidChar(level[i].charAt(j))) {
                     chars[i][j] = ColoredChar.create(level[i].charAt(j));
-                } else if (itemMap.containsKey(level[i].charAt(j))){
+                } else if (itemMap.containsKey(level[i].charAt(j))) {
                     chars[i][j] = ColoredChar.create(getDefaultChar());
                 } else {
-                    chars[i][j] = ColoredChar.create(level[i].charAt(j),Color.WHITE);
+                    chars[i][j] = ColoredChar.create(level[i].charAt(j), Color.WHITE);
                 }
             }
         }
@@ -284,8 +288,11 @@ public class ConfigHelper {
         for (int x = 0; x < lev.width(); x++) {
             for (int y = 0; y < lev.height(); y++) {
                 char c;
-                try {c = level[y].charAt(x);}
-                catch (StringIndexOutOfBoundsException exc) {c = ' ';}
+                try {
+                    c = level[y].charAt(x);
+                } catch (StringIndexOutOfBoundsException exc) {
+                    c = ' ';
+                }
                 if (itemMap.containsKey(c)) {
                     String itemName = itemMap.get(c);
                     Actor actor = null;
@@ -296,16 +303,17 @@ public class ConfigHelper {
                         } else if (m.group(1).equals("key")) {
                             actor = getKeyCardByName(m.group(2));
                         } else if (m.group(1).equals("shop")) {
-                            actor = getShopByName(m.group(2));
+                            actor = newShopByName(m.group(2));
                         } else {
                             Guard.validateArgument(false);
                         }
                     } else {
                         actor = newItemByName(itemName);
-                    }try{
-                    lev.addActor(actor, x, y);}
-                    catch (Exception e) {System.out.println(mapName);
-                        System.out.println(actor);}
+                    }
+                    try {
+                        lev.addActor(actor, x, y);
+                    } catch (Exception e) {
+                    }
                 }
             }
         }

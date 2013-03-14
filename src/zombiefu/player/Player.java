@@ -35,7 +35,7 @@ public class Player extends Creature implements Camera {
     private HashMap<String, Waffe> waffen;
     private ArrayList<String> waffenListe;
 
-    public Player(ColoredChar face, String name, int healthPoints,
+    public Player(ColoredChar face, String name, Discipline discipline, int healthPoints,
             int attackValue, int defenseValue, int intelligenceValue,
             ArrayList<String> waffe) {
 
@@ -47,6 +47,7 @@ public class Player extends Creature implements Camera {
         this.money = 10;
         this.ects = 0;
         this.semester = 1;
+        this.discipline = discipline;
 
         this.inventar = new ArrayList<ConsumableItem>();
         this.waffen = new HashMap<String, Waffe>();
@@ -220,7 +221,7 @@ public class Player extends Creature implements Camera {
     }
 
     public void heal(int i) throws MaximumHealthPointException {
-        System.out.print(getName() + " hat " + i + " HP geheilt. ");
+        ZombieTools.log(getName() + " hat " + i + " HP geheilt. ");
         if (healthPoints == maximalHealthPoints) {
             throw new MaximumHealthPointException();
         }
@@ -263,5 +264,36 @@ public class Player extends Creature implements Camera {
     @Override
     protected Direction getAttackDirection() throws NoDirectionGivenException {
         return ZombieGame.askPlayerForDirection();
+    }
+
+    public void giveECTS(int e) {
+        ects += e;
+        if (ects >= 30) {
+            levelUp();
+        }
+    }
+
+    public void levelUp() {
+        ects -= 30;
+        semester += 1;
+        Attribut att = ZombieGame.askPlayerForAttrbuteToRaise();
+        int step = att.getStep();
+        switch(att) {
+            case MAXHP:
+                maximalHealthPoints += step;
+                break;
+            case ATTACK:
+                attackValue += step;
+                break;
+            case DEFENSE:
+                defenseValue += step;
+                break;
+            case INTELLIGENCE:
+                intelligenceValue += step;
+                break;
+            default:
+                throw new AssertionError(att.name());            
+        }
+        
     }
 }
