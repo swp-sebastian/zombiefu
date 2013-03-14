@@ -26,7 +26,7 @@ import zombiefu.util.ConfigHelper;
 
 public class Player extends Creature implements Camera {
 
-    private final static int ECTS_FOR_NEXT_SEMESTER = 3;
+    private final static int ECTS_FOR_NEXT_SEMESTER = 5;
     
     private int intelligenceValue;
     private int money;
