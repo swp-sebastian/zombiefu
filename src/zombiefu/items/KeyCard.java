@@ -1,6 +1,7 @@
 package zombiefu.items;
 
 import jade.util.datatype.ColoredChar;
+import java.awt.Color;
 import zombiefu.creature.Door;
 import zombiefu.creature.Player;
 import zombiefu.util.ZombieGame;
@@ -9,8 +10,8 @@ public class KeyCard extends ConsumableItem {
 
     private final Door door;
 
-    public KeyCard(ColoredChar face, Door door) {
-        super(face, "KeyCard (" + door.getName() + ")");
+    public KeyCard(Door door) {
+        super(ColoredChar.create('D', Color.RED), "KeyCard (" + door.getName() + ")");
         this.door = door;
     }
 

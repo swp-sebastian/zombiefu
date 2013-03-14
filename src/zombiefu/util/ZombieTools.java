@@ -61,12 +61,17 @@ public class ZombieTools {
     public static Action keyToAction(HashMap<String, Action> keybindings, char c) {
         return keybindings.get(Character.getName(c));
     }
-    
+
     public static void log(String s) {
         System.out.println(s);
     }
-    
+
     public static void logError(String s) {
         System.out.println(s);
+    }
+
+    public static void stopWithFatalError(String s) {
+        logError(s);
+        System.exit(1);
     }
 }
