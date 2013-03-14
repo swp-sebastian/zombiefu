@@ -42,6 +42,8 @@ public class ConfigHelper {
     private static HashMap<Character, Boolean> passSet;
     private static HashMap<Character, Boolean> visibleSet;
     private static Character defaultChar;
+    private static Level startMap;
+    private static Coordinate startPosition;
 
     private static void createBidirectionalTeleporter(World world1,
             Coordinate from1, Coordinate to2, World world2, Coordinate from2,
@@ -65,7 +67,7 @@ public class ConfigHelper {
         String[] waffen = getStrings(new File(ZombieGame.getItemDirectory(), "Waffen.txt"));
         for (String s : waffen) {
             String[] st = s.split(" ");
-            if(st.length < 8) {
+            if (st.length < 8) {
                 ZombieTools.logError("initItems(): Ungültige Zeile in Waffen.txt: " + s);
                 continue;
             }
@@ -85,9 +87,9 @@ public class ConfigHelper {
             Waffentyp wtyp = Waffentyp.getTypeFromString(st[3]);
             double radius = Double.parseDouble(st[6]);
             int range = Integer.decode(st[7]);
-            
+
             Set<Discipline> experts = new HashSet<Discipline>();
-            for(int i = 8; i < st.length; i++) {
+            for (int i = 8; i < st.length; i++) {
                 experts.add(Discipline.getTypeFromString(st[i]));
             }
             items.put(st[0], new WaffenBuilder(face, name, damage, wtyp, experts, munition, radius, range));
@@ -155,6 +157,13 @@ public class ConfigHelper {
         }
     }
 
+    private static void initStartInfo() {
+        String[] str = getStrings(new File(ZombieGame.getSourceDirectory(), "startinfo.txt"));
+        str = str[0].split(" ");
+        startMap = getLevelByName(str[0]);
+        startPosition = new Coordinate(Integer.decode(str[1]), Integer.decode(str[2]));
+    }
+    
     public static ItemBuilder getItemBuilderByName(String s) {
         if (items == null) {
             initItems();
@@ -235,8 +244,22 @@ public class ConfigHelper {
         return visibleSet;
     }
 
-    public static Level getFirstLevel() {
+    public static Level getStartMap() {
+        if(startMap == null) {
+            initStartInfo();
+        }
+        return startMap;
+    }
+    
+    public static Level getGlobalMap() {
         return getLevelByName(getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "levels.txt")));
+    }
+    
+    public static Coordinate getStartPosition() {
+        if(startPosition == null) {
+            initStartInfo();
+        }
+        return startPosition;        
     }
 
     public static boolean isValidChar(char c) {
