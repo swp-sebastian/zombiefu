@@ -10,8 +10,7 @@ import zombiefu.util.ZombieTools;
 public class Human extends Creature {
 
     public Human(ColoredChar face, String name) {
-        super(face, name);
-        godMode = true;
+        super(face, name,1,1,1);
     }
 
     @Override
@@ -25,7 +24,10 @@ public class Human extends Creature {
 
     @Override
     protected void killed(Creature killer) {
-        // TODO: Spiel sofort beenden.
+        if (killer==ZombieGame.getPlayer()){
+            ZombieGame.newMessage("Du hast einen Menschen getötet.");
+            killer.expire();
+        }
     }
 
     @Override

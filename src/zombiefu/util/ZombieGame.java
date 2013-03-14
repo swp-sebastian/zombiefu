@@ -129,6 +129,7 @@ public class ZombieGame {
             refreshBottomFrame();
             player.world().tick();
         }
+        System.exit(0);
     }
 
     public static void showHelp() {
