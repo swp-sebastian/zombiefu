@@ -38,6 +38,7 @@ public class ZombieSettings {
         keybindings.put(props.getProperty("controls.prevweapon"), Action.PREV_WEAPON);
         keybindings.put(props.getProperty("controls.inventory"), Action.INVENTORY);
         keybindings.put(props.getProperty("controls.noop"), Action.NOOP);
+        keybindings.put(props.getProperty("controls.help"), Action.HELP);
 
         // Die Pfadangaben einlesen.
         paths = new HashMap<String, File>();
@@ -80,6 +81,7 @@ public class ZombieSettings {
         def.setProperty("controls.prevweapon", "LATIN SMALL LETTER Q");
         def.setProperty("controls.inventory", "LATIN SMALL LETTER I");
         def.setProperty("controls.noop", "FULL STOP");
+        def.setProperty("controls.help", "QUESTION MARK");
 
         return def;
     }

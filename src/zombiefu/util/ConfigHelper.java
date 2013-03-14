@@ -318,6 +318,6 @@ public class ConfigHelper {
     }
 
     public static ColoredChar[][] getImage(String imageName) throws IOException {
-        return readFile(new File(ZombieGame.getScreenDirectory(), imageName + ".scr"));
+            return readFile(new File(ZombieGame.getScreenDirectory(), imageName + ".scr"));
     }
 }

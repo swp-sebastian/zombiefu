@@ -82,7 +82,7 @@ public abstract class Creature extends NotPassableActor {
     protected abstract Direction getAttackDirection()
             throws NoDirectionGivenException;
 
-    public void hurtCreature(Creature cr) {
+    public void hurtCreature(Creature cr, double faktor) {
 
         // Wer keine Waffe hat, kann nicht angreifen!
         if (getActiveWeapon() == null) {
@@ -97,7 +97,7 @@ public abstract class Creature extends NotPassableActor {
         // Calculate damage
         int damage = (int) (((double) getActiveWeapon().getDamage())
                 * ((double) attackValue / (double) cr.defenseValue)
-                * (double) Dice.global.nextInt(20, 40) / 30);
+                * (double) Dice.global.nextInt(20, 40) / 30 * faktor);
         if (damage == 0) {
             damage = 1;
         }
@@ -108,6 +108,10 @@ public abstract class Creature extends NotPassableActor {
         cr.hurt(damage, this);
     }
 
+    public void hurtCreature(Creature cr) {
+        hurtCreature(cr, 1);
+    }
+    
     public void attackCoordinate(Coordinate coord) {
         Guard.argumentIsNotNull(coord);
         DamageAnimation anim = new DamageAnimation();
