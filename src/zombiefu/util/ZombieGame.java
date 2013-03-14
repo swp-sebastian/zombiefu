@@ -28,6 +28,7 @@ public class ZombieGame {
 
     private static ZombieSettings settings;
     private static ZombieFrame frame;
+    private static Discipline myDiscipline;
     private static Player player;
 
     public static void createGame(String[] args, String name) {
@@ -39,8 +40,8 @@ public class ZombieGame {
         return settings;
     }
 
-    public static void showStaticImage(String file) {
-        try {
+    public static void showStaticImage(String file, Boolean pressKey) { //pressKey gibt an, ob auf einen Tastendruck gewartet wird
+        try { //bevor fortgefahren wird
             ColoredChar[][] start = ConfigHelper.getImage(file);
             frame.mainTerm().clearBuffer();
             for (int x = 0; x < frame.mainTerm().DEFAULT_COLS; x++) {
@@ -54,13 +55,16 @@ public class ZombieGame {
                 }
             }
             frame.mainTerm().refreshScreen();
-            frame.mainTerm().getKey();
+            if (pressKey) {
+                frame.mainTerm().getKey();
+            }
         } catch (IOException ex) {
         } catch (InterruptedException ex) {
         }
     }
 
     public static void initialize() {
+    	askPlayerForDiscipline();
         Level firstLevel = ConfigHelper.getFirstLevel();
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
@@ -130,7 +134,7 @@ public class ZombieGame {
     }
 
     public static void showHelp() {
-        showStaticImage("help");
+        showStaticImage("help", true);
         askPlayerForKey();
         refreshMainFrame();
     }
@@ -221,10 +225,48 @@ public class ZombieGame {
         return output;
     }
 
-    public static Discipline askPlayerForDiscipline() {
-        // TODO: Adrians Studiengangabfrage
-        return Discipline.MATHEMATICS;
+    public static void askPlayerForDiscipline(){
+    	showStaticImage("discipline", false); 
+    	Discipline output;
+    //	try {
+    	char alpha = askPlayerForKey();
+    	switch (alpha){
+    		case 'a':
+    			output=Discipline.POLITICAL_SCIENCE;
+    			break;
+    		case 'b':
+    			output=Discipline.COMPUTER_SCIENCE;
+    			break;
+    		case 'c':
+    			output=Discipline.MEDICINE;
+    			break;
+    		case 'd':
+    			output=Discipline.PHILOSOPHY;
+    			break;
+    		case 'e':
+    			output=Discipline.PHYSICS;
+    			break;
+    		case 'f':
+    			output=Discipline.BUSINESS;
+    			break;
+    		case 'g':
+    			output=Discipline.CHEMISTRY;
+    			break;
+    		case 'h':
+    			output=Discipline.SPORTS;
+    			break;
+    		case 'i':
+    			output=Discipline.MATHEMATICS;
+    			break;
+    		default:
+    				output = null;
+    	}
+        myDiscipline=output;
+        System.out.println(output);
+   // 	} catch (InterruptedException ex) {
+   // 	}
     }
+
 
     public static File getSourceDirectory() {
         return settings.paths.get("base");
@@ -248,7 +290,7 @@ public class ZombieGame {
 
     public static void endGame() {
         // TODO: Im Endscreen dynamisch Informationen anzeigen.
-        showStaticImage("endscreen");
+        showStaticImage("endscreen", true);
         System.exit(0);
     }
 }
