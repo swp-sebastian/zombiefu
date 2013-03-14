@@ -27,3 +27,4 @@ T notpassable notvisible 8B4726 Baum
 ꗞ passable visible FFFFF0 Klo
 ✉ notpassable visible FFFFF0 Post
 ☐ notpassable visible FF7F24 Tisch
++ notpassable visible FFFFFF Welt
