@@ -266,7 +266,7 @@ public class ConfigHelper {
 
         // Baue Level
         RoomBuilder builder = new RoomBuilder(chars);
-        Level lev = new Level(builder.width(), builder.height(), builder);
+        Level lev = new Level(builder.width(), builder.height(), builder, mapName);
         for (String[] s : levelDoorMap.get(mapName)) {
             lev.addActor(doors.get(s[0]), Integer.decode(s[1]),
                     Integer.decode(s[2]));
