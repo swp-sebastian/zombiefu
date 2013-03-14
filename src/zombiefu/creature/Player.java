@@ -157,8 +157,7 @@ public class Player extends Creature implements Camera {
                         tryToMove(Direction.EAST);
                         break;
 
-                    case NOOP:
-                        break;
+ 
                 }
             } else {
                 act();
