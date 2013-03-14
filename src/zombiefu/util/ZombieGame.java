@@ -11,19 +11,14 @@ import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.logging.Logger;
-import zombiefu.creature.Door;
-import zombiefu.creature.Player;
-import zombiefu.creature.Shop;
+import zombiefu.exception.NoDirectionGivenException;
+import zombiefu.player.Player;
 import zombiefu.itembuilder.ItemBuilder;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
-import zombiefu.items.KeyCard;
-import zombiefu.items.Waffe;
 import zombiefu.level.Level;
+import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
-import zombiefu.util.ConfigHelper;
 
 /**
  *

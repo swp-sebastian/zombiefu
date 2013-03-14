@@ -1,13 +1,11 @@
-package zombiefu.creature;
+package zombiefu.human;
 
-import zombiefu.items.ConsumableItem;
 import zombiefu.util.ZombieGame;
 import jade.util.datatype.ColoredChar;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import zombiefu.exception.CanNotAffordException;
 import zombiefu.itembuilder.ItemBuilder;
+import zombiefu.player.Player;
 
 public class Shop extends Human {
 

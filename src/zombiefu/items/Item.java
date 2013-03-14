@@ -1,8 +1,8 @@
 package zombiefu.items;
 
 import jade.util.datatype.ColoredChar;
-import zombiefu.creature.PassableActor;
-import zombiefu.creature.Player;
+import zombiefu.actor.PassableActor;
+import zombiefu.player.Player;
 import zombiefu.level.Level;
 import zombiefu.util.ZombieGame;
 

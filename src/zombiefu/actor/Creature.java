@@ -1,4 +1,4 @@
-package zombiefu.creature;
+package zombiefu.actor;
 
 import jade.fov.ViewField;
 import jade.util.Dice;
@@ -9,12 +9,15 @@ import jade.util.datatype.Direction;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import zombiefu.human.Human;
+import zombiefu.monster.Monster;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.util.DamageAnimation;
 import zombiefu.exception.NoDirectionGivenException;
+import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 

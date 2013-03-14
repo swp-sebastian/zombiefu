@@ -1,7 +1,6 @@
 package zombiefu.util;
 
 import jade.util.Dice;
-import jade.util.Guard;
 import jade.util.datatype.Direction;
 import static jade.util.datatype.Direction.EAST;
 import static jade.util.datatype.Direction.NORTH;
@@ -12,13 +11,6 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import sun.rmi.runtime.Log;
-import zombiefu.creature.Player;
-import zombiefu.ui.ZombieFrame;
-import zombiefu.util.Action;
 
 public class ZombieTools {
 

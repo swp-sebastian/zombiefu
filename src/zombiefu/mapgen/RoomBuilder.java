@@ -1,4 +1,4 @@
-package zombiefu.map;
+package zombiefu.mapgen;
 
 import java.awt.Color;
 import java.util.HashMap;

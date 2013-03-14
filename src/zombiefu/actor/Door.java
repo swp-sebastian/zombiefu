@@ -1,4 +1,4 @@
-package zombiefu.creature;
+package zombiefu.actor;
 
 import jade.util.datatype.ColoredChar;
 import java.awt.Color;
