@@ -6,6 +6,7 @@ package zombiefu.util;
 
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
+import jade.util.Guard;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.File;
@@ -69,11 +70,11 @@ public class ZombieGame {
     }
 
     public static void initialize() {
-        askPlayerForDiscipline();
+        Discipline discipline = askPlayerForDiscipline();
         Level firstLevel = ConfigHelper.getFirstLevel();
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
-        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, 100, 10, 10, 10, waffen);
+        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, discipline, 100, 10, 10, 10, waffen);
 
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
@@ -229,7 +230,7 @@ public class ZombieGame {
         return output;
     }
 
-    public static void askPlayerForDiscipline(){
+    public static Discipline askPlayerForDiscipline(){
         char alpha = showStaticImage("discipline");
         Discipline output;
 
@@ -264,8 +265,10 @@ public class ZombieGame {
         default:
             output = null;
         }
-        myDiscipline=output;
+        // Quick fix. TODO: sebastian denkt sich was aus.
+        Guard.argumentIsNotNull(output);
         System.out.println(output);
+        return output;
         //      } catch (InterruptedException ex) {
         //      }
     }
