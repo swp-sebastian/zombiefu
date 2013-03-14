@@ -157,9 +157,11 @@ public class Player extends Creature implements Camera {
                         tryToMove(Direction.EAST);
                         break;
 
-                    default:
+                    case NOOP:
                         break;
                 }
+            } else {
+                act();
             }
         } catch (InterruptedException e) {
         } catch (CannotMoveToIllegalFieldException ex) {
