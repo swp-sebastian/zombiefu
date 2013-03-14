@@ -258,18 +258,38 @@ public class ZombieGame {
                 output = Discipline.MATHEMATICS;
                 break;
             default:
-                output = null;
+                output = askPlayerForDiscipline();
         }
         // Quick fix. TODO: sebastian denkt sich was aus.
         Guard.argumentIsNotNull(output);
         System.out.println(output);
         return output;
-        //      } catch (InterruptedException ex) {
-        //      }
     }
 
     public static Attribut askPlayerForAttrbuteToRaise() {
-        return Attribut.ATTACK;
+        char alpha = showStaticImage("askForAttribute");
+        Attribut output;
+
+        switch (alpha) {
+            case 'a':
+                output = Attribut.MAXHP;
+                break;
+            case 'b':
+                output = Attribut.ATTACK;
+                break;
+            case 'c':
+                output = Attribut.DEFENSE;
+                break;
+            case 'd':
+                output = Attribut.INTELLIGENCE;
+                break;
+            default:
+                output = askPlayerForAttrbuteToRaise();
+        }
+        // Quick fix. TODO: sebastian denkt sich was aus.
+        Guard.argumentIsNotNull(output);
+        System.out.println(output);
+        return output;
     }
 
     public static File getSourceDirectory() {

@@ -26,6 +26,8 @@ import zombiefu.util.ConfigHelper;
 
 public class Player extends Creature implements Camera {
 
+    private final static int ECTS_FOR_NEXT_SEMESTER = 5;
+    
     private int intelligenceValue;
     private int money;
     private int ects;
@@ -268,14 +270,15 @@ public class Player extends Creature implements Camera {
 
     public void giveECTS(int e) {
         ects += e;
-        if (ects >= 30) {
+        if (ects >= ECTS_FOR_NEXT_SEMESTER) {
             levelUp();
         }
     }
 
     public void levelUp() {
-        ects -= 30;
+        ects -= ECTS_FOR_NEXT_SEMESTER;
         semester += 1;
+        ZombieGame.refreshBottomFrame();
         Attribut att = ZombieGame.askPlayerForAttrbuteToRaise();
         int step = att.getStep();
         switch(att) {
@@ -294,6 +297,6 @@ public class Player extends Creature implements Camera {
             default:
                 throw new AssertionError(att.name());            
         }
-        
+        ZombieGame.refreshBottomFrame();        
     }
 }
