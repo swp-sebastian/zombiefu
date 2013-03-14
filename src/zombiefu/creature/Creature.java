@@ -188,8 +188,9 @@ public abstract class Creature extends NotPassableActor {
     }
 
     public void attack(Direction dir) throws WeaponHasNoMunitionException {
-        if (!getActiveWeapon().hasMunition())
+        if (!getActiveWeapon().hasMunition()) {
             throw new WeaponHasNoMunitionException();
+        }
         Waffentyp typ = getActiveWeapon().getTyp();
         Coordinate ziel;
         if (typ.isRanged()) {
@@ -238,15 +239,17 @@ public abstract class Creature extends NotPassableActor {
                 pos().getTranslated(dir));
         if (actor == null) {
             move(dir);
-        } else if (!(actor instanceof Player) && this instanceof Monster) {
+        } else if (this instanceof Player) {
+            if (actor instanceof Door) {
+                ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
+                throw new CannotMoveToIllegalFieldException();
+            } else if (actor instanceof Human) {
+                ((Human) actor).talk();
+            } else if(!(actor instanceof Monster) ) {
             throw new CannotMoveToIllegalFieldException();
-        } else if (actor instanceof Door && this instanceof Player) {
-            ZombieGame
-                    .newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
-            throw new CannotMoveToIllegalFieldException();
-        } else if (actor instanceof Shop && this instanceof Player) {
-            ((Shop) actor).talk();
-        } else if (!(actor instanceof Monster) && this instanceof Player) {
+                
+            }
+        } else if (this instanceof Monster && !(actor instanceof Player)) {
             throw new CannotMoveToIllegalFieldException();
         } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
             attack(dir);

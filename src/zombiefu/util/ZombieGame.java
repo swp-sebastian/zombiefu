@@ -146,8 +146,7 @@ public class ZombieGame {
         try {
             return frame.mainTerm().getKey();
         } catch (InterruptedException ex) {
-            Logger.getLogger(ZombieGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            System.exit(1);
+            ZombieTools.stopWithFatalError("InterruptedException: kein Key bekommen?");
             return 0;
         }
     }

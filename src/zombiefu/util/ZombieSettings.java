@@ -52,8 +52,7 @@ public class ZombieSettings {
         while(itr.hasNext()) {
             File f = (File) itr.next();
             if (!f.canRead()) {
-                    ZombieTools.logError("Fehler: Verzeichnis "+ f + " nicht existent oder nicht lesbar.");
-                    System.exit(1);
+                    ZombieTools.stopWithFatalError("Fehler: Verzeichnis "+ f + " nicht existent oder nicht lesbar.");
                 }
         }
     }

@@ -1,16 +1,14 @@
 package zombiefu.creature;
 
-import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import zombiefu.items.Waffe;
 import zombiefu.util.ZombieGame;
-import zombiefu.util.ZombieTools;
 
-public class Human extends Creature {
+public abstract class Human extends Creature {
 
     public Human(ColoredChar face, String name) {
-        super(face, name,1,1,1);
+        super(face, name, 1, 1, 1);
     }
 
     @Override
@@ -24,8 +22,8 @@ public class Human extends Creature {
 
     @Override
     protected void killed(Creature killer) {
-        if (killer==ZombieGame.getPlayer()){
-            ZombieGame.newMessage("Du hast einen Menschen getötet.");
+        if (killer == ZombieGame.getPlayer()) {
+            ZombieGame.newMessage("Du hast einen Menschen getötet. Exmatrikulation!");
             killer.expire();
         }
     }
@@ -34,8 +32,7 @@ public class Human extends Creature {
     protected Direction getAttackDirection() {
         return null;
     }
+
+    public abstract void talk();
     
-    public void talk(){
-        ZombieGame.newMessage("Hallo, ich bin ein Mensch.");
-    }
 }

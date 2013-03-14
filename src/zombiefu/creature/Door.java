@@ -1,14 +1,14 @@
 package zombiefu.creature;
 
-import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
+import java.awt.Color;
 
 public class Door extends NotPassableActor {
 
     private final String name;
     
-    public Door(ColoredChar face, String name) {
-        super(face);
+    public Door(String name) {
+        super(ColoredChar.create('\u9911', Color.yellow));
         this.name = name;
     }
 
