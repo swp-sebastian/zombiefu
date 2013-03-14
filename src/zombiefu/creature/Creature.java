@@ -235,21 +235,28 @@ public abstract class Creature extends NotPassableActor {
                 || !world().passableAt(targetField)) {
             throw new CannotMoveToIllegalFieldException();
         }
+
         NotPassableActor actor = world().getActorAt(NotPassableActor.class,
                 pos().getTranslated(dir));
         if (actor == null) {
             move(dir);
-        } else if (this instanceof Player) {
+            return;
+        }
+
+        if (this instanceof Player) {
             if (actor instanceof Door) {
                 ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
                 throw new CannotMoveToIllegalFieldException();
             } else if (actor instanceof Human) {
                 ((Human) actor).talk();
-            } else if(!(actor instanceof Monster) ) {
-            throw new CannotMoveToIllegalFieldException();
-                
+                return;
+            } else if (!(actor instanceof Monster)) {
+                throw new CannotMoveToIllegalFieldException();
+
             }
-        } else if (this instanceof Monster && !(actor instanceof Player)) {
+        }
+        
+        if (this instanceof Monster && !(actor instanceof Player)) {
             throw new CannotMoveToIllegalFieldException();
         } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
             attack(dir);

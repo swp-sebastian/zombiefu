@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import zombiefu.creature.Door;
+import zombiefu.creature.Shop;
 import zombiefu.itembuilder.HealingItemBuilder;
 import zombiefu.itembuilder.ItemBuilder;
 import zombiefu.itembuilder.WaffenBuilder;
@@ -268,6 +269,8 @@ public class ConfigHelper {
                             actor = getDoorByName(m.group(2));
                         } else if (m.group(1).equals("key")) {
                             actor = getKeyCardByName(m.group(2));
+                        } else if (m.group(1).equals("shop")) {
+                            actor = Shop.newShop(m.group(2));
                         } else {
                             ZombieTools.stopWithFatalError("createLevelFromFile(): Ungültiges Item: " + itemName);
                         }

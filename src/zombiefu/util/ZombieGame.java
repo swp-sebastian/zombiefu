@@ -70,7 +70,6 @@ public class ZombieGame {
 
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
-        firstLevel.addActor(new Shop(ColoredChar.create('M')));
         frame.mainTerm().registerCamera(player, 40, 17);
     }
 
