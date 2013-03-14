@@ -4,6 +4,8 @@
  */
 package zombiefu.player;
 
+import zombiefu.items.Waffentyp;
+
 /**
  *
  * @author tomas
@@ -19,5 +21,15 @@ public enum Discipline {
     CHEMISTRY,
     SPORTS,
     MATHEMATICS;
+    
+    
+    public static Discipline getTypeFromString(String string) {
+        for (Discipline d : Discipline.values()) {
+            if (d.toString().equals(string)) {
+                return d;
+            }
+        }
+        throw new IllegalArgumentException("Ungültige Discipline-Name");
+    }
     
 }
