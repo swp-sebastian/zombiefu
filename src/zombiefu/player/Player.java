@@ -3,7 +3,9 @@ package zombiefu.player;
 import jade.core.World;
 import zombiefu.items.Waffe;
 import jade.fov.RayCaster;
+import jade.fov.ViewField;
 import jade.ui.Camera;
+import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ import zombiefu.util.ConfigHelper;
 public class Player extends Creature implements Camera {
 
     private final static int ECTS_FOR_NEXT_SEMESTER = 5;
-    
+    private final static ViewField DEFAULT_VIEWFIELD = new RayCaster();
     private int intelligenceValue;
     private int money;
     private int ects;
@@ -60,7 +62,7 @@ public class Player extends Creature implements Camera {
         }
 
         this.sichtweite = 20;
-        this.fov = new RayCaster();
+        this.fov = DEFAULT_VIEWFIELD;
     }
 
     public int getSemester() {
@@ -194,9 +196,20 @@ public class Player extends Creature implements Camera {
     }
 
     public void changeWorld(World world) {
-        world().removeActor(this);
-        world.addActor(this);
-        ((Level) world).fillWithEnemies();
+        
+        Guard.verifyState(world instanceof Level);
+        Level lvl = (Level) world;
+        
+        if (bound()) {
+            world().removeActor(this);
+        }
+        lvl.addActor(this);
+        if (lvl == ZombieGame.getGlobalMap()) {
+            fov = new ViewEverything();
+        } else {
+            fov = DEFAULT_VIEWFIELD;
+            lvl.fillWithEnemies();
+        }
     }
 
     public void obtainItem(Item i) {
@@ -281,7 +294,7 @@ public class Player extends Creature implements Camera {
         ZombieGame.refreshBottomFrame();
         Attribut att = ZombieGame.askPlayerForAttrbuteToRaise();
         int step = att.getStep();
-        switch(att) {
+        switch (att) {
             case MAXHP:
                 maximalHealthPoints += step;
                 break;
@@ -295,8 +308,8 @@ public class Player extends Creature implements Camera {
                 intelligenceValue += step;
                 break;
             default:
-                throw new AssertionError(att.name());            
+                throw new AssertionError(att.name());
         }
-        ZombieGame.refreshBottomFrame();        
+        ZombieGame.refreshBottomFrame();
     }
 }

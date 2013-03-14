@@ -32,8 +32,9 @@ public class ZombieGame {
     private static ZombieSettings settings;
     private static ZombieFrame frame;
     private static Discipline myDiscipline;
-    private static Player player;
-
+    private static Player player;    
+    private static Level globalmap;
+    
     public static void createGame(String[] args, String name) {
         settings = new ZombieSettings(args, "src/sources");
         frame = new ZombieFrame(name);
@@ -66,13 +67,15 @@ public class ZombieGame {
 
     public static void initialize() {
         Discipline discipline = askPlayerForDiscipline();
-        Level firstLevel = ConfigHelper.getFirstLevel();
+        globalmap = ConfigHelper.getGlobalMap();
+        
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
+        
         player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, discipline, 100, 5, 5, 5, waffen);
 
-        firstLevel.addActor(player);
-        firstLevel.fillWithEnemies();
+        player.changeWorld(globalmap);
+        
         frame.mainTerm().registerCamera(player, 40, 17);
     }
 
@@ -312,6 +315,10 @@ public class ZombieGame {
         return settings.paths.get("screens");
     }
 
+    public static Level getGlobalMap() {
+        return globalmap;
+    }
+    
     public static void endGame() {
         // TODO: Im Endscreen dynamisch Informationen anzeigen.
         showStaticImage("endscreen");
