@@ -49,9 +49,11 @@ public class ConfigHelper {
     }
 
     private static void initItems() {
+        ZombieTools.log("initItems(): Initialisiere Items");
         items = new HashMap<String, ItemBuilder>();
 
         // Lade Waffen
+        ZombieTools.log("initItems(): Lade Waffen");
         String[] waffen = getStrings(new File(ZombieGame.getItemDirectory(), "Waffen.txt"));
         for (String s : waffen) {
                 String[] st = s.split(" ");
@@ -84,6 +86,7 @@ public class ConfigHelper {
         }
 
         // Lade HealingItems
+        ZombieTools.log("initItems(): Lade HealingItems");
         String[] healingItems = getStrings(new File(ZombieGame.getItemDirectory(), "HealingItems.txt"));
         for (String s : healingItems) {
                 String[] st = s.split(" ");
@@ -95,6 +98,7 @@ public class ConfigHelper {
         }
 
         // Lade KeyCards
+        ZombieTools.log("initItems(): Lade KeyCards");
         String[] keyCards = getStrings(new File(ZombieGame.getItemDirectory(), "KeyCards.txt"));
         for (String s : keyCards) {
                 String[] st = s.split(" ");
@@ -106,14 +110,20 @@ public class ConfigHelper {
     }
 
     private static void initLevels() {
+        ZombieTools.log("initLevels(): Initialisiere Levels");
+        
         levels = new HashMap<String, Level>();
         doors = new HashMap<String, Door>();
         levelDoorMap = new HashMap<String, LinkedList<String[]>>();
+        
+        ZombieTools.log("initLevels(): Lade Levelliste");
         String[] levelStrings = getStrings(new File(ZombieGame.getSourceDirectory(), "levels.txt"));
         for (String s : levelStrings) {
             levelDoorMap.put(s, new LinkedList<String[]>());
         }
+        
         // Lade alle Türen
+        ZombieTools.log("initLevels(): Lade Alle Türen");
         String[] tempDoors = getStrings(new File(ZombieGame.getSourceDirectory(), "doors.txt"));
         for (String s : tempDoors) {
             String[] st = s.split(" ");
@@ -126,12 +136,14 @@ public class ConfigHelper {
         }
 
         // Lade alle Level
+        ZombieTools.log("initLevels(): Lade alle Level");
         for (String s : levelStrings) {
             Level level = createLevelFromFile(s);
             levels.put(s, level);
         }
 
         // Setze statische Items auf die Level:
+        ZombieTools.log("initLevels(): Setze statische Items auf Level");
         for (String s : levelStrings) {
             String[] level = getStrings(new File(ZombieGame.getMapDirectory(), s + ".map"));
             Level lev = levels.get(s);
@@ -153,6 +165,7 @@ public class ConfigHelper {
         }
 
         // Lade Teleporter
+        ZombieTools.log("initLevels(): Lade alle Teleporter");
         String[] teles = getStrings(new File(ZombieGame.getSourceDirectory(), "teleporters.txt"));
         for (String s : teles) {
             String[] d = s.split(" ");
