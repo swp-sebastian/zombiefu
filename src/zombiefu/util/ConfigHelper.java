@@ -250,7 +250,7 @@ public class ConfigHelper {
     public static Level createLevelFromFile(String mapName) {
 
         ZombieTools.log("createLevelFromFile(" + mapName + ")");
-        
+
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
         HashMap<Character, String> itemMap = new HashMap<Character, String>();

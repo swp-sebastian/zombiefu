@@ -31,11 +31,12 @@ public class Player extends Creature implements Camera {
     private int ects;
     private int semester;
     private int maximalHealthPoints;
+    private Discipline discipline;
     private ArrayList<ConsumableItem> inventar;
     private HashMap<String, Waffe> waffen;
     private ArrayList<String> waffenListe;
 
-    public Player(ColoredChar face, String name, int healthPoints,
+    public Player(ColoredChar face, String name, Discipline discipline, int healthPoints,
             int attackValue, int defenseValue, int intelligenceValue,
             ArrayList<String> waffe) {
 
@@ -47,6 +48,7 @@ public class Player extends Creature implements Camera {
         this.money = 10;
         this.ects = 0;
         this.semester = 1;
+        this.discipline = discipline;
 
         this.inventar = new ArrayList<ConsumableItem>();
         this.waffen = new HashMap<String, Waffe>();
@@ -58,6 +60,10 @@ public class Player extends Creature implements Camera {
 
         this.sichtweite = 20;
         this.fov = new RayCaster();
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
     public int getSemester() {
