@@ -45,19 +45,6 @@ public class ConfigHelper {
     private static Level startMap;
     private static Coordinate startPosition;
 
-    private static void createBidirectionalTeleporter(World world1,
-            Coordinate from1, Coordinate to2, World world2, Coordinate from2,
-            Coordinate to1) {
-        /*
-         * fromi: Wo befindet sich der Teleporter in Welt i? toi: Wo soll der
-         * Player in Welt i hinteleportiert werden?
-         */
-        Teleporter tel1 = new Teleporter(world2, to2);
-        Teleporter tel2 = new Teleporter(world1, to1);
-        world1.addActor(tel1, from1);
-        world2.addActor(tel2, from2);
-    }
-
     private static void initItems() {
         ZombieTools.log("initItems(): Initialisiere Items");
         items = new HashMap<String, ItemBuilder>();
@@ -108,42 +95,6 @@ public class ConfigHelper {
         }
     }
 
-    private static void initLevels() {
-        ZombieTools.log("initLevels(): Initialisiere Levels");
-
-        levels = new HashMap<String, Level>();
-
-        // Lade Levelliste
-        ZombieTools.log("initLevels(): Lade Levelliste");
-        String[] levelList = getStrings(new File(ZombieGame.getSourceDirectory(), "levels.txt"));
-
-        // Lade alle Level
-        ZombieTools.log("initLevels(): Lade alle Level");
-        for (String s : levelList) {
-            Level level = createLevelFromFile(s);
-            levels.put(s, level);
-        }
-
-        // Lade Teleporter
-        ZombieTools.log("initLevels(): Lade alle Teleporter");
-        String[] teles = getStrings(new File(ZombieGame.getSourceDirectory(), "teleporters.txt"));
-        for (String s : teles) {
-            String[] d = s.split(" ");
-            Level world1 = levels.get(d[0]);
-            Coordinate from1 = new Coordinate(Integer.decode(d[1]),
-                    Integer.decode(d[2]));
-            Coordinate to2 = new Coordinate(Integer.decode(d[3]),
-                    Integer.decode(d[4]));
-            Level world2 = levels.get(d[5]);
-            Coordinate from2 = new Coordinate(Integer.decode(d[6]),
-                    Integer.decode(d[7]));
-            Coordinate to1 = new Coordinate(Integer.decode(d[8]),
-                    Integer.decode(d[9]));
-            createBidirectionalTeleporter(world1, from1, to2, world2, from2,
-                    to1);
-        }
-    }
-
     private static void initCharSet() {
         charSet = new HashMap<Character, Color>();
         passSet = new HashMap<Character, Boolean>();
@@ -184,9 +135,12 @@ public class ConfigHelper {
         return (Waffe) w;
     }
 
-    private static Level getLevelByName(String s) {
+    public static Level getLevelByName(String s) {
         if (levels == null) {
-            initLevels();
+            levels = new HashMap<String,Level>();
+        }
+        if(!levels.containsKey(s)) {
+            levels.put(s, createLevelFromFile(s));
         }
         return levels.get(s);
     }
@@ -328,6 +282,9 @@ public class ConfigHelper {
                                 actor = getKeyCardByName(m.group(2));
                             } else if (m.group(1).equals("shop")) {
                                 actor = newShopByName(m.group(2));
+                            } else if (m.group(1).equals("teleporter")) {
+                                String[] ziel = m.group(2).split(",");
+                                actor = new Teleporter(ziel[0].trim(), new Coordinate(Integer.decode(ziel[1].trim()),Integer.decode(ziel[2].trim())));
                             } else {
                                 Guard.validateArgument(false);
                             }
