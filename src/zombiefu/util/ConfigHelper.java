@@ -163,7 +163,7 @@ public class ConfigHelper {
         startMap = getLevelByName(str[0]);
         startPosition = new Coordinate(Integer.decode(str[1]), Integer.decode(str[2]));
     }
-    
+
     public static ItemBuilder getItemBuilderByName(String s) {
         if (items == null) {
             initItems();
@@ -245,21 +245,21 @@ public class ConfigHelper {
     }
 
     public static Level getStartMap() {
-        if(startMap == null) {
+        if (startMap == null) {
             initStartInfo();
         }
         return startMap;
     }
-    
+
     public static Level getGlobalMap() {
         return getLevelByName(getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "levels.txt")));
     }
-    
+
     public static Coordinate getStartPosition() {
-        if(startPosition == null) {
+        if (startPosition == null) {
             initStartInfo();
         }
-        return startPosition;        
+        return startPosition;
     }
 
     public static boolean isValidChar(char c) {
@@ -279,11 +279,11 @@ public class ConfigHelper {
 
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
-        HashMap<Character, String> itemMap = new HashMap<Character, String>();
+        HashMap<Character, String[]> itemMap = new HashMap<Character, String[]>();
         String[] items = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".itm"));
         for (String st : items) {
-            String[] it = st.split(" ");
-            itemMap.put(it[0].charAt(0), it[1]);
+            String[] it = st.split(" ", 2);
+            itemMap.put(it[0].charAt(0), it[1].split(" "));
         }
         // Lese Map ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Maps aus Mapfile");
@@ -317,25 +317,24 @@ public class ConfigHelper {
                     c = ' ';
                 }
                 if (itemMap.containsKey(c)) {
-                    String itemName = itemMap.get(c);
-                    Actor actor = null;
-                    Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(itemName);
-                    if (m.matches()) {
-                        if (m.group(1).equals("door")) {
-                            actor = getDoorByName(m.group(2));
-                        } else if (m.group(1).equals("key")) {
-                            actor = getKeyCardByName(m.group(2));
-                        } else if (m.group(1).equals("shop")) {
-                            actor = newShopByName(m.group(2));
+                    String[] itemNames = itemMap.get(c);
+                    for (String itemName : itemNames) {
+                        Actor actor = null;
+                        Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(itemName);
+                        if (m.matches()) {
+                            if (m.group(1).equals("door")) {
+                                actor = getDoorByName(m.group(2));
+                            } else if (m.group(1).equals("key")) {
+                                actor = getKeyCardByName(m.group(2));
+                            } else if (m.group(1).equals("shop")) {
+                                actor = newShopByName(m.group(2));
+                            } else {
+                                Guard.validateArgument(false);
+                            }
                         } else {
-                            Guard.validateArgument(false);
+                            actor = newItemByName(itemName);
                         }
-                    } else {
-                        actor = newItemByName(itemName);
-                    }
-                    try {
                         lev.addActor(actor, x, y);
-                    } catch (Exception e) {
                     }
                 }
             }
