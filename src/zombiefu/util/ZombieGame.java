@@ -65,7 +65,7 @@ public class ZombieGame {
         Level firstLevel = ConfigHelper.getFirstLevel();
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
-        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, 100, 10, 10, 10,waffen);
+        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, 100, 10, 10, 10, waffen);
 
         firstLevel.addActor(player);
         firstLevel.fillWithEnemies();
@@ -103,20 +103,20 @@ public class ZombieGame {
                 0,
                 0,
                 "Waffe: " + player.getActiveWeapon().getName() + " ("
-                        + player.getActiveWeapon().getMunitionToString()
-                        + " / " + player.getActiveWeapon().getDamage() + ") "
-                        + " | HP: " + player.getHealthPoints() + "/"
-                        + player.getMaximalHealthPoints() + " | A: "
-                        + player.getAttackValue() + " | D: "
-                        + player.getDefenseValue() + " | I: "
-                        + player.getIntelligenceValue());
+                + player.getActiveWeapon().getMunitionToString()
+                + " / " + player.getActiveWeapon().getDamage() + ") "
+                + " | HP: " + player.getHealthPoints() + "/"
+                + player.getMaximalHealthPoints() + " | A: "
+                + player.getAttackValue() + " | D: "
+                + player.getDefenseValue() + " | I: "
+                + player.getIntelligenceValue());
         frame.bottomTerm().bufferString(
                 0,
                 1,
                 "Ort: " + ((Level) player.world()).getName() + "(" + player.pos().x() + "|" + player.pos().y() + ")"
-                        + " | € " + player.getMoney() + " | ECTS "
-                        + player.getECTS() + " | Sem " + player.getSemester() + " | GodMode: "
-                        + (player.isGod() ? "an" : "aus"));
+                + " | € " + player.getMoney() + " | ECTS "
+                + player.getECTS() + " | Sem " + player.getSemester() + " | GodMode: "
+                + (player.isGod() ? "an" : "aus"));
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
     }
@@ -129,12 +129,24 @@ public class ZombieGame {
         }
     }
 
+    public static void showHelp() {
+        showStaticImage("help");
+        askPlayerForKey();
+        refreshMainFrame();
+    }
+
     public static Player getPlayer() {
         return player;
     }
 
-    public static char askPlayerForKey() throws InterruptedException {
-        return frame.mainTerm().getKey();
+    public static char askPlayerForKey() {
+        try {
+            return frame.mainTerm().getKey();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ZombieGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            System.exit(1);
+            return 0;
+        }
     }
 
     public static Direction askPlayerForDirection()
@@ -166,22 +178,20 @@ public class ZombieGame {
                     0,
                     2 + i,
                     "[" + ((char) (97 + i)) + "] " + it.face() + " - "
-                            + it.getName());
+                    + it.getName());
         }
         frame.mainTerm().refreshScreen();
-        try {
-            int key = ((int) ZombieGame.askPlayerForKey()) - 97;
-            if (key >= 0 && key <= 25 && key < player.getInventar().size()) {
-                output = player.getInventar().get(key);
-            }
-        } catch (InterruptedException ex) {
+        int key = ((int) ZombieGame.askPlayerForKey()) - 97;
+        if (key >= 0 && key <= 25 && key < player.getInventar().size()) {
+            output = player.getInventar().get(key);
         }
         refreshMainFrame();
         return output;
     }
+
     public static Discipline askPlayerForDiscipline() {
         // TODO: Adrians Studiengangabfrage
-        return Discipline.MATHEMATICS;    
+        return Discipline.MATHEMATICS;
     }
 
     public static File getSourceDirectory() {

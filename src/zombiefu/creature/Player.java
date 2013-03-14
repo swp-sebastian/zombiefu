@@ -141,6 +141,11 @@ public class Player extends Creature implements Camera {
                             act();
                         }
                         break;
+                        
+                    case HELP:
+                        ZombieGame.showHelp();
+                        act();
+                        break;
 
                     case UP:
                         tryToMove(Direction.NORTH);
