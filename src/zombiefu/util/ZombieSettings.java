@@ -11,7 +11,7 @@ import zombiefu.util.Action;
 public class ZombieSettings {
     private Properties props;
     public final String name;
-    public final HashMap<Character, Action> keybindings;
+    public final HashMap<String, Action> keybindings;
     public final HashMap<String, File> paths;
 
     public ZombieSettings(String[] args, String res) {
@@ -28,15 +28,16 @@ public class ZombieSettings {
         name = props.getProperty("player.name");
 
         // Die Keybindings einlesen. TODO: Einstampfen in Schleife.
-        keybindings = new HashMap<Character, Action>();
-        keybindings.put(Character.valueOf(props.getProperty("controls.up").charAt(0)), Action.UP);
-        keybindings.put(Character.valueOf(props.getProperty("controls.down").charAt(0)), Action.DOWN);
-        keybindings.put(Character.valueOf(props.getProperty("controls.left").charAt(0)), Action.LEFT);
-        keybindings.put(Character.valueOf(props.getProperty("controls.right").charAt(0)), Action.RIGHT);
-        keybindings.put(Character.valueOf(props.getProperty("controls.attack").charAt(0)), Action.ATTACK);
-        keybindings.put(Character.valueOf(props.getProperty("controls.nextweapon").charAt(0)), Action.NEXT_WEAPON);
-        keybindings.put(Character.valueOf(props.getProperty("controls.prevweapon").charAt(0)), Action.PREV_WEAPON);
-        keybindings.put(Character.valueOf(props.getProperty("controls.inventory").charAt(0)), Action.INVENTORY);
+        keybindings = new HashMap<String, Action>();
+        keybindings.put(props.getProperty("controls.up"), Action.UP);
+        keybindings.put(props.getProperty("controls.down"), Action.DOWN);
+        keybindings.put(props.getProperty("controls.left"), Action.LEFT);
+        keybindings.put(props.getProperty("controls.right"), Action.RIGHT);
+        keybindings.put(props.getProperty("controls.attack"), Action.ATTACK);
+        keybindings.put(props.getProperty("controls.nextweapon"), Action.NEXT_WEAPON);
+        keybindings.put(props.getProperty("controls.prevweapon"), Action.PREV_WEAPON);
+        keybindings.put(props.getProperty("controls.inventory"), Action.INVENTORY);
+        keybindings.put(props.getProperty("controls.noop"), Action.NOOP);
 
         // Die Pfadangaben einlesen.
         paths = new HashMap<String, File>();
@@ -70,14 +71,15 @@ public class ZombieSettings {
         def.setProperty("player.name", System.getProperty("user.name"));
 
         // Default Keybindings
-        def.setProperty("controls.up", "w");
-        def.setProperty("controls.down", "s");
-        def.setProperty("controls.left", "a");
-        def.setProperty("controls.right", "d");
-        def.setProperty("controls.attack", " ");
-        def.setProperty("controls.nextweapon", "e");
-        def.setProperty("controls.prevweapon", "q");
-        def.setProperty("controls.inventory", "i");
+        def.setProperty("controls.up", "LATIN SMALL LETTER W");
+        def.setProperty("controls.down", "LATIN SMALL LETTER S");
+        def.setProperty("controls.left", "LATIN SMALL LETTER A");
+        def.setProperty("controls.right", "LATIN SMALL LETTER D");
+        def.setProperty("controls.attack", "LINE FEED (LF)");
+        def.setProperty("controls.nextweapon", "LATIN SMALL LETTER E");
+        def.setProperty("controls.prevweapon", "LATIN SMALL LETTER Q");
+        def.setProperty("controls.inventory", "LATIN SMALL LETTER I");
+        def.setProperty("controls.noop", "FULL STOP");
 
         return def;
     }
