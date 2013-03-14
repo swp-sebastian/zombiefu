@@ -7,6 +7,7 @@ package zombiefu.ki;
 import jade.core.World;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import zombiefu.exception.TargetNotFoundException;
 
 /**
  *

@@ -1,7 +1,7 @@
 package zombiefu.items;
 
 import jade.util.datatype.ColoredChar;
-import zombiefu.creature.MaximumHealthPointException;
+import zombiefu.exception.MaximumHealthPointException;
 import zombiefu.creature.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;

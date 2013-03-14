@@ -20,7 +20,7 @@ import zombiefu.items.Teleporter;
 import zombiefu.items.Waffe;
 import zombiefu.map.RoomBuilder;
 import zombiefu.util.DamageAnimation;
-import zombiefu.ki.TargetIsNotInThisWorldException;
+import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.util.ConfigHelper;
 import zombiefu.util.ZombieGame;
 
