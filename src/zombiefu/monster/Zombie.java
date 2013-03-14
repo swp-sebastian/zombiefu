@@ -1,4 +1,4 @@
-package zombiefu.creature;
+package zombiefu.monster;
 
 import jade.util.Dice;
 import jade.util.datatype.ColoredChar;

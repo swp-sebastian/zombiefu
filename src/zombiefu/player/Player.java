@@ -1,4 +1,4 @@
-package zombiefu.creature;
+package zombiefu.player;
 
 import jade.core.World;
 import zombiefu.items.Waffe;
@@ -8,6 +8,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
 import java.util.HashMap;
+import zombiefu.actor.Creature;
 import zombiefu.exception.CanNotAffordException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.MaximumHealthPointException;

@@ -6,9 +6,8 @@ package zombiefu.items;
 
 import jade.util.datatype.ColoredChar;
 import java.awt.Color;
-import zombiefu.creature.Player;
+import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
-import zombiefu.util.ZombieTools;
 
 /**
  *

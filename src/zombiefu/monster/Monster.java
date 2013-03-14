@@ -1,4 +1,4 @@
-package zombiefu.creature;
+package zombiefu.monster;
 
 import jade.fov.RayCaster;
 import zombiefu.items.Waffe;
@@ -8,6 +8,7 @@ import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.Collections;
 import java.util.List;
+import zombiefu.actor.Creature;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.NoPlaceToMoveException;
 import zombiefu.exception.WeaponHasNoMunitionException;
@@ -17,6 +18,7 @@ import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.items.Item;
 import zombiefu.ki.StupidMover;
 import zombiefu.ki.MoveAlgorithm;
+import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 

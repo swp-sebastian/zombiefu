@@ -15,18 +15,18 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import zombiefu.creature.Door;
-import zombiefu.creature.Shop;
+import zombiefu.actor.Door;
+import zombiefu.human.Shop;
 import zombiefu.itembuilder.HealingItemBuilder;
 import zombiefu.itembuilder.ItemBuilder;
 import zombiefu.itembuilder.WaffenBuilder;
 import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
-import zombiefu.items.Teleporter;
+import zombiefu.actor.Teleporter;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.level.Level;
-import zombiefu.map.RoomBuilder;
+import zombiefu.mapgen.RoomBuilder;
 
 public class ConfigHelper {
 

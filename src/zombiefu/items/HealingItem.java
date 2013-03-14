@@ -2,9 +2,8 @@ package zombiefu.items;
 
 import jade.util.datatype.ColoredChar;
 import zombiefu.exception.MaximumHealthPointException;
-import zombiefu.creature.Player;
+import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
-import zombiefu.util.ZombieTools;
 
 public class HealingItem extends ConsumableItem {
 

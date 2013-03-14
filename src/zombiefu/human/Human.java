@@ -1,8 +1,10 @@
-package zombiefu.creature;
+package zombiefu.human;
 
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
+import zombiefu.actor.Creature;
 import zombiefu.items.Waffe;
+import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 
 public abstract class Human extends Creature {
