@@ -179,6 +179,10 @@ public class ZombieGame {
         refreshMainFrame();
         return output;
     }
+    public static Discipline askPlayerForDiscipline() {
+        // TODO: Adrians Studiengangabfrage
+        return Discipline.MATHEMATICS;    
+    }
 
     public static File getSourceDirectory() {
         return settings.paths.get("base");
