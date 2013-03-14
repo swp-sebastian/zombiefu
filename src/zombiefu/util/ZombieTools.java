@@ -57,8 +57,4 @@ public class ZombieTools {
         System.out.println(s);
     }
 
-    public static void stopWithFatalError(String s) {
-        logError(s);
-        System.exit(1);
-    }
 }
