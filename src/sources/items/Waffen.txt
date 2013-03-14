@@ -1,8 +1,8 @@
-# Benutzung:
-# Name Char Farbe Typ Standardmunitionsmenge Schaden (Explosionsradius) (Reichweite) 
-# (Explosionsradius ist nur nötig, wenn Typ Granete oder Umkreis)
-# (Reichweite ist nur nötig, wenn Typ Granate oder Fernkampf)
-# Muntion ist entweder eine Zahl oder 'unbegrenzt'
+// Benutzung:
+// Name Char Farbe Typ Standardmunitionsmenge Schaden (Explosionsradius) (Reichweite)
+// (Explosionsradius ist nur nötig, wenn Typ Granete oder Umkreis)
+// (Reichweite ist nur nötig, wenn Typ Granate oder Fernkampf)
+// Muntion ist entweder eine Zahl oder 'unbegrenzt'
 Faust F FF0000 Nahkampf unbegrenzt 5
 SuperFist S FF0000 Nahkampf unbegrenzt 1000
 Kettensäge K FF0000 Nahkampf 50 15
@@ -12,5 +12,5 @@ RoundhouseKick R FF0000 Umkreis unbegrenzt 1 1.5
 Splittergranate G FF0000 Granate 8 30 2.0 10
 Nuklearrakete ☢ FFFF00 Granate 1 1000 20.0 20
 Feuerlöscher ⚕ FF0000 Nahkampf unbegrenzt 12
-# Zombiewaffen:
+// Zombiewaffen:
 Kralle | 000000 Nahkampf unbegrenzt 2

@@ -157,13 +157,13 @@ public class ConfigHelper {
         }
         ItemBuilder i = items.get(s);
         Guard.argumentIsNotNull(i);
-        return i;       
+        return i;
     }
 
     public static Item newItemByName(String s) {
         return getItemBuilderByName(s).buildItem();
     }
-    
+
     public static Waffe newWaffeByName(String s) {
         Item w = newItemByName(s);
         Guard.argumentIsNotNull(w);
@@ -316,8 +316,9 @@ public class ConfigHelper {
             BufferedReader text = new BufferedReader(reader);
             String temp;
             while ((temp = text.readLine()) != null) {
-                if (!temp.startsWith("#") && !temp.startsWith("//")) {
-                    lines.add(temp.replaceFirst("//.*$", ""));
+                if (!temp.startsWith("//")) {
+                    // End of Line comments done right?
+                    lines.add(temp.replaceFirst("\\s*\\/\\/.*$", ""));
                 }
             }
             text.close();
