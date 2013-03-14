@@ -40,7 +40,7 @@ public class ZombieGame {
         return settings;
     }
 
-    public static void showStaticImage(String file, Boolean pressKey) { //pressKey gibt an, ob auf einen Tastendruck gewartet wird
+    public static char showStaticImage(String file) {
         try { //bevor fortgefahren wird
             ColoredChar[][] start = ConfigHelper.getImage(file);
             frame.mainTerm().clearBuffer();
@@ -55,16 +55,21 @@ public class ZombieGame {
                 }
             }
             frame.mainTerm().refreshScreen();
-            if (pressKey) {
-                frame.mainTerm().getKey();
-            }
-        } catch (IOException ex) {
+        } catch (IOException ex) {}
+
+        try {
+            return frame.mainTerm().getKey();
         } catch (InterruptedException ex) {
+            // Das sollte endlich mal anders gelöst werden.
+            System.out.println("Fail miserably.");
+            System.exit(1);
+            return 0;
         }
+
     }
 
     public static void initialize() {
-    	askPlayerForDiscipline();
+        askPlayerForDiscipline();
         Level firstLevel = ConfigHelper.getFirstLevel();
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
@@ -134,8 +139,7 @@ public class ZombieGame {
     }
 
     public static void showHelp() {
-        showStaticImage("help", true);
-        askPlayerForKey();
+        showStaticImage("help");
         refreshMainFrame();
     }
 
@@ -194,19 +198,19 @@ public class ZombieGame {
     }
 
     public static ItemBuilder askPlayerForItemToBuy(HashMap<ItemBuilder, Integer> itemMap) {
-        
+
         if (itemMap.isEmpty()) {
             ZombieGame.newMessage("Dieser Shop hat keine Artikel.");
             return null;
         }
-        
+
         ItemBuilder output = null;
-        
+
         ArrayList<ItemBuilder> itemSet = new ArrayList<ItemBuilder>();
         for(ItemBuilder it: itemMap.keySet()) {
             itemSet.add(it);
         }
-        
+
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferString(0, 0, "Inventarliste:");
         for (int i = 0; i < itemSet.size(); i++) {
@@ -226,45 +230,44 @@ public class ZombieGame {
     }
 
     public static void askPlayerForDiscipline(){
-    	showStaticImage("discipline", false); 
-    	Discipline output;
-    //	try {
-    	char alpha = askPlayerForKey();
-    	switch (alpha){
-    		case 'a':
-    			output=Discipline.POLITICAL_SCIENCE;
-    			break;
-    		case 'b':
-    			output=Discipline.COMPUTER_SCIENCE;
-    			break;
-    		case 'c':
-    			output=Discipline.MEDICINE;
-    			break;
-    		case 'd':
-    			output=Discipline.PHILOSOPHY;
-    			break;
-    		case 'e':
-    			output=Discipline.PHYSICS;
-    			break;
-    		case 'f':
-    			output=Discipline.BUSINESS;
-    			break;
-    		case 'g':
-    			output=Discipline.CHEMISTRY;
-    			break;
-    		case 'h':
-    			output=Discipline.SPORTS;
-    			break;
-    		case 'i':
-    			output=Discipline.MATHEMATICS;
-    			break;
-    		default:
-    				output = null;
-    	}
+        char alpha = showStaticImage("discipline");
+        Discipline output;
+
+        switch (alpha){
+        case 'a':
+            output=Discipline.POLITICAL_SCIENCE;
+            break;
+        case 'b':
+            output=Discipline.COMPUTER_SCIENCE;
+            break;
+        case 'c':
+            output=Discipline.MEDICINE;
+            break;
+        case 'd':
+            output=Discipline.PHILOSOPHY;
+            break;
+        case 'e':
+            output=Discipline.PHYSICS;
+            break;
+        case 'f':
+            output=Discipline.BUSINESS;
+            break;
+        case 'g':
+            output=Discipline.CHEMISTRY;
+            break;
+        case 'h':
+            output=Discipline.SPORTS;
+            break;
+        case 'i':
+            output=Discipline.MATHEMATICS;
+            break;
+        default:
+            output = null;
+        }
         myDiscipline=output;
         System.out.println(output);
-   // 	} catch (InterruptedException ex) {
-   // 	}
+        //      } catch (InterruptedException ex) {
+        //      }
     }
 
 
@@ -290,7 +293,7 @@ public class ZombieGame {
 
     public static void endGame() {
         // TODO: Im Endscreen dynamisch Informationen anzeigen.
-        showStaticImage("endscreen", true);
+        showStaticImage("endscreen");
         System.exit(0);
     }
 }
