@@ -74,7 +74,8 @@ public class ZombieGame {
         
         player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, discipline, 100, 5, 5, 5, waffen);
 
-        player.changeWorld(globalmap);
+        player.changeWorld(ConfigHelper.getStartMap());
+        player.setPos(ConfigHelper.getStartPosition());
         
         frame.mainTerm().registerCamera(player, 40, 17);
     }
