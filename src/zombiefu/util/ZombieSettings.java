@@ -62,7 +62,7 @@ public class ZombieSettings {
         Iterator itr = paths.values().iterator();
         while(itr.hasNext()) {
             File f = (File) itr.next();
-            Guard.verifyState(!f.canRead());
+            Guard.verifyState(f.canRead());
         }
     }
 
