@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
+import zombiefu.util.ZombieGame;
 
 public class ZombieTools {
 
@@ -50,7 +51,9 @@ public class ZombieTools {
     }
 
     public static void log(String s) {
-        System.out.println(s);
+        if (ZombieGame.getSettings().debug) {
+            System.out.println(s);
+        }
     }
 
     public static void logError(String s) {

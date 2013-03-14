@@ -11,6 +11,7 @@ import zombiefu.util.Action;
 public class ZombieSettings {
     private Properties props;
     public final String name;
+    public final boolean debug;
     public final HashMap<String, Action> keybindings;
     public final HashMap<String, File> paths;
 
@@ -19,13 +20,21 @@ public class ZombieSettings {
 
         try {
             props.load(new FileInputStream(res + "/config.cfg"));
-            ZombieTools.log("ZombieSettings: Konfigurationsdatei "+res+"/config.cfg geladen.");
+            System.out.println("ZombieSettings: Konfigurationsdatei "+res+"/config.cfg geladen.");
         } catch (IOException ex) {
-            ZombieTools.log("ZombieSettings: Konfigurationsdatei "+res+"/config.cfg  nicht vorhanden.");
+            System.out.println("ZombieSettings: Konfigurationsdatei " + res +
+                               "/config.cfg  nicht vorhanden. Benutze Defaults.");
         }
 
         // Den Spielernamen öffentlich machen.
         name = props.getProperty("player.name");
+
+        // Debug-Modus
+        if (props.getProperty("debug").equalsIgnoreCase("true")) {
+            debug = true;
+        } else {
+            debug = false;
+        }
 
         // Die Keybindings einlesen. TODO: Einstampfen in Schleife.
         keybindings = new HashMap<String, Action>();
@@ -53,8 +62,9 @@ public class ZombieSettings {
         while(itr.hasNext()) {
             File f = (File) itr.next();
             if (!f.canRead()) {
-                    ZombieTools.stopWithFatalError("Fehler: Verzeichnis "+ f + " nicht existent oder nicht lesbar.");
-                }
+                System.out.println("Fehler: Verzeichnis "+ f + " nicht existent oder nicht lesbar.");
+                System.exit(1);
+            }
         }
     }
 
@@ -68,6 +78,9 @@ public class ZombieSettings {
         def.setProperty("dir.items", res + "/items");
         def.setProperty("dir.screens", res + "/screens");
         def.setProperty("dir.shops", res + "/shops");
+
+        // Default Debug Einstellung (aus)
+        def.setProperty("debug", "false");
 
         // Default Playername
         def.setProperty("player.name", System.getProperty("user.name"));
@@ -86,7 +99,4 @@ public class ZombieSettings {
 
         return def;
     }
-
-
-
 }
