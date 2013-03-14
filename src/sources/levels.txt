@@ -1,4 +1,4 @@
-// Weltkarte
+Weltkarte
 Info_Ebene1_test
 raum1 // Test eines End-of-Line Kommentars
 raum2
