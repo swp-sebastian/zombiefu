@@ -2,15 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package zombiefu.util;
+package zombiefu.exception;
 
 /**
  *
  * @author tomas
  */
-public class NoDirectionGivenException extends Exception {
+public class CanNotAffordException extends Exception {
 
-    public NoDirectionGivenException() {
+    public CanNotAffordException() {
     }
     
 }

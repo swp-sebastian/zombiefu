@@ -6,6 +6,7 @@ import jade.util.datatype.ColoredChar;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import zombiefu.exception.CanNotAffordException;
 import zombiefu.itembuilder.ItemBuilder;
 
 public class Shop extends Human {

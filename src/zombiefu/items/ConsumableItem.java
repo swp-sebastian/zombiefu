@@ -6,6 +6,7 @@ package zombiefu.items;
 
 import jade.util.datatype.ColoredChar;
 import zombiefu.creature.Player;
+import zombiefu.exception.CannotBeConsumedException;
 
 /**
  *

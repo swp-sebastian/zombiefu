@@ -4,6 +4,7 @@ import jade.util.datatype.ColoredChar;
 import java.awt.Color;
 import zombiefu.creature.Door;
 import zombiefu.creature.Player;
+import zombiefu.exception.CannotBeConsumedException;
 import zombiefu.util.ZombieGame;
 
 public class KeyCard extends ConsumableItem {
