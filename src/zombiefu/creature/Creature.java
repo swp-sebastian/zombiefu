@@ -82,18 +82,10 @@ public abstract class Creature extends NotPassableActor {
     protected abstract Direction getAttackDirection()
             throws NoDirectionGivenException;
 
-    public void attackCreature(Creature cr) {
-        if (this.equals(cr)) {
-            return;
-        }
+    public void hurtCreature(Creature cr) {
 
         // Wer keine Waffe hat, kann nicht angreifen!
         if (getActiveWeapon() == null) {
-            return;
-        }
-
-        // Monster greifen keine Monster an!
-        if (this instanceof Monster && cr instanceof Monster) {
             return;
         }
 
@@ -127,7 +119,7 @@ public abstract class Creature extends NotPassableActor {
         } else {
             Iterator<Creature> it = actors.iterator();
             while (it.hasNext()) {
-                attackCreature(it.next());
+                hurtCreature(it.next());
             }
         }
         world().removeActor(anim);
@@ -155,9 +147,7 @@ public abstract class Creature extends NotPassableActor {
                     Iterator<Creature> it = actors.iterator();
                     while (it.hasNext()) {
                         Creature next = it.next();
-                        if (!equals(next)) {
-                            targets.add(next);
-                        }
+                        targets.add(next);
                     }
                 }
             }
@@ -166,7 +156,7 @@ public abstract class Creature extends NotPassableActor {
             ZombieGame.newMessage("Niemanden getroffen!");
         } else {
             for (Creature target : targets) {
-                attackCreature(target);
+                hurtCreature(target);
             }
         }
         for (DamageAnimation anim : anims) {

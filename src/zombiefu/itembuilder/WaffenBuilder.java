@@ -48,7 +48,7 @@ public class WaffenBuilder extends ItemBuilder {
         if (munition == -1) {
             w.setUnlimitedMunition(true);
         } else {
-            w.addMunition(munition * Dice.global.nextInt(10, 40) / 30);
+            w.addMunition(Dice.global.nextInt(1, munition));
         }
         return w;
     }
