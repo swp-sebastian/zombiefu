@@ -316,8 +316,8 @@ public class ConfigHelper {
             BufferedReader text = new BufferedReader(reader);
             String temp;
             while ((temp = text.readLine()) != null) {
-                if (!temp.startsWith("#")) {
-                    lines.add(temp);
+                if (!temp.startsWith("#") && !temp.startsWith("//")) {
+                    lines.add(temp.replaceFirst("//.*$", ""));
                 }
             }
             text.close();
