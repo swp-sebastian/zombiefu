@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import zombiefu.util.Action;
 
 public class ZombieSettings {
@@ -26,7 +27,7 @@ public class ZombieSettings {
         // Den Spielernamen öffentlich machen.
         name = props.getProperty("player.name");
 
-        // Die Keybindings einlesen.
+        // Die Keybindings einlesen. TODO: Einstampfen in Schleife.
         keybindings = new HashMap<Character, Action>();
         keybindings.put(Character.valueOf(props.getProperty("controls.up").charAt(0)), Action.UP);
         keybindings.put(Character.valueOf(props.getProperty("controls.down").charAt(0)), Action.DOWN);
@@ -44,19 +45,31 @@ public class ZombieSettings {
         paths.put("items", new File(props.getProperty("dir.items")));
         paths.put("screens", new File(props.getProperty("dir.screens")));
 
-        // TODO: Überprüfen, ob Pfade lesbar sind.
+        // Überprüfen, ob Pfade lesbar sind.
+        Iterator itr = paths.values().iterator();
+        while(itr.hasNext()) {
+            File f = (File) itr.next();
+            if (!f.canRead()) {
+                    System.out.println("Fehler: Verzeichnis "+ f + " nicht existent oder nicht lesbar.");
+                    System.exit(1);
+                }
+        }
     }
 
 
     private Properties defaults(String res) {
         Properties def = new Properties();
 
+        // Default Verzeichnis-Layout
         def.setProperty("dir.base", res);
         def.setProperty("dir.maps", res + "/maps");
         def.setProperty("dir.items", res + "/items");
         def.setProperty("dir.screens", res + "/screens");
 
+        // Default Playername
         def.setProperty("player.name", System.getProperty("user.name"));
+
+        // Default Keybindings
         def.setProperty("controls.up", "w");
         def.setProperty("controls.down", "s");
         def.setProperty("controls.left", "a");
