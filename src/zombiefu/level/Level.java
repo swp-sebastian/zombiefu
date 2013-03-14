@@ -90,8 +90,6 @@ public class Level extends World {
     }
 
     private void fillWithItems() {
-        addActor(ConfigHelper.newItemByName("Kaffee"));
-        addActor(ConfigHelper.newItemByName("Kettensäge"));
     }
 
     public void refresh(TermPanel term) {
