@@ -59,15 +59,7 @@ public class ZombieGame {
             frame.mainTerm().refreshScreen();
         } catch (IOException ex) {}
 
-        try {
-            return frame.mainTerm().getKey();
-        } catch (InterruptedException ex) {
-            // Das sollte endlich mal anders gelöst werden.
-            System.out.println("Fail miserably.");
-            System.exit(1);
-            return 0;
-        }
-
+        return askPlayerForKey();
     }
 
     public static void initialize() {
@@ -93,11 +85,10 @@ public class ZombieGame {
     public static void newMessage(String s) {
         refreshMainFrame();
         setTopFrameContent(s);
-        char key = 0;
         try {
-            key = frame.mainTerm().getKey();
-        } catch (InterruptedException ex) {
-        }
+            frame.mainTerm().getKey();
+        } catch (InterruptedException ex) {}
+
         setTopFrameContent(null);
     }
 
