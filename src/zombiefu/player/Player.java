@@ -31,7 +31,6 @@ public class Player extends Creature implements Camera {
     private int ects;
     private int semester;
     private int maximalHealthPoints;
-    private Discipline discipline;
     private ArrayList<ConsumableItem> inventar;
     private HashMap<String, Waffe> waffen;
     private ArrayList<String> waffenListe;
@@ -60,10 +59,6 @@ public class Player extends Creature implements Camera {
 
         this.sichtweite = 20;
         this.fov = new RayCaster();
-    }
-
-    public Discipline getDiscipline() {
-        return discipline;
     }
 
     public int getSemester() {
@@ -226,7 +221,7 @@ public class Player extends Creature implements Camera {
     }
 
     public void heal(int i) throws MaximumHealthPointException {
-        System.out.print(getName() + " hat " + i + " HP geheilt. ");
+        ZombieTools.log(getName() + " hat " + i + " HP geheilt. ");
         if (healthPoints == maximalHealthPoints) {
             throw new MaximumHealthPointException();
         }

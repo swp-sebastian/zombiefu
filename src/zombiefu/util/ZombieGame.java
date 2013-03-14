@@ -57,7 +57,8 @@ public class ZombieGame {
                 }
             }
             frame.mainTerm().refreshScreen();
-        } catch (IOException ex) {}
+        } catch (IOException ex) {
+        }
 
         return askPlayerForKey();
     }
@@ -87,7 +88,8 @@ public class ZombieGame {
         setTopFrameContent(s);
         try {
             frame.mainTerm().getKey();
-        } catch (InterruptedException ex) {}
+        } catch (InterruptedException ex) {
+        }
 
         setTopFrameContent(null);
     }
@@ -200,7 +202,7 @@ public class ZombieGame {
         ItemBuilder output = null;
 
         ArrayList<ItemBuilder> itemSet = new ArrayList<ItemBuilder>();
-        for(ItemBuilder it: itemMap.keySet()) {
+        for (ItemBuilder it : itemMap.keySet()) {
             itemSet.add(it);
         }
 
@@ -222,40 +224,40 @@ public class ZombieGame {
         return output;
     }
 
-    public static Discipline askPlayerForDiscipline(){
+    public static Discipline askPlayerForDiscipline() {
         char alpha = showStaticImage("discipline");
         Discipline output;
 
-        switch (alpha){
-        case 'a':
-            output=Discipline.POLITICAL_SCIENCE;
-            break;
-        case 'b':
-            output=Discipline.COMPUTER_SCIENCE;
-            break;
-        case 'c':
-            output=Discipline.MEDICINE;
-            break;
-        case 'd':
-            output=Discipline.PHILOSOPHY;
-            break;
-        case 'e':
-            output=Discipline.PHYSICS;
-            break;
-        case 'f':
-            output=Discipline.BUSINESS;
-            break;
-        case 'g':
-            output=Discipline.CHEMISTRY;
-            break;
-        case 'h':
-            output=Discipline.SPORTS;
-            break;
-        case 'i':
-            output=Discipline.MATHEMATICS;
-            break;
-        default:
-            output = null;
+        switch (alpha) {
+            case 'a':
+                output = Discipline.POLITICAL_SCIENCE;
+                break;
+            case 'b':
+                output = Discipline.COMPUTER_SCIENCE;
+                break;
+            case 'c':
+                output = Discipline.MEDICINE;
+                break;
+            case 'd':
+                output = Discipline.PHILOSOPHY;
+                break;
+            case 'e':
+                output = Discipline.PHYSICS;
+                break;
+            case 'f':
+                output = Discipline.BUSINESS;
+                break;
+            case 'g':
+                output = Discipline.CHEMISTRY;
+                break;
+            case 'h':
+                output = Discipline.SPORTS;
+                break;
+            case 'i':
+                output = Discipline.MATHEMATICS;
+                break;
+            default:
+                output = null;
         }
         // Quick fix. TODO: sebastian denkt sich was aus.
         Guard.argumentIsNotNull(output);
@@ -264,7 +266,6 @@ public class ZombieGame {
         //      } catch (InterruptedException ex) {
         //      }
     }
-
 
     public static File getSourceDirectory() {
         return settings.paths.get("base");

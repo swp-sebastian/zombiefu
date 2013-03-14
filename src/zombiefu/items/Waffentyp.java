@@ -20,8 +20,6 @@ public enum Waffentyp {
     private Waffentyp(boolean r, boolean d) {
         this.ranged = r;
         this.directed = d;
-
-
     }
 
     public boolean isRanged() {
@@ -30,5 +28,16 @@ public enum Waffentyp {
 
     public boolean isDirected() {
         return directed;
+    }
+
+    public static Waffentyp getTypeFromString(String string) {
+        for (Waffentyp w : Waffentyp.values()) {
+            String s = w.toString().toLowerCase();
+            s = Character.toUpperCase(s.charAt(0)) + s.substring(1);
+            if (s.equals(string)) {
+                return w;
+            }
+        }
+        throw new IllegalArgumentException("Ungültige Waffentypname: " + string);
     }
 }
