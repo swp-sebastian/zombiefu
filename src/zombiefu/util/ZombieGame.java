@@ -286,7 +286,6 @@ public class ZombieGame {
         }
         // Quick fix. TODO: sebastian denkt sich was aus.
         Guard.argumentIsNotNull(output);
-        System.out.println(output);
         return output;
     }
 
