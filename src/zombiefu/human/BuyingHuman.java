@@ -21,14 +21,14 @@ public class BuyingHuman extends DealingHuman {
     private String requestItem;
     private int offerMoney;
 
-    public BuyingHuman(ColoredChar face, String name, String phrase, String requestItem, int offerMoney, Map<String, String> phraseSet) {
+    public BuyingHuman(ColoredChar face, String name, String requestItem, int offerMoney, Map<String, String> phraseSet) {
         super(face, name, phraseSet);
         this.requestItem = requestItem;
         this.offerMoney = offerMoney;
     }
 
-    public BuyingHuman(ColoredChar face, String name, String phrase, String requestItem, int offerMoney) {
-        this(face, name, phrase, requestItem, offerMoney, null);
+    public BuyingHuman(ColoredChar face, String name, String requestItem, int offerMoney) {
+        this(face, name, requestItem, offerMoney, null);
     }
 
     @Override

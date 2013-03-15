@@ -1,4 +1,4 @@
-package zombiefu.itembuilder;
+package zombiefu.builder;
 
 import jade.util.datatype.ColoredChar;
 import zombiefu.items.Item;
