@@ -91,10 +91,8 @@ public class Level extends World {
         int newEnemies = (int) (semester * 0.005 * numberOfPassableFields * Dice.global.nextInt(40, 60) / 50);
         // 6 normale Zombies kommen hinzu
         for (int i = oldEnemies; i <= newEnemies; i++) {
-           // addActor(new Zombie());
+           addActor(new Zombie());
         }
-        ZombieGame.getPlayer().obtainItem(ConfigHelper.newItemByName("Mate"));
-        addActor(new ItemGivingHuman(ColoredChar.create('='), "Joachim", "Hallo, schenke!", new MensaCard(30), "Mate"));
     }
 
     protected void fillWithItems() {
