@@ -7,19 +7,20 @@ import jade.core.World;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import java.awt.Color;
+import zombiefu.util.ConfigHelper;
 
 public class Teleporter extends Actor {
 
-    private World targetWorld;
+    private String targetWorldName;
     private Coordinate targetCoord;
 
-    public Teleporter(ColoredChar face, World w, Coordinate c) {
+    public Teleporter(ColoredChar face, String w, Coordinate c) {
         super(face);
-        this.targetWorld = w;
+        this.targetWorldName = w;
         this.targetCoord = c;
     }
 
-    public Teleporter(World w, Coordinate c) {
+    public Teleporter(String w, Coordinate c) {
         this(ColoredChar.create('\u25A0', Color.decode("0x8B4513")), w, c);
     }
 
@@ -31,7 +32,7 @@ public class Teleporter extends Actor {
             return;
         }
         if (player.pos().equals(pos())) {
-            player.changeWorld(targetWorld);
+            player.changeWorld(ConfigHelper.getLevelByName(targetWorldName));
             player.setPos(targetCoord);
         }
     }

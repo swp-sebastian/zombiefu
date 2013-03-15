@@ -30,6 +30,9 @@ import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.level.Level;
 import zombiefu.mapgen.RoomBuilder;
+import zombiefu.monster.DozentZombie;
+import zombiefu.monster.Monster;
+import zombiefu.monster.Zombie;
 import zombiefu.player.Discipline;
 
 public class ConfigHelper {
@@ -41,22 +44,10 @@ public class ConfigHelper {
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
     private static HashMap<Character, Boolean> visibleSet;
-    private static Character defaultChar;
+    private static ColoredChar defaultChar;
     private static Level startMap;
+    private static Level globalMap;
     private static Coordinate startPosition;
-
-    private static void createBidirectionalTeleporter(World world1,
-            Coordinate from1, Coordinate to2, World world2, Coordinate from2,
-            Coordinate to1) {
-        /*
-         * fromi: Wo befindet sich der Teleporter in Welt i? toi: Wo soll der
-         * Player in Welt i hinteleportiert werden?
-         */
-        Teleporter tel1 = new Teleporter(world2, to2);
-        Teleporter tel2 = new Teleporter(world1, to1);
-        world1.addActor(tel1, from1);
-        world2.addActor(tel2, from2);
-    }
 
     private static void initItems() {
         ZombieTools.log("initItems(): Initialisiere Items");
@@ -108,42 +99,6 @@ public class ConfigHelper {
         }
     }
 
-    private static void initLevels() {
-        ZombieTools.log("initLevels(): Initialisiere Levels");
-
-        levels = new HashMap<String, Level>();
-
-        // Lade Levelliste
-        ZombieTools.log("initLevels(): Lade Levelliste");
-        String[] levelList = getStrings(new File(ZombieGame.getSourceDirectory(), "levels.txt"));
-
-        // Lade alle Level
-        ZombieTools.log("initLevels(): Lade alle Level");
-        for (String s : levelList) {
-            Level level = createLevelFromFile(s);
-            levels.put(s, level);
-        }
-
-        // Lade Teleporter
-        ZombieTools.log("initLevels(): Lade alle Teleporter");
-        String[] teles = getStrings(new File(ZombieGame.getSourceDirectory(), "teleporters.txt"));
-        for (String s : teles) {
-            String[] d = s.split(" ");
-            Level world1 = levels.get(d[0]);
-            Coordinate from1 = new Coordinate(Integer.decode(d[1]),
-                    Integer.decode(d[2]));
-            Coordinate to2 = new Coordinate(Integer.decode(d[3]),
-                    Integer.decode(d[4]));
-            Level world2 = levels.get(d[5]);
-            Coordinate from2 = new Coordinate(Integer.decode(d[6]),
-                    Integer.decode(d[7]));
-            Coordinate to1 = new Coordinate(Integer.decode(d[8]),
-                    Integer.decode(d[9]));
-            createBidirectionalTeleporter(world1, from1, to2, world2, from2,
-                    to1);
-        }
-    }
-
     private static void initCharSet() {
         charSet = new HashMap<Character, Color>();
         passSet = new HashMap<Character, Boolean>();
@@ -160,10 +115,11 @@ public class ConfigHelper {
     private static void initStartInfo() {
         String[] str = getStrings(new File(ZombieGame.getSourceDirectory(), "startinfo.txt"));
         str = str[0].split(" ");
-        startMap = getLevelByName(str[0]);
-        startPosition = new Coordinate(Integer.decode(str[1]), Integer.decode(str[2]));
+        globalMap = getLevelByName(str[0]);
+        startMap = getLevelByName(str[1]);
+        startPosition = new Coordinate(Integer.decode(str[2]), Integer.decode(str[3]));
     }
-    
+
     public static ItemBuilder getItemBuilderByName(String s) {
         if (items == null) {
             initItems();
@@ -184,9 +140,12 @@ public class ConfigHelper {
         return (Waffe) w;
     }
 
-    private static Level getLevelByName(String s) {
+    public static Level getLevelByName(String s) {
         if (levels == null) {
-            initLevels();
+            levels = new HashMap<String, Level>();
+        }
+        if (!levels.containsKey(s)) {
+            levels.put(s, createLevelFromFile(s));
         }
         return levels.get(s);
     }
@@ -219,6 +178,11 @@ public class ConfigHelper {
         return shops.get(s).buildShop();
     }
 
+    private static Monster newEnemyByName(String s) {
+        // Unfertig: Enemy-Prototyp
+        return new DozentZombie();
+    }
+
     private static KeyCard getKeyCardByName(String s) {
         return new KeyCard(getDoorByName(s));
     }
@@ -245,46 +209,84 @@ public class ConfigHelper {
     }
 
     public static Level getStartMap() {
-        if(startMap == null) {
+        if (startMap == null) {
             initStartInfo();
         }
         return startMap;
     }
-    
+
     public static Level getGlobalMap() {
-        return getLevelByName(getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "levels.txt")));
-    }
-    
-    public static Coordinate getStartPosition() {
-        if(startPosition == null) {
+        if (globalMap == null) {
             initStartInfo();
         }
-        return startPosition;        
+        return globalMap;
+    }
+
+    public static Coordinate getStartPosition() {
+        if (startPosition == null) {
+            initStartInfo();
+        }
+        return startPosition;
     }
 
     public static boolean isValidChar(char c) {
         return getCharSet().containsKey(c);
     }
 
-    public static char getDefaultChar() {
+    public static ColoredChar getDefaultChar() {
         if (defaultChar == null) {
-            defaultChar = getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "CharSet.txt")).charAt(0);
+            char c = getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "CharSet.txt")).charAt(0);
+            defaultChar = ColoredChar.create(c, charSet.get(c));
         }
         return defaultChar;
+    }
+
+    private static Actor decodeITMEntry(String s) {
+        Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(s);
+        Guard.verifyState(m.matches());
+        String key = m.group(1);
+        String[] arguments = m.group(2).split("\\s?,\\s?");
+        // Tomas: Ich möchte hier eigentlich switch benutzen, aber ich 
+        // darf nicht, weil Java 6 das nicht kann. Grrrrrr!
+        if (key.equals("item")) {
+            return newItemByName(arguments[0]);
+        } else if (key.equals("door")) {
+            return getDoorByName(arguments[0]);
+        } else if (key.equals("enemy")) {
+            return newEnemyByName(arguments[0]);
+        } else if (key.equals("key")) {
+            return getKeyCardByName(arguments[0]);
+        } else if (key.equals("shop")) {
+            return newShopByName(arguments[0]);
+        } else if (key.equals("teleporter")) {
+            return new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2])));
+        } else {
+            throw new IllegalArgumentException("decodeITMEntry(" + s + "): Ungültiges Item");
+        }
     }
 
     public static Level createLevelFromFile(String mapName) {
 
         ZombieTools.log("createLevelFromFile(" + mapName + ")");
 
+        // Lese Metadaten ein
+        ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Metadaten ein");
+        HashMap<String, String> levelConfig = new HashMap<String, String>();
+        String[] cfg = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".cfg"));
+        for (String st : cfg) {
+            String[] it = st.trim().split("=", 2);
+            levelConfig.put(it[0], it[1]);
+        }
+
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
-        HashMap<Character, String> itemMap = new HashMap<Character, String>();
+        HashMap<Character, String[]> itemMap = new HashMap<Character, String[]>();
         String[] items = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".itm"));
         for (String st : items) {
-            String[] it = st.split(" ");
-            itemMap.put(it[0].charAt(0), it[1]);
+            String[] it = st.split(" ", 2);
+            itemMap.put(it[0].charAt(0), it[1].split(" "));
         }
+
         // Lese Map ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Maps aus Mapfile");
         String[] level = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".map"));
@@ -294,7 +296,11 @@ public class ConfigHelper {
                 if (isValidChar(level[i].charAt(j))) {
                     chars[i][j] = ColoredChar.create(level[i].charAt(j));
                 } else if (itemMap.containsKey(level[i].charAt(j))) {
-                    chars[i][j] = ColoredChar.create(getDefaultChar());
+                    if (levelConfig.containsKey("defaulttile.char") && levelConfig.containsKey("defaulttile.color")) {
+                        chars[i][j] = ColoredChar.create(levelConfig.get("defaulttile.char").charAt(0), Color.decode("0x" + levelConfig.get("defaulttile.color")));
+                    } else {
+                        chars[i][j] = getDefaultChar();
+                    }
                 } else {
                     chars[i][j] = ColoredChar.create(level[i].charAt(j), Color.WHITE);
                 }
@@ -317,25 +323,9 @@ public class ConfigHelper {
                     c = ' ';
                 }
                 if (itemMap.containsKey(c)) {
-                    String itemName = itemMap.get(c);
-                    Actor actor = null;
-                    Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(itemName);
-                    if (m.matches()) {
-                        if (m.group(1).equals("door")) {
-                            actor = getDoorByName(m.group(2));
-                        } else if (m.group(1).equals("key")) {
-                            actor = getKeyCardByName(m.group(2));
-                        } else if (m.group(1).equals("shop")) {
-                            actor = newShopByName(m.group(2));
-                        } else {
-                            Guard.validateArgument(false);
-                        }
-                    } else {
-                        actor = newItemByName(itemName);
-                    }
-                    try {
-                        lev.addActor(actor, x, y);
-                    } catch (Exception e) {
+                    String[] itemNames = itemMap.get(c);
+                    for (String itemName : itemNames) {
+                        lev.addActor(decodeITMEntry(itemName), x, y);
                     }
                 }
             }
