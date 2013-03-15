@@ -67,7 +67,7 @@ public class ZombieGame {
 
     public static void initialize() {
         Discipline discipline = askPlayerForDiscipline();
-        globalmap = ConfigHelper.getGlobalMap();
+        globalmap = ConfigHelper.getLevelByName(settings.globalMap);
 
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
@@ -79,8 +79,8 @@ public class ZombieGame {
             player.obtainItem((Item) a);
         }
         
-        player.changeWorld(ConfigHelper.getStartMap());
-        player.setPos(ConfigHelper.getStartPosition());
+        player.changeWorld(ConfigHelper.getLevelByName(settings.playerStartMap));
+        player.setPos(settings.playerStartCoord);
 
         frame.mainTerm().registerCamera(player, 40, 17);
     }
