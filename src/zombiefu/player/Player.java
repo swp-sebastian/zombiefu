@@ -30,7 +30,7 @@ import zombiefu.util.ConfigHelper;
 
 public class Player extends Creature implements Camera {
 
-    private final static int ECTS_FOR_NEXT_SEMESTER = 5;
+    private final static int ECTS_FOR_NEXT_SEMESTER = 30;
     private final static ViewField DEFAULT_VIEWFIELD = new RayCaster();
     private int intelligenceValue;
     private int money;
