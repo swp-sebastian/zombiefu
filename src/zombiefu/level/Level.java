@@ -94,7 +94,6 @@ public class Level extends World {
         for (int i = oldEnemies; i <= newEnemies; i++) {
            addActor(new Zombie());
         }
-        addActor(new GivingHuman(ColoredChar.create('ü'), "Heinz", ConfigHelper.newItemByName("Nuklearrakete")));
     }
 
     protected void fillWithItems() {
