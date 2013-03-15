@@ -268,9 +268,14 @@ public abstract class Creature extends NotPassableActor {
         
         if (this instanceof Monster && !(actor instanceof Player)) {
             throw new CannotMoveToIllegalFieldException();
-        } else if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
+        } 
+        
+        if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
             attack(dir);
         } else {
+            if(this instanceof Player) {
+                ZombieGame.newMessage("Du trägst keine Nahkampfwaffe!");
+            }
             throw new CannotMoveToIllegalFieldException();
         }
     }
