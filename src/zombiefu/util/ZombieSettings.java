@@ -3,6 +3,7 @@ package zombiefu.util;
 import jade.core.Actor;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
+import jade.util.datatype.Coordinate;
 import java.util.Properties;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,6 +23,9 @@ public class ZombieSettings {
     public final HashMap<Attribut, Integer> playerAttributes;
     public final String playerInventar;
     public final ColoredChar playerChar;
+    public final String playerStartMap;
+    public final Coordinate playerStartCoord;
+    public final String globalMap;
     public final boolean debug;
     public final HashMap<String, Action> keybindings;
     public final HashMap<String, File> paths;
@@ -52,6 +56,11 @@ public class ZombieSettings {
         playerAttributes.put(Attribut.ATTACK, Integer.decode(props.getProperty("player.attr.att")));
         playerAttributes.put(Attribut.DEFENSE, Integer.decode(props.getProperty("player.attr.def")));
         playerAttributes.put(Attribut.INTELLIGENCE, Integer.decode(props.getProperty("player.attr.int")));
+        playerStartMap = props.getProperty("player.start.map");
+        playerStartCoord = new Coordinate(Integer.decode(props.getProperty("player.start.x")), Integer.decode(props.getProperty("player.start.y")));
+        
+        // Weltkarte
+        globalMap = props.getProperty("globalmap");
 
         // Debug-Modus
         if (props.getProperty("debug").equalsIgnoreCase("true")) {
@@ -115,6 +124,11 @@ public class ZombieSettings {
         def.setProperty("player.startItems", "item(Faust)");
         def.setProperty("player.tile.char", "263B");
         def.setProperty("player.tile.color", "7D26CD");
+        def.setProperty("player.start.map", "Weltkarte");
+        def.setProperty("player.start.x", "15");
+        def.setProperty("player.start.y", "53");
+        
+        def.setProperty("globalmap", "Weltkarte");
 
         // Default Keybindings
         def.setProperty("controls.up", "LATIN SMALL LETTER W");

@@ -52,9 +52,6 @@ public class ConfigHelper {
     private static HashMap<Character, Boolean> passSet;
     private static HashMap<Character, Boolean> visibleSet;
     private static ColoredChar defaultChar;
-    private static Level startMap;
-    private static Level globalMap;
-    private static Coordinate startPosition;
 
     private static void initItems() {
         ZombieTools.log("initItems(): Initialisiere Items");
@@ -117,14 +114,6 @@ public class ConfigHelper {
             passSet.put(setting[0].charAt(0), setting[1].equals("passable"));
             visibleSet.put(setting[0].charAt(0), setting[2].equals("visible"));
         }
-    }
-
-    private static void initStartInfo() {
-        String[] str = getStrings(new File(ZombieGame.getSourceDirectory(), "startinfo.txt"));
-        str = str[0].split(" ");
-        globalMap = getLevelByName(str[0]);
-        startMap = getLevelByName(str[1]);
-        startPosition = new Coordinate(Integer.decode(str[2]), Integer.decode(str[3]));
     }
 
     public static ItemBuilder getItemBuilderByName(String s) {
@@ -252,27 +241,6 @@ public class ConfigHelper {
             initCharSet();
         }
         return visibleSet;
-    }
-
-    public static Level getStartMap() {
-        if (startMap == null) {
-            initStartInfo();
-        }
-        return startMap;
-    }
-
-    public static Level getGlobalMap() {
-        if (globalMap == null) {
-            initStartInfo();
-        }
-        return globalMap;
-    }
-
-    public static Coordinate getStartPosition() {
-        if (startPosition == null) {
-            initStartInfo();
-        }
-        return startPosition;
     }
 
     public static boolean isValidChar(char c) {
