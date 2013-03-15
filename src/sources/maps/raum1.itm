@@ -1,7 +1,7 @@
-1 Sniper
-2 Mate
-3 Splittergranate
-4 RoundhouseKick
+1 item(Sniper)
+2 item(Mate)
+3 item(Splittergranate)
+4 item(RoundhouseKick)
 5 key(TestDoor)
 6 door(TestDoor) teleporter(raum2,33,2)
 7 shop(Mensa-Automat)
