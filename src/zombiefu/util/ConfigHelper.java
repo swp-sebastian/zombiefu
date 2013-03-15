@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +27,9 @@ import zombiefu.builder.WaffenBuilder;
 import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
 import zombiefu.actor.Teleporter;
+import zombiefu.builder.HumanBuilder;
 import zombiefu.builder.ShopBuilder;
+import zombiefu.human.Human;
 import zombiefu.items.MensaCard;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
@@ -43,6 +47,7 @@ public class ConfigHelper {
     private static HashMap<String, ShopBuilder> shops;
     private static HashMap<String, Level> levels;
     private static HashMap<String, MonsterBuilder> monsters;
+    private static HashMap<String, HumanBuilder> humans;
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
     private static HashMap<Character, Boolean> visibleSet;
@@ -211,6 +216,31 @@ public class ConfigHelper {
         return monsters.get(s).buildMonster();
     }
 
+    private static Human newHumanByName(String s) {
+        if (humans == null) {
+            humans = new HashMap<String, HumanBuilder>();
+        }
+        if (!humans.containsKey(s)) {
+            HashMap<String, String> human = readConfig(new File(ZombieGame.getHumansDirectory(), s + ".hum"));
+            String name = s;
+            ColoredChar c = ColoredChar.create(getCharFromString(human.get("tile.char")), getColorFromString(human.get("tile.color")));
+            Item offerItem = human.containsKey("deal.offerItem") ? (Item) decodeITM(human.get("deal.offerItem")).iterator().next() : null;
+            Integer offerMoney = human.containsKey("deal.offerMoney") ? Integer.decode(human.get("deal.offerMoney")) : null;
+            Integer requestMoney = human.containsKey("deal.requestMoney") ? Integer.decode(human.get("deal.requestMoney")) : null;
+            String requestItem = human.containsKey("deal.requestItem") ? human.get("deal.requestItem") : null;
+            Map<String, String> phraseSet = new HashMap<String, String>();
+            for (String m : human.keySet()) {
+                Matcher matcher = Pattern.compile("^phrase\\.(\\w+)$").matcher(m);
+                if (matcher.matches()) {
+                    System.out.println(human.get(m));
+                    phraseSet.put(matcher.group(1), human.get(m));
+                }
+            }
+            humans.put(name, new HumanBuilder(c, name, phraseSet, offerItem, offerMoney, requestItem, requestMoney));
+        }
+        return humans.get(s).buildHuman();
+    }
+
     private static KeyCard getKeyCardByName(String s) {
         return new KeyCard(getDoorByName(s));
     }
@@ -283,6 +313,8 @@ public class ConfigHelper {
                     ret.add(new MensaCard(Integer.decode(arguments[0])));
                 } else if (key.equals("shop")) {
                     ret.add(newShopByName(arguments[0]));
+                } else if (key.equals("human")) {
+                    ret.add(newHumanByName(arguments[0]));
                 } else if (key.equals("monster")) {
                     ret.add(newMonsterByName(arguments[0]));
                 } else if (key.equals("teleporter")) {
@@ -357,7 +389,7 @@ public class ConfigHelper {
                 if (itemMap.containsKey(c)) {
                     Set<Actor> actors = decodeITM(itemMap.get(c));
                     for (Actor a : actors) {
-                        lev.addActor(a,x,y);
+                        lev.addActor(a, x, y);
                     }
                 }
             }

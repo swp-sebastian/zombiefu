@@ -1,2 +1,4 @@
+tile.char=M
+tile.color=FFFFFF
 phrases.default="Die Zombies sind doof. Ich helfe Dir!"
 deal.offerItem=item(Nuklearrakete)
