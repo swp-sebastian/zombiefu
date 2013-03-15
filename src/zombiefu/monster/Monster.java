@@ -1,7 +1,9 @@
 package zombiefu.monster;
 
 import jade.fov.RayCaster;
+import zombiefu.items.MensaCard;
 import zombiefu.items.Waffe;
+import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
@@ -30,22 +32,30 @@ public class Monster extends Creature {
     private Waffe waffe;
     protected int ectsYield;
     private Item item;
-    
-    public Monster(String name,int h, int a,int d,Waffe w,int ects, Item item) {
-        this(ColoredChar.create('\u265E', Color.RED),name,h,a,d,w,ects);
+
+    public Monster(String name, int h, int a, int d, Waffe w, int ects,
+            Item item) {
+        this(ColoredChar.create('\u265E', Color.RED), name, h, a, d, w, ects);
         this.item = item;
     }
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w, int ects, int s, MoveAlgorithm m) {
+    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w,
+            int ects, int s, MoveAlgorithm m) {
         super(face, n, h, a, d);
         waffe = w;
         movealg = m;
         fov = new RayCaster();
         sichtweite = s;
-        ectsYield = ects; 
-   }
+        ectsYield = ects;
+        if (item != null) {
+            if (Dice.global.chance(85)) {
+                this.item = new MensaCard(Dice.global.nextInt(1, 100));
+            }
+        }
+    }
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w, int ects) {
+    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w,
+            int ects) {
         this(face, n, h, a, d, w, ects, 10, new StupidMover());
     }
 
@@ -63,7 +73,8 @@ public class Monster extends Creature {
         throw new NoPlaceToMoveException();
     }
 
-    private Coordinate getPlayerPosition() throws TargetIsNotInThisWorldException {
+    private Coordinate getPlayerPosition()
+            throws TargetIsNotInThisWorldException {
         Guard.argumentIsNotNull(world());
         Player player = world().getActor(Player.class);
 
@@ -74,19 +85,23 @@ public class Monster extends Creature {
         return player.pos();
     }
 
-    protected boolean positionIsVisible(Coordinate pos) throws TargetIsNotInThisWorldException {
+    protected boolean positionIsVisible(Coordinate pos)
+            throws TargetIsNotInThisWorldException {
         return fov.getViewField(world(), pos(), sichtweite).contains(pos);
     }
 
-    protected Direction directionToPlayer() throws TargetNotFoundException, TargetIsNotInThisWorldException {
+    protected Direction directionToPlayer() throws TargetNotFoundException,
+            TargetIsNotInThisWorldException {
         return movealg.directionTo(world(), pos(), getPlayerPosition());
     }
 
-    protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
+    protected void moveToPlayer() throws TargetIsNotInThisWorldException,
+            TargetNotFoundException, WeaponHasNoMunitionException {
         try {
             tryToMove(directionToPlayer());
         } catch (CannotMoveToIllegalFieldException ex) {
-            //Logger.getLogger(Monster.class.getName()).log(Level.SEVERE, null, ex);
+            // Logger.getLogger(Monster.class.getName()).log(Level.SEVERE, null,
+            // ex);
         }
     }
 
@@ -123,12 +138,12 @@ public class Monster extends Creature {
         Item it = itemDroppedOnKill();
         if (it != null) {
             world().addActor(it, pos());
-        }
-        else if(ZombieGame.getPlayer() == killer) {
+        } else if (ZombieGame.getPlayer() == killer) {
             ZombieGame.getPlayer().giveECTS(ectsYield);
         }
         expire();
-        ZombieGame.newMessage(killer.getName() + " hat " + getName() + " getötet.");
+        ZombieGame.newMessage(killer.getName() + " hat " + getName()
+                + " getötet.");
     }
 
     @Override
