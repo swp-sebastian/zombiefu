@@ -139,9 +139,9 @@ public class ConfigHelper {
 
     public static Level getLevelByName(String s) {
         if (levels == null) {
-            levels = new HashMap<String,Level>();
+            levels = new HashMap<String, Level>();
         }
-        if(!levels.containsKey(s)) {
+        if (!levels.containsKey(s)) {
             levels.put(s, createLevelFromFile(s));
         }
         return levels.get(s);
@@ -280,21 +280,26 @@ public class ConfigHelper {
                     for (String itemName : itemNames) {
                         Actor actor = null;
                         Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(itemName);
-                        if (m.matches()) {
-                            if (m.group(1).equals("door")) {
+                        Guard.verifyState(m.matches());
+                        switch (m.group(1)) {
+                            case "item":
+                                actor = newItemByName(m.group(2));
+                                break;
+                            case "door":
                                 actor = getDoorByName(m.group(2));
-                            } else if (m.group(1).equals("key")) {
+                                break;
+                            case "key":
                                 actor = getKeyCardByName(m.group(2));
-                            } else if (m.group(1).equals("shop")) {
+                                break;
+                            case "shop":
                                 actor = newShopByName(m.group(2));
-                            } else if (m.group(1).equals("teleporter")) {
+                                break;
+                            case "teleporter":
                                 String[] ziel = m.group(2).split(",");
-                                actor = new Teleporter(ziel[0].trim(), new Coordinate(Integer.decode(ziel[1].trim()),Integer.decode(ziel[2].trim())));
-                            } else {
-                                Guard.validateArgument(false);
-                            }
-                        } else {
-                            actor = newItemByName(itemName);
+                                actor = new Teleporter(ziel[0].trim(), new Coordinate(Integer.decode(ziel[1].trim()), Integer.decode(ziel[2].trim())));
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Ungültiges Item in " + mapName + ".itm: " + itemName);
                         }
                         lev.addActor(actor, x, y);
                     }
