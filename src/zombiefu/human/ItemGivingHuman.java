@@ -9,7 +9,7 @@ import jade.util.datatype.ColoredChar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import zombiefu.exception.CanNotAffordException;
-import zombiefu.exception.DoesNotPossessThisItem;
+import zombiefu.exception.DoesNotPossessThisItemException;
 import zombiefu.items.Item;
 import zombiefu.items.MensaCard;
 import zombiefu.player.Player;
@@ -92,7 +92,7 @@ public class ItemGivingHuman extends TalkingHuman {
                     card.expire();
                     done = true;
                     ZombieGame.newMessage("Juhu, jetzt kann ich wieder meine Miete bezahlen!");
-                } catch (DoesNotPossessThisItem ex) {
+                } catch (DoesNotPossessThisItemException ex) {
                     ZombieGame.newMessage("Schade, Du hast das Item \"" + giftItem + "\" nicht, was ich haben möchte.");
                 }
             } else {
@@ -106,7 +106,7 @@ public class ItemGivingHuman extends TalkingHuman {
                     done = true;
                     sayWhenDone = "Na, wie gefällt dir " + giftItem.getName() + "?";
                     ZombieGame.newMessage("Super, ich wollte schon immer mal ein/e " + wishItem + " haben!");
-                } catch (DoesNotPossessThisItem ex) {
+                } catch (DoesNotPossessThisItemException ex) {
                     ZombieGame.newMessage("Schade, Du hast das Item \"" + giftItem + "\" nicht, was ich haben möchte.");
                 }
             }
