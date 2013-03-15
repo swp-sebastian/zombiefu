@@ -26,5 +26,10 @@ public class MensaCard extends Item {
     protected void pickedUpByPlayer(Player player) {
         ZombieGame.newMessage("Du hast eine MensaCard mit " + guthaben + "€ aufgehoben.");
         player.addMoney(guthaben);
+        expire();
+    }
+    
+    public int getValue() {
+        return guthaben;
     }
 }

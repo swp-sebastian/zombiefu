@@ -23,10 +23,11 @@ public abstract class Human extends Creature {
     }
 
     @Override
-    protected void killed(Creature killer) {
+    public void killed(Creature killer) {
         if (killer == ZombieGame.getPlayer()) {
             ZombieGame.newMessage("Du hast einen Menschen getötet. Exmatrikulation!");
-            killer.expire();
+            killer.killed(null);
+            
         }
     }
 
