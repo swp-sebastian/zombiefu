@@ -34,9 +34,8 @@ public class ZombieSettings {
         props = new Properties(defaults(res));
 
         List<String> configFiles = new ArrayList<String>();
-        configFiles.add(res + "/config.cfg");
         configFiles.add(System.getProperty("user.home") + "/.zombiefurc");
-
+        configFiles.add(res + "/config.cfg");
 
         for (String fileName : configFiles) {
             try {
@@ -59,7 +58,7 @@ public class ZombieSettings {
         playerAttributes.put(Attribut.INTELLIGENCE, Integer.decode(props.getProperty("player.attr.int")));
         playerStartMap = props.getProperty("player.start.map");
         playerStartCoord = new Coordinate(Integer.decode(props.getProperty("player.start.x")), Integer.decode(props.getProperty("player.start.y")));
-
+        
         // Weltkarte
         globalMap = props.getProperty("globalmap");
 
@@ -128,7 +127,7 @@ public class ZombieSettings {
         def.setProperty("player.start.map", "Weltkarte");
         def.setProperty("player.start.x", "15");
         def.setProperty("player.start.y", "53");
-
+        
         def.setProperty("globalmap", "Weltkarte");
 
         // Default Keybindings
