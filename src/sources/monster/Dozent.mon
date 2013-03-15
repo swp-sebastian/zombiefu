@@ -1,0 +1,7 @@
+baseAttr.HP=1000
+baseAttr.att=30
+baseAttr.def=30
+staticAttributes=true
+ects=15
+weapon=Gasatem
+drop=item(Nuklearrakete)
