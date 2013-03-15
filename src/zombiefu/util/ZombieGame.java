@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.player.Player;
-import zombiefu.itembuilder.ItemBuilder;
+import zombiefu.builder.ItemBuilder;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;

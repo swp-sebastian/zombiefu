@@ -36,11 +36,6 @@ public class Monster extends Creature {
     protected int ectsYield;
     private Set<Actor> dropOnDeath;
 
-    public Monster(String name, int h, int a, int d, Waffe w, int ects,
-            Set<Actor> dropOnDeath) {
-        this(ColoredChar.create('\u265E', Color.RED), name, h, a, d, w, ects, 10, new StupidMover(), dropOnDeath);
-    }
-
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w,
             int ects, int s, MoveAlgorithm m, Set<Actor> dropOnDeath) {
         super(face, n, h, a, d);
@@ -57,6 +52,11 @@ public class Monster extends Creature {
         } else {
             this.dropOnDeath = dropOnDeath;
         }
+    }
+
+    public Monster(ColoredChar face, String name, int h, int a, int d, Waffe w, int ects,
+            Set<Actor> dropOnDeath) {
+        this(face, name, h, a, d, w, ects, 10, new StupidMover(), dropOnDeath);
     }
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w,
@@ -135,11 +135,11 @@ public class Monster extends Creature {
     }
 
     @Override
-    public void killed(Creature killer) {        
-        for(Actor it: dropOnDeath) {
+    public void killed(Creature killer) {
+        for (Actor it : dropOnDeath) {
             world().addActor(it, pos());
-        } 
-        
+        }
+
         if (ZombieGame.getPlayer() == killer) {
             ZombieGame.getPlayer().giveECTS(ectsYield);
         }
