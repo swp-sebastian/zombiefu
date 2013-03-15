@@ -1,6 +1,7 @@
 package zombiefu.itembuilder;
 
-import zombiefu.items.Item;
+import jade.core.Actor;
+import java.util.Set;
 import zombiefu.items.Waffe;
 import zombiefu.monster.Monster;
 
@@ -12,19 +13,19 @@ public class MonsterBuilder {
     private int defense;
     private int ects;
     private Waffe w;
-    private Item item;
+    private Set<Actor> dropOnDeath;
     
-    public MonsterBuilder(String name,int hp,int attack,int defense, Waffe w, int ects, Item item){
+    public MonsterBuilder(String name,int hp,int attack,int defense, Waffe w, int ects, Set<Actor> dropOnDeath){
         this.name = name;
         this.hp = hp;
         this.attack = attack;
         this.defense = defense;
         this.w = w;
-        this.item = item;
+        this.dropOnDeath = dropOnDeath;
         this.ects = ects;
     }
     
     public Monster buildMonster(){
-        return new Monster(name,hp,attack,defense,w,ects,item);
+        return new Monster(name,hp,attack,defense,w,ects,dropOnDeath);
     }
 }

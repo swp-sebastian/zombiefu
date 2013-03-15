@@ -1,5 +1,6 @@
 package zombiefu.monster;
 
+import jade.core.Actor;
 import jade.fov.RayCaster;
 import zombiefu.items.MensaCard;
 import zombiefu.items.Waffe;
@@ -11,7 +12,9 @@ import jade.util.datatype.Direction;
 
 import java.awt.Color;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import zombiefu.actor.Creature;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.NoPlaceToMoveException;
@@ -31,27 +34,28 @@ public class Monster extends Creature {
     protected MoveAlgorithm movealg;
     private Waffe waffe;
     protected int ectsYield;
-    private Item item;
+    private Set<Actor> dropOnDeath;
 
     public Monster(String name, int h, int a, int d, Waffe w, int ects,
-            Item item) {
-        this(ColoredChar.create('\u265E', Color.RED), name, h, a, d, w, ects, 10, new StupidMover(), item);
+            Set<Actor> dropOnDeath) {
+        this(ColoredChar.create('\u265E', Color.RED), name, h, a, d, w, ects, 10, new StupidMover(), dropOnDeath);
     }
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w,
-            int ects, int s, MoveAlgorithm m, Item dropItem) {
+            int ects, int s, MoveAlgorithm m, Set<Actor> dropOnDeath) {
         super(face, n, h, a, d);
         waffe = w;
         movealg = m;
         fov = new RayCaster();
         sichtweite = s;
         ectsYield = ects;
-        if (dropItem == null) {
+        if (dropOnDeath == null) {
+            this.dropOnDeath = new HashSet<Actor>();
             if (Dice.global.chance(85)) {
-                this.item = new MensaCard(Dice.global.nextInt(1, 100));
+                this.dropOnDeath.add(new MensaCard(Dice.global.nextInt(1, 100)));
             }
         } else {
-            this.item = dropItem;
+            this.dropOnDeath = dropOnDeath;
         }
     }
 
@@ -130,16 +134,13 @@ public class Monster extends Creature {
         return waffe;
     }
 
-    protected Item itemDroppedOnKill() {
-        return item;
-    }
-
     @Override
-    public void killed(Creature killer) {
-        Item it = itemDroppedOnKill();
-        if (it != null) {
+    public void killed(Creature killer) {        
+        for(Actor it: dropOnDeath) {
             world().addActor(it, pos());
-        } else if (ZombieGame.getPlayer() == killer) {
+        } 
+        
+        if (ZombieGame.getPlayer() == killer) {
             ZombieGame.getPlayer().giveECTS(ectsYield);
         }
         expire();

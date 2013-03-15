@@ -38,7 +38,6 @@ public class ConfigHelper {
 
     private static final ColoredChar DEFAULT_BG_CHAR = ColoredChar.create(' ');
     private static final ColoredChar DEFAULT_FLOOR_CHAR = ColoredChar.create(' ');
-    
     private static HashMap<String, ItemBuilder> items;
     private static HashMap<String, Door> doors;
     private static HashMap<String, ShopBuilder> shops;
@@ -184,18 +183,17 @@ public class ConfigHelper {
     private static Monster newEnemyByName(String s) {
         if (monsters == null) {
             monsters = new HashMap<String, MonsterBuilder>();
-            String[] monsterInfos = getStrings(new File(ZombieGame.getMonsterDirectory(), "Monster.mon"));
-            for (String t : monsterInfos) {
-                String[] infos = t.split(" ");
-                String name = infos[0];
-                int hp = Integer.decode(infos[1]);
-                int attack = Integer.decode(infos[2]);
-                int defense = Integer.decode(infos[3]);
-                Waffe w = newWaffeByName(infos[4]);
-                int ects = Integer.decode(infos[5]);
-                Item m = (Item) decodeITMEntry(infos[6]);
-                monsters.put(name, new MonsterBuilder(name, hp, attack, defense, w, ects, m));
-            }
+        }
+        if (!monsters.containsKey(s)) {
+            HashMap<String, String> monster = readConfig(new File(ZombieGame.getMonsterDirectory(), s + ".mon"));
+            String name = s;
+            int hp = Integer.decode(monster.get("baseAttr.HP"));
+            int attack = Integer.decode(monster.get("baseAttr.att"));
+            int defense = Integer.decode(monster.get("baseAttr.def"));
+            Waffe w = newWaffeByName(monster.get("weapon"));
+            int ects = Integer.decode(monster.get("ects"));
+            Set<Actor> m = decodeITM(monster.get("drop"));
+            monsters.put(name, new MonsterBuilder(name, hp, attack, defense, w, ects, m));
         }
         return monsters.get(s).buildMonster();
     }
@@ -249,31 +247,39 @@ public class ConfigHelper {
     public static boolean isValidChar(char c) {
         return getCharSet().containsKey(c);
     }
-    
-    private static Actor decodeITMEntry(String s) {
-        Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(s);
-        Guard.verifyState(m.matches());
-        String key = m.group(1);
-        String[] arguments = m.group(2).split("\\s?,\\s?");
-        // Tomas: Ich möchte hier eigentlich switch benutzen, aber ich 
-        // darf nicht, weil Java 6 das nicht kann. Grrrrrr!
-        if (key.equals("item")) {
-            return newItemByName(arguments[0]);
-        } else if (key.equals("door")) {
-            return getDoorByName(arguments[0]);
-        } else if (key.equals("key")) {
-            return getKeyCardByName(arguments[0]);
-        } else if (key.equals("mensacard")) {
-            return new MensaCard(Integer.decode(arguments[0]));
-        } else if (key.equals("shop")) {
-            return newShopByName(arguments[0]);
-        } else if (key.equals("monster")) {
-            return newEnemyByName(arguments[0]);
-        } else if (key.equals("teleporter")) {
-            return new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2])));
-        } else {
-            throw new IllegalArgumentException("decodeITMEntry(" + s + "): Ungültiges Item");
+
+    private static Set<Actor> decodeITM(String entry) {
+        Set<Actor> ret = new HashSet<Actor>();
+        String[] strings = entry.split(" ");
+        for (String s : strings) {
+            Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)x?([0-9]*)$").matcher(s);
+            Guard.verifyState(m.matches());
+            String key = m.group(1);
+            String[] arguments = m.group(2).split("\\s?,\\s?");
+            int anzahl = m.group(3).isEmpty() ? 1 : Integer.decode(m.group(3));
+            // Tomas: Ich möchte hier eigentlich switch benutzen, aber ich 
+            // darf nicht, weil Java 6 das nicht kann. Grrrrrr!
+            for (int i = 1; i <= anzahl; i++) {
+                if (key.equals("item")) {
+                    ret.add(newItemByName(arguments[0]));
+                } else if (key.equals("door")) {
+                    ret.add(getDoorByName(arguments[0]));
+                } else if (key.equals("key")) {
+                    ret.add(getKeyCardByName(arguments[0]));
+                } else if (key.equals("mensacard")) {
+                    ret.add(new MensaCard(Integer.decode(arguments[0])));
+                } else if (key.equals("shop")) {
+                    ret.add(newShopByName(arguments[0]));
+                } else if (key.equals("monster")) {
+                    ret.add(newEnemyByName(arguments[0]));
+                } else if (key.equals("teleporter")) {
+                    ret.add(new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2]))));
+                } else {
+                    throw new IllegalArgumentException("decodeITMEntry(" + s + "): Ungültiges Item");
+                }
+            }
         }
+        return ret;
     }
 
     public static Level createLevelFromFile(String mapName) {
@@ -290,15 +296,15 @@ public class ConfigHelper {
             floorChar = ColoredChar.create(levelConfig.get("defaulttile.char").charAt(0), Color.decode("0x" + levelConfig.get("defaulttile.color")));
         } else {
             floorChar = DEFAULT_FLOOR_CHAR;
-        }        
-        
+        }
+
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
-        HashMap<Character, String[]> itemMap = new HashMap<Character, String[]>();
+        HashMap<Character, String> itemMap = new HashMap<Character, String>();
         String[] items = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".itm"));
         for (String st : items) {
             String[] it = st.split(" ", 2);
-            itemMap.put(it[0].charAt(0), it[1].split(" "));
+            itemMap.put(it[0].charAt(0), it[1]);
         }
 
         // Lese Map ein
@@ -322,7 +328,7 @@ public class ConfigHelper {
 
         // Baue Level
         ZombieTools.log("createLevelFromFile(" + mapName + "): Erzeuge Level");
-        RoomBuilder builder = new RoomBuilder(chars,floorChar);
+        RoomBuilder builder = new RoomBuilder(chars, floorChar);
         Level lev = new Level(builder.width(), builder.height(), builder, mapName);
 
         // Lade statische Items auf Map
@@ -336,19 +342,9 @@ public class ConfigHelper {
                     c = ' ';
                 }
                 if (itemMap.containsKey(c)) {
-                    String[] itemNames = itemMap.get(c);
-                    for (String itemName : itemNames) {
-                        Matcher m = Pattern.compile("(.*)x([0-9]*)$").matcher(itemName);
-                        int anzahl;
-                        if (m.matches()) {
-                            anzahl = Integer.decode(m.group(2));
-                            itemName = m.group(1);
-                        } else {
-                            anzahl = 1;
-                        }
-                        for (int i = 1; i <= anzahl; i++) {
-                            lev.addActor(decodeITMEntry(itemName), x, y);
-                        }
+                    Set<Actor> actors = decodeITM(itemMap.get(c));
+                    for (Actor a : actors) {
+                        lev.addActor(a);
                     }
                 }
             }
