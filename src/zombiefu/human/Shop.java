@@ -4,7 +4,7 @@ import zombiefu.util.ZombieGame;
 import jade.util.datatype.ColoredChar;
 import java.util.HashMap;
 import zombiefu.exception.CanNotAffordException;
-import zombiefu.itembuilder.ItemBuilder;
+import zombiefu.builder.ItemBuilder;
 import zombiefu.player.Player;
 
 public class Shop extends Human {

@@ -4,7 +4,6 @@
  */
 package zombiefu.util;
 
-import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import jade.util.Guard;
@@ -15,9 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.player.Player;
-import zombiefu.itembuilder.ItemBuilder;
+import zombiefu.builder.ItemBuilder;
 import zombiefu.items.ConsumableItem;
-import zombiefu.items.Item;
 import zombiefu.level.Level;
 import zombiefu.player.Attribut;
 import zombiefu.player.Discipline;
@@ -332,6 +330,10 @@ public class ZombieGame {
 
     public static File getMonsterDirectory() {
         return settings.paths.get("monster");
+    }
+
+    public static File getHumansDirectory() {
+        return settings.paths.get("humans");
     }
 
     public static Level getGlobalMap() {
