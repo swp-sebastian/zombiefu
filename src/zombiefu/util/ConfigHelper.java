@@ -183,7 +183,7 @@ public class ConfigHelper {
     private static Monster newEnemyByName(String s) {
         if (monsters==null){
             monsters = new HashMap<String, MonsterBuilder>();
-            String[] monsterInfos = getStrings(new File(ZombieGame.getMonsterDirectory(),"Monster.mom"));
+            String[] monsterInfos = getStrings(new File(ZombieGame.getMonsterDirectory(),"Monster.mon"));
             for (String t : monsterInfos){
                 String[] infos = t.split(" ");
                 String name = infos[0];
