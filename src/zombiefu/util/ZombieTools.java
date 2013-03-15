@@ -44,6 +44,18 @@ public class ZombieTools {
         return getRandomColor(Dice.global);
     }
 
+    public static Color getColorFromString(String s) {
+        return Color.decode("0x" + s);
+    }
+
+    public static char getCharFromString(String s) {
+        if (s.length() == 1) {
+            return s.charAt(0);
+        } else {
+            return (char) Integer.parseInt(s, 16);
+        }
+    }
+
     // getAction :: char -> Action
     // Konvertiert key press in konfigurierte Action
     public static Action keyToAction(HashMap<String, Action> keybindings, char c) {

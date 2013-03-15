@@ -41,16 +41,14 @@ public class Player extends Creature implements Camera {
     private HashMap<String, Waffe> waffen;
     private ArrayList<String> waffenListe;
 
-    public Player(ColoredChar face, String name, Discipline discipline, int healthPoints,
-            int attackValue, int defenseValue, int intelligenceValue,
-            ArrayList<String> waffe) {
+    public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribut,Integer> attr) {
 
-        super(face, name, healthPoints, attackValue, defenseValue);
+        super(face, name, attr.get(Attribut.MAXHP), attr.get(Attribut.ATTACK), attr.get(Attribut.DEFENSE));
 
-        this.maximalHealthPoints = healthPoints;
-        this.intelligenceValue = intelligenceValue;
+        this.maximalHealthPoints = attr.get(Attribut.MAXHP);
+        this.intelligenceValue = attr.get(Attribut.INTELLIGENCE);
         this.godMode = true;
-        this.money = 10;
+        this.money = 0;
         this.ects = 0;
         this.semester = 1;
         this.discipline = discipline;
@@ -58,10 +56,6 @@ public class Player extends Creature implements Camera {
         this.inventar = new HashMap<String, ArrayList<ConsumableItem>>();
         this.waffen = new HashMap<String, Waffe>();
         this.waffenListe = new ArrayList<String>();
-        for (String wName : waffe) {
-            waffen.put(wName, ConfigHelper.newWaffeByName(wName));
-            waffenListe.add(wName);
-        }
 
         this.sichtweite = 20;
         this.fov = DEFAULT_VIEWFIELD;

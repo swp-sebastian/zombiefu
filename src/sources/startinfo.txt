@@ -1,3 +1,0 @@
-// Weltkarte Startkarte StartX StartY
-//Weltkarte Weltkarte 15 53
-Weltkarte raum1 5 5
