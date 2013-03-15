@@ -43,6 +43,7 @@ public class ConfigHelper {
     private static HashMap<Character, Boolean> visibleSet;
     private static Character defaultChar;
     private static Level startMap;
+    private static Level globalMap;
     private static Coordinate startPosition;
 
     private static void initItems() {
@@ -111,8 +112,9 @@ public class ConfigHelper {
     private static void initStartInfo() {
         String[] str = getStrings(new File(ZombieGame.getSourceDirectory(), "startinfo.txt"));
         str = str[0].split(" ");
-        startMap = getLevelByName(str[0]);
-        startPosition = new Coordinate(Integer.decode(str[1]), Integer.decode(str[2]));
+        globalMap = getLevelByName(str[0]);
+        startMap = getLevelByName(str[1]);
+        startPosition = new Coordinate(Integer.decode(str[2]), Integer.decode(str[3]));
     }
 
     public static ItemBuilder getItemBuilderByName(String s) {
@@ -206,7 +208,10 @@ public class ConfigHelper {
     }
 
     public static Level getGlobalMap() {
-        return getLevelByName(getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "weltkarte.txt")));
+        if (globalMap == null) {
+            initStartInfo();
+        }
+        return globalMap;
     }
 
     public static Coordinate getStartPosition() {
