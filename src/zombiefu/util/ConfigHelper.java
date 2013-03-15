@@ -243,22 +243,24 @@ public class ConfigHelper {
     private static Actor decodeITMEntry(String s) {
         Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(s);
         Guard.verifyState(m.matches());
-        switch (m.group(1)) {
-            case "item":
-                return newItemByName(m.group(2));
-            case "door":
-                return getDoorByName(m.group(2));
-            case "enemy":
-                return newEnemyByName(m.group(2));
-            case "key":
-                return getKeyCardByName(m.group(2));
-            case "shop":
-                return newShopByName(m.group(2));
-            case "teleporter":
-                String[] ziel = m.group(2).split(",");
-                return new Teleporter(ziel[0].trim(), new Coordinate(Integer.decode(ziel[1].trim()), Integer.decode(ziel[2].trim())));
-            default:
-                throw new IllegalArgumentException("decodeITMEntry(" + s + "): Ungültiges Item");
+        String key = m.group(1);
+        String[] arguments = m.group(2).split("\\s?,\\s?");
+        // Tomas: Ich möchte hier eigentlich switch benutzen, aber ich 
+        // darf nicht, weil Java 6 das nicht kann. Grrrrrr!
+        if (key.equals("item")) {
+            return newItemByName(arguments[0]);
+        } else if (key.equals("door")) {
+            return getDoorByName(arguments[0]);
+        } else if (key.equals("enemy")) {
+            return newEnemyByName(arguments[0]);
+        } else if (key.equals("key")) {
+            return getKeyCardByName(arguments[0]);
+        } else if (key.equals("shop")) {
+            return newShopByName(arguments[0]);
+        } else if (key.equals("teleporter")) {
+            return new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2])));
+        } else {
+            throw new IllegalArgumentException("decodeITMEntry(" + s + "): Ungültiges Item");
         }
     }
 
