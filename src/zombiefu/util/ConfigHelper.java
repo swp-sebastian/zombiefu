@@ -30,6 +30,9 @@ import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.level.Level;
 import zombiefu.mapgen.RoomBuilder;
+import zombiefu.monster.DozentZombie;
+import zombiefu.monster.Monster;
+import zombiefu.monster.Zombie;
 import zombiefu.player.Discipline;
 
 public class ConfigHelper {
@@ -175,6 +178,11 @@ public class ConfigHelper {
         return shops.get(s).buildShop();
     }
 
+    private static Monster newEnemyByName(String s) {
+        // Unfertig: Enemy-Prototyp
+        return new DozentZombie();
+    }
+
     private static KeyCard getKeyCardByName(String s) {
         return new KeyCard(getDoorByName(s));
     }
@@ -240,6 +248,8 @@ public class ConfigHelper {
                 return newItemByName(m.group(2));
             case "door":
                 return getDoorByName(m.group(2));
+            case "enemy":
+                return newEnemyByName(m.group(2));
             case "key":
                 return getKeyCardByName(m.group(2));
             case "shop":
