@@ -38,8 +38,7 @@ public class RoomBuilder extends MapGenerator {
                 try {
                     if (charSet.containsKey(screen[x][y].ch())) {
                         world.setTile(
-                                ColoredChar.create(screen[x][y].ch(),
-                                charSet.get(screen[x][y].ch())),
+                                screen[x][y],
                                 passSet.get(screen[x][y].ch()), visibleSet.get(screen[x][y].ch()), y, x);
                     } else {
                         world.setTile(screen[x][y], y, x);
