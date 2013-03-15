@@ -271,12 +271,7 @@ public class ConfigHelper {
 
         // Lese Metadaten ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Metadaten ein");
-        HashMap<String, String> levelConfig = new HashMap<String, String>();
-        String[] cfg = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".cfg"));
-        for (String st : cfg) {
-            String[] it = st.trim().split("=", 2);
-            levelConfig.put(it[0], it[1]);
-        }
+        HashMap<String, String> levelConfig = readConfig(new File(ZombieGame.getMapDirectory(), mapName + ".cfg"));
 
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
@@ -356,6 +351,16 @@ public class ConfigHelper {
             erg[i] = lines.get(i);
         }
         return erg;
+    }
+
+    public static HashMap<String, String> readConfig(File input) {
+        HashMap<String, String> output = new HashMap<String, String>();
+        String[] cfg = getStrings(input);
+        for (String st : cfg) {
+            String[] it = st.trim().split("=", 2);
+            output.put(it[0], it[1]);
+        }
+        return output;
     }
 
     // Liest eine Datei im UTF-16 Format ein und gibt das 2-dim Feld in
