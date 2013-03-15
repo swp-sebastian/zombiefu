@@ -52,9 +52,6 @@ public class ConfigHelper {
     private static HashMap<Character, Boolean> passSet;
     private static HashMap<Character, Boolean> visibleSet;
     private static ColoredChar defaultChar;
-    private static Level startMap;
-    private static Level globalMap;
-    private static Coordinate startPosition;
 
     private static void initItems() {
         ZombieTools.log("initItems(): Initialisiere Items");
@@ -116,26 +113,6 @@ public class ConfigHelper {
             charSet.put(setting[0].charAt(0), Color.decode("0x" + setting[3]));
             passSet.put(setting[0].charAt(0), setting[1].equals("passable"));
             visibleSet.put(setting[0].charAt(0), setting[2].equals("visible"));
-        }
-    }
-
-    private static void initStartInfo() {
-        String[] str = getStrings(new File(ZombieGame.getSourceDirectory(), "startinfo.txt"));
-        str = str[0].split(" ");
-        globalMap = getLevelByName(str[0]);
-        startMap = getLevelByName(str[1]);
-        startPosition = new Coordinate(Integer.decode(str[2]), Integer.decode(str[3]));
-    }
-
-    private static Color getColorFromString(String s) {
-        return Color.decode("0x" + s);
-    }
-
-    private static char getCharFromString(String s) {
-        if (s.length() == 1) {
-            return s.charAt(0);
-        } else {
-            return (char) Integer.parseInt(s, 16);
         }
     }
 
@@ -204,7 +181,7 @@ public class ConfigHelper {
         if (!monsters.containsKey(s)) {
             HashMap<String, String> monster = readConfig(new File(ZombieGame.getMonsterDirectory(), s + ".mon"));
             String name = s;
-            ColoredChar c = ColoredChar.create(getCharFromString(monster.get("tile.char")), getColorFromString(monster.get("tile.color")));
+            ColoredChar c = ColoredChar.create(ZombieTools.getCharFromString(monster.get("tile.char")), ZombieTools.getColorFromString(monster.get("tile.color")));
             int hp = Integer.decode(monster.get("baseAttr.HP"));
             int attack = Integer.decode(monster.get("baseAttr.att"));
             int defense = Integer.decode(monster.get("baseAttr.def"));
@@ -223,7 +200,7 @@ public class ConfigHelper {
         if (!humans.containsKey(s)) {
             HashMap<String, String> human = readConfig(new File(ZombieGame.getHumansDirectory(), s + ".hum"));
             String name = s;
-            ColoredChar c = ColoredChar.create(getCharFromString(human.get("tile.char")), getColorFromString(human.get("tile.color")));
+            ColoredChar c = ColoredChar.create(ZombieTools.getCharFromString(human.get("tile.char")), ZombieTools.getColorFromString(human.get("tile.color")));
             Item offerItem = human.containsKey("deal.offerItem") ? (Item) decodeITM(human.get("deal.offerItem")).iterator().next() : null;
             Integer offerMoney = human.containsKey("deal.offerMoney") ? Integer.decode(human.get("deal.offerMoney")) : null;
             Integer requestMoney = human.containsKey("deal.requestMoney") ? Integer.decode(human.get("deal.requestMoney")) : null;
@@ -266,32 +243,11 @@ public class ConfigHelper {
         return visibleSet;
     }
 
-    public static Level getStartMap() {
-        if (startMap == null) {
-            initStartInfo();
-        }
-        return startMap;
-    }
-
-    public static Level getGlobalMap() {
-        if (globalMap == null) {
-            initStartInfo();
-        }
-        return globalMap;
-    }
-
-    public static Coordinate getStartPosition() {
-        if (startPosition == null) {
-            initStartInfo();
-        }
-        return startPosition;
-    }
-
     public static boolean isValidChar(char c) {
         return getCharSet().containsKey(c);
     }
 
-    private static Set<Actor> decodeITM(String entry) {
+    public static Set<Actor> decodeITM(String entry) {
         Set<Actor> ret = new HashSet<Actor>();
         String[] strings = entry.split(" ");
         for (String s : strings) {

@@ -1,17 +1,31 @@
 package zombiefu.util;
 
+import jade.core.Actor;
 import jade.util.Guard;
+import jade.util.datatype.ColoredChar;
+import jade.util.datatype.Coordinate;
 import java.util.Properties;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import zombiefu.items.Waffe;
+import zombiefu.player.Attribut;
 import zombiefu.util.Action;
 
 public class ZombieSettings {
+
     private Properties props;
-    public final String name;
+    public final String playerName;
+    public final HashMap<Attribut, Integer> playerAttributes;
+    public final String playerInventar;
+    public final ColoredChar playerChar;
+    public final String playerStartMap;
+    public final Coordinate playerStartCoord;
+    public final String globalMap;
     public final boolean debug;
     public final HashMap<String, Action> keybindings;
     public final HashMap<String, File> paths;
@@ -19,16 +33,34 @@ public class ZombieSettings {
     public ZombieSettings(String[] args, String res) {
         props = new Properties(defaults(res));
 
-        try {
-            props.load(new FileInputStream(res + "/config.cfg"));
-            System.out.println("ZombieSettings: Konfigurationsdatei "+res+"/config.cfg geladen.");
-        } catch (IOException ex) {
-            System.out.println("ZombieSettings: Konfigurationsdatei " + res +
-                               "/config.cfg  nicht vorhanden. Benutze Defaults.");
+        List<String> configFiles = new ArrayList<String>();
+        configFiles.add(System.getProperty("user.home") + "/.zombiefurc");
+        configFiles.add(res + "/config.cfg");
+
+        for (String fileName : configFiles) {
+            try {
+                props.load(new FileInputStream(fileName));
+                System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " geladen.");
+                break;
+            } catch (IOException ex) {
+                System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " nicht vorhanden.");
+            }
         }
 
-        // Den Spielernamen öffentlich machen.
-        name = props.getProperty("player.name");
+        // Spielerinfo
+        playerName = props.getProperty("player.name");
+        playerChar = ColoredChar.create(ZombieTools.getCharFromString(props.getProperty("player.tile.char")), ZombieTools.getColorFromString(props.getProperty("player.tile.color")));
+        playerInventar = props.getProperty("player.startItems");
+        playerAttributes = new HashMap<Attribut, Integer>();
+        playerAttributes.put(Attribut.MAXHP, Integer.decode(props.getProperty("player.attr.hp")));
+        playerAttributes.put(Attribut.ATTACK, Integer.decode(props.getProperty("player.attr.att")));
+        playerAttributes.put(Attribut.DEFENSE, Integer.decode(props.getProperty("player.attr.def")));
+        playerAttributes.put(Attribut.INTELLIGENCE, Integer.decode(props.getProperty("player.attr.int")));
+        playerStartMap = props.getProperty("player.start.map");
+        playerStartCoord = new Coordinate(Integer.decode(props.getProperty("player.start.x")), Integer.decode(props.getProperty("player.start.y")));
+        
+        // Weltkarte
+        globalMap = props.getProperty("globalmap");
 
         // Debug-Modus
         if (props.getProperty("debug").equalsIgnoreCase("true")) {
@@ -62,12 +94,11 @@ public class ZombieSettings {
 
         // Überprüfen, ob Pfade lesbar sind.
         Iterator itr = paths.values().iterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             File f = (File) itr.next();
             Guard.verifyState(f.canRead());
         }
     }
-
 
     private Properties defaults(String res) {
         Properties def = new Properties();
@@ -86,6 +117,18 @@ public class ZombieSettings {
 
         // Default Playername
         def.setProperty("player.name", System.getProperty("user.name"));
+        def.setProperty("player.attr.hp", "100");
+        def.setProperty("player.attr.att", "5");
+        def.setProperty("player.attr.def", "5");
+        def.setProperty("player.attr.int", "5");
+        def.setProperty("player.startItems", "item(Faust)");
+        def.setProperty("player.tile.char", "263B");
+        def.setProperty("player.tile.color", "7D26CD");
+        def.setProperty("player.start.map", "Weltkarte");
+        def.setProperty("player.start.x", "15");
+        def.setProperty("player.start.y", "53");
+        
+        def.setProperty("globalmap", "Weltkarte");
 
         // Default Keybindings
         def.setProperty("controls.up", "LATIN SMALL LETTER W");
