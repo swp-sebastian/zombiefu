@@ -10,6 +10,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 import zombiefu.actor.Creature;
 import zombiefu.exception.CanNotAffordException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
@@ -17,7 +18,7 @@ import zombiefu.exception.MaximumHealthPointException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.CannotBeConsumedException;
 import zombiefu.exception.NoDirectionGivenException;
-import zombiefu.exception.DoesNotPossessThisItem;
+import zombiefu.exception.DoesNotPossessThisItemException;
 import zombiefu.fov.ViewEverything;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
@@ -36,7 +37,7 @@ public class Player extends Creature implements Camera {
     private int ects;
     private int semester;
     private int maximalHealthPoints;
-    private ArrayList<ConsumableItem> inventar;
+    private HashMap<String, ArrayList<ConsumableItem>> inventar;
     private HashMap<String, Waffe> waffen;
     private ArrayList<String> waffenListe;
 
@@ -54,7 +55,7 @@ public class Player extends Creature implements Camera {
         this.semester = 1;
         this.discipline = discipline;
 
-        this.inventar = new ArrayList<ConsumableItem>();
+        this.inventar = new HashMap<String, ArrayList<ConsumableItem>>();
         this.waffen = new HashMap<String, Waffe>();
         this.waffenListe = new ArrayList<String>();
         for (String wName : waffe) {
@@ -86,7 +87,7 @@ public class Player extends Creature implements Camera {
         return intelligenceValue;
     }
 
-    public ArrayList<ConsumableItem> getInventar() {
+    public HashMap<String, ArrayList<ConsumableItem>> getInventar() {
         return inventar;
     }
 
@@ -136,7 +137,7 @@ public class Player extends Creature implements Camera {
                         break;
 
                     case INVENTORY:
-                        ConsumableItem it = ZombieGame.askPlayerForItemInInventar();
+                        String it = ZombieGame.askPlayerForItemInInventar();
                         if (it == null) {
                             act();
                         } else {
@@ -224,27 +225,32 @@ public class Player extends Creature implements Camera {
                 waffenListe.add(w.getName());
             }
         } else if (i instanceof ConsumableItem) {
-            inventar.add((ConsumableItem) i);
+            ConsumableItem c = (ConsumableItem) i;
+            if (!inventar.containsKey(i.getName())) {
+                inventar.put(i.getName(), new ArrayList<ConsumableItem>());
+            }
+            inventar.get(i.getName()).add(c);
         } else {
             throw new IllegalStateException(
                     "Items should either be Weapons or consumable.");
         }
     }
 
-    public Item removeItem(String itemName) throws DoesNotPossessThisItem {
+    public ConsumableItem removeConsumableItemFromInventar(String s) throws DoesNotPossessThisItemException {
+        if (inventar.containsKey(s) && !inventar.get(s).isEmpty()) {
+            return inventar.get(s).remove(0);
+        } else {
+            throw new DoesNotPossessThisItemException();
+        }
+    }
+
+    public Item removeItem(String itemName) throws DoesNotPossessThisItemException {
         if (waffenListe.contains(itemName)) {
             waffenListe.remove(itemName);
             return waffen.remove(itemName);
         } else {
-            for (ConsumableItem item : inventar) {
-                if (item.getName().equals(itemName)) {
-                    inventar.remove(item);
-                    return item;
-                }
-            }
+            return removeConsumableItemFromInventar(itemName);
         }
-
-        throw new DoesNotPossessThisItem();
     }
 
     @Override
@@ -263,13 +269,18 @@ public class Player extends Creature implements Camera {
         }
     }
 
-    private void consumeItem(ConsumableItem it) {
-        ZombieGame.newMessage("Du benutzt '" + it.getName() + "'.");
+    private void consumeItem(String itemName) {
+        ZombieGame.newMessage("Du benutzt '" + itemName + "'.");
+        ConsumableItem it;
         try {
-            it.getConsumedBy(this);
-            inventar.remove(it);
-            it.expire();
-        } catch (CannotBeConsumedException ex) {
+            it = removeConsumableItemFromInventar(itemName);
+            try {
+                it.getConsumedBy(this);
+                it.expire();
+            } catch (CannotBeConsumedException ex) {
+                obtainItem(it);
+            }
+        } catch (DoesNotPossessThisItemException ex) {
         }
         ZombieGame.refreshBottomFrame();
     }

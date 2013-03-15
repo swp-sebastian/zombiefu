@@ -8,9 +8,9 @@ package zombiefu.exception;
  *
  * @author tomas
  */
-public class DoesNotPossessThisItem extends Exception {
+public class DoesNotPossessThisItemException extends Exception {
 
-    public DoesNotPossessThisItem() {
+    public DoesNotPossessThisItemException() {
     }
     
 }

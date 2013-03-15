@@ -177,27 +177,35 @@ public class ZombieGame {
         return d;
     }
 
-    public static ConsumableItem askPlayerForItemInInventar() {
-        ConsumableItem output = null;
-        ArrayList<ConsumableItem> inventar = getPlayer().getInventar();
-        if (inventar.isEmpty()) {
+    public static String askPlayerForItemInInventar() {
+        String output = null;
+        HashMap<String, ArrayList<ConsumableItem>> inventar = getPlayer().getInventar();
+        ArrayList<String[]> inventarList = new ArrayList<String[]>();
+        for (String s : inventar.keySet()) {
+            int i = inventar.get(s).size();
+            if (i == 1) {
+                inventarList.add(new String[]{s, inventar.get(s).get(0).face() + " " + s});
+            } else if (i > 1) {
+                inventarList.add(new String[]{s, inventar.get(s).get(0).face() + " " + s + " (" + i + "x)"});
+            }
+        }
+        if (inventarList.isEmpty()) {
             ZombieGame.newMessage("Inventar ist leer.");
             return null;
         }
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferString(0, 0, "Inventarliste:");
         for (int i = 0; i < inventar.size(); i++) {
-            Item it = inventar.get(i);
+            String[] s = inventarList.get(i);
             frame.mainTerm().bufferString(
                     0,
                     2 + i,
-                    "[" + ((char) (97 + i)) + "] " + it.face() + " - "
-                    + it.getName());
+                    "[" + ((char) (97 + i)) + "] " + s[1]);
         }
         frame.mainTerm().refreshScreen();
         int key = ((int) ZombieGame.askPlayerForKey()) - 97;
         if (key >= 0 && key <= 25 && key < inventar.size()) {
-            output = inventar.get(key);
+            output = inventarList.get(key)[0];
         }
         refreshMainFrame();
         return output;
@@ -218,11 +226,11 @@ public class ZombieGame {
         }
 
         frame.mainTerm().clearBuffer();
-        frame.mainTerm().bufferString(0, 0, "Inventarliste:");
+        frame.mainTerm().bufferString(0, 0, "Artikel:");
         for (int i = 0; i < itemSet.size(); i++) {
             frame.mainTerm().bufferString(
                     0,
-                    i,
+                    2 + i,
                     "[" + ((char) (97 + i)) + "] " + itemSet.get(i).face() + " - "
                     + itemSet.get(i).getName() + " (Preis: " + itemMap.get(itemSet.get(i)) + ")");
         }
@@ -321,8 +329,8 @@ public class ZombieGame {
     public static File getScreenDirectory() {
         return settings.paths.get("screens");
     }
-    
-    public static File getMonsterDirectory(){
+
+    public static File getMonsterDirectory() {
         return settings.paths.get("monster");
     }
 
