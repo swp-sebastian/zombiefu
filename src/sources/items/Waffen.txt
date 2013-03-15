@@ -15,3 +15,4 @@ Splittergranate G FF0000 Granate 8 30 2.0 10
 Nuklearrakete ☢ FFFF00 Granate 1 1000 20.0 20 PHYSICS
 // Zombiewaffen:
 Kralle | 000000 Nahkampf unbegrenzt 2 0 0
+Gasatem | 000000 Fernkampf unbegrenzt 100 1 30
