@@ -236,7 +236,7 @@ public class ConfigHelper {
     public static ColoredChar getDefaultChar() {
         if (defaultChar == null) {
             char c = getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "CharSet.txt")).charAt(0);
-            defaultChar = ColoredChar.create(c, charSet.get(c));
+            defaultChar = ColoredChar.create(c, getCharSet().get(c));
         }
         return defaultChar;
     }
@@ -286,16 +286,22 @@ public class ConfigHelper {
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Maps aus Mapfile");
         String[] level = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".map"));
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
+
+        ColoredChar floorChar;
+        if (levelConfig.containsKey("defaulttile.char") && levelConfig.containsKey("defaulttile.color")) {
+            floorChar = ColoredChar.create(levelConfig.get("defaulttile.char").charAt(0), Color.decode("0x" + levelConfig.get("defaulttile.color")));
+        } else {
+            floorChar = getDefaultChar();
+        }
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level[i].length(); j++) {
-                if (isValidChar(level[i].charAt(j))) {
-                    chars[i][j] = ColoredChar.create(level[i].charAt(j));
+                if (level[i].charAt(j) == '.') {
+                    chars[i][j] = floorChar;
+                } else if (isValidChar(level[i].charAt(j))) {
+                    char c = level[i].charAt(j);
+                    chars[i][j] = ColoredChar.create(c,getCharSet().get(c));
                 } else if (itemMap.containsKey(level[i].charAt(j))) {
-                    if (levelConfig.containsKey("defaulttile.char") && levelConfig.containsKey("defaulttile.color")) {
-                        chars[i][j] = ColoredChar.create(levelConfig.get("defaulttile.char").charAt(0), Color.decode("0x" + levelConfig.get("defaulttile.color")));
-                    } else {
-                        chars[i][j] = getDefaultChar();
-                    }
+                    chars[i][j] = floorChar;
                 } else {
                     chars[i][j] = ColoredChar.create(level[i].charAt(j), Color.WHITE);
                 }
