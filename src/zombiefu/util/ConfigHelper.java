@@ -232,6 +232,26 @@ public class ConfigHelper {
         return defaultChar;
     }
 
+    private static Actor decodeITMEntry(String s) {
+        Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(s);
+        Guard.verifyState(m.matches());
+        switch (m.group(1)) {
+            case "item":
+                return newItemByName(m.group(2));
+            case "door":
+                return getDoorByName(m.group(2));
+            case "key":
+                return getKeyCardByName(m.group(2));
+            case "shop":
+                return newShopByName(m.group(2));
+            case "teleporter":
+                String[] ziel = m.group(2).split(",");
+                return new Teleporter(ziel[0].trim(), new Coordinate(Integer.decode(ziel[1].trim()), Integer.decode(ziel[2].trim())));
+            default:
+                throw new IllegalArgumentException("decodeITMEntry(" + s + "): Ungültiges Item");
+        }
+    }
+
     public static Level createLevelFromFile(String mapName) {
 
         ZombieTools.log("createLevelFromFile(" + mapName + ")");
@@ -278,30 +298,7 @@ public class ConfigHelper {
                 if (itemMap.containsKey(c)) {
                     String[] itemNames = itemMap.get(c);
                     for (String itemName : itemNames) {
-                        Actor actor = null;
-                        Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(itemName);
-                        Guard.verifyState(m.matches());
-                        switch (m.group(1)) {
-                            case "item":
-                                actor = newItemByName(m.group(2));
-                                break;
-                            case "door":
-                                actor = getDoorByName(m.group(2));
-                                break;
-                            case "key":
-                                actor = getKeyCardByName(m.group(2));
-                                break;
-                            case "shop":
-                                actor = newShopByName(m.group(2));
-                                break;
-                            case "teleporter":
-                                String[] ziel = m.group(2).split(",");
-                                actor = new Teleporter(ziel[0].trim(), new Coordinate(Integer.decode(ziel[1].trim()), Integer.decode(ziel[2].trim())));
-                                break;
-                            default:
-                                throw new IllegalArgumentException("Ungültiges Item in " + mapName + ".itm: " + itemName);
-                        }
-                        lev.addActor(actor, x, y);
+                        lev.addActor(decodeITMEntry(itemName), x, y);
                     }
                 }
             }
