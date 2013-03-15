@@ -7,16 +7,19 @@ import java.util.Properties;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import zombiefu.items.Waffe;
 import zombiefu.player.Attribut;
 import zombiefu.util.Action;
 
 public class ZombieSettings {
+
     private Properties props;
     public final String playerName;
-    public final HashMap<Attribut,Integer> playerAttributes;
+    public final HashMap<Attribut, Integer> playerAttributes;
     public final String playerInventar;
     public final ColoredChar playerChar;
     public final boolean debug;
@@ -26,19 +29,25 @@ public class ZombieSettings {
     public ZombieSettings(String[] args, String res) {
         props = new Properties(defaults(res));
 
-        try {
-            props.load(new FileInputStream(res + "/config.cfg"));
-            System.out.println("ZombieSettings: Konfigurationsdatei "+res+"/config.cfg geladen.");
-        } catch (IOException ex) {
-            System.out.println("ZombieSettings: Konfigurationsdatei " + res +
-                               "/config.cfg  nicht vorhanden. Benutze Defaults.");
+        List<String> configFiles = new ArrayList<String>();
+        configFiles.add(System.getProperty("user.home") + "/.zombiefurc");
+        configFiles.add(res + "/config.cfg");
+
+        for (String fileName : configFiles) {
+            try {
+                props.load(new FileInputStream(fileName));
+                System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " geladen.");
+                break;
+            } catch (IOException ex) {
+                System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " nicht vorhanden.");
+            }
         }
 
         // Spielerinfo
         playerName = props.getProperty("player.name");
         playerChar = ColoredChar.create(ZombieTools.getCharFromString(props.getProperty("player.tile.char")), ZombieTools.getColorFromString(props.getProperty("player.tile.color")));
         playerInventar = props.getProperty("player.startItems");
-        playerAttributes = new HashMap<Attribut,Integer>();
+        playerAttributes = new HashMap<Attribut, Integer>();
         playerAttributes.put(Attribut.MAXHP, Integer.decode(props.getProperty("player.attr.hp")));
         playerAttributes.put(Attribut.ATTACK, Integer.decode(props.getProperty("player.attr.att")));
         playerAttributes.put(Attribut.DEFENSE, Integer.decode(props.getProperty("player.attr.def")));
@@ -76,12 +85,11 @@ public class ZombieSettings {
 
         // Überprüfen, ob Pfade lesbar sind.
         Iterator itr = paths.values().iterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             File f = (File) itr.next();
             Guard.verifyState(f.canRead());
         }
     }
-
 
     private Properties defaults(String res) {
         Properties def = new Properties();
