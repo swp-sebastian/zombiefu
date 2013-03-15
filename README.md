@@ -1,52 +1,52 @@
-The Final Exam - Die Anwesenheitspflicht schlägt zurück
-(Softwarepraktikum 2013 geleitet von Till Zoppke)
+#  The Final Exam - Die Anwesenheitspflicht schlÃ¤gt zurÃ¼ck #
 
-von Tomas Bayer, Adrian Henning, Christoph Jaecks, Inga Röhl, Sebastian Sontberg, Max Willert
+## Story ##
 
-Story:
-Die Anwesenheitspflicht wurde wieder eingeführt.
-Notgedrungen quälst du dich eines frühen Morgens
-nach mehreren Wochen Abwesenheit wieder in die Uni.
-Dort stellst du mit Erschrecken fest, dass aus
-irgendeinem Grund eine Epidemie ausgebrochen ist.
-Viele deiner Kommilitonen sind bereits infiziert
-und zu Zombies mutiert. Doch nicht nur Studierende
-hat es erwischt, sowohl Mitarbeiter als auch Dozenten
-wandeln als lebende Tote durch die Universität.
-Aufgrund der Anwesenheitspflicht bleibt dir gar nichts
-anderes übrig, als dich selbst mit dem Problem zu
-befassen und du sagst den Zombies, ehrfürchtige Erstis
-oder respekt-einflößende Dozenten, den Kampf an.
+Die Anwesenheitspflicht wurde wieder eingefÃ¼hrt.  Notgedrungen quÃ¤lst
+du dich eines frÃ¼hen Morgens nach mehreren Wochen Abwesenheit wieder
+in die Uni.  Dort stellst du mit Erschrecken fest, dass aus
+irgendeinem Grund eine Epidemie ausgebrochen ist.  Viele deiner
+Kommilitonen sind bereits infiziert und zu Zombies mutiert. Doch nicht
+nur Studierende hat es erwischt, sowohl Mitarbeiter als auch Dozenten
+wandeln als lebende Tote durch die UniversitÃ¤t.  Aufgrund der
+Anwesenheitspflicht bleibt dir gar nichts anderes Ã¼brig, als dich
+selbst mit dem Problem zu befassen und du sagst den Zombies,
+ehrfÃ¼rchtige Erstis oder respekt-einflÃ¶ÃŸende Dozenten, den Kampf an.
 
+## Starten ##
 
+`ant run`
 
-Startklasse: ZombieFu.java
+## Anleitung ##
 
-Um zwischen den Maps Campus oder Testraum zu wechseln muss in der startinfo.txt-Datei
-die 2. Zeile auskommentiert werden oder nicht.
+Um zwischen den Maps Campus oder Testraum zu wechseln muss in der Datei
+/src/sources/startinfo.txt die 2. Zeile auskommentiert werden oder nicht.
 
-Steuerung (lässt sich in der config.cfg ändern):
-    WASD zum Bewegen
-    '.' tut gar nichts
-    'Q' und 'E' wechseln die Waffe
-    'I' öffnet das Inventar
-    'G' GodMode (nur fürs Debugging)
-    'F' Schatten/Nicht Schatten (nur fürs Debugging)
-    Enter Angriff
-    Esc Beenden
+Steuerung (lÃ¤sst sich in der config.cfg Ã¤ndern):
++ WASD zum Bewegen
++ '.' tut gar nichts
++ 'q' und 'e' wechseln die Waffe
++ 'i' Ã¶ffnet das Inventar
++ 'g' GodMode (nur fÃ¼rs Debugging)
++ 'g' Schatten/Nicht Schatten (nur fÃ¼rs Debugging)
++ <Enter> Angriff
++ <Esc> Beenden
 
 Charaktere (nicht alle kann man in den Welten finden, sind aber implementiert):
-	Monster/Zombies laufen auf einen zu und attackieren
-	Menschen, dir nur reden (zur Zeit ohne Bewegung)
-	Menschen, die Items verkaufen/kaufen/tauschen/verschenken (zur Zeit ohne Bewegung)
-	Mensa-Automaten, Mensa-Shops (zur Zeit ohne Bewegung)
++ Monster/Zombies laufen auf einen zu und attackieren
++ Menschen, dir nur reden (zur Zeit ohne Bewegung)
++ Menschen, die Items verkaufen/kaufen/tauschen/verschenken (zur Zeit ohne Bewegung)
++ Mensa-Automaten, Mensa-Shops (zur Zeit ohne Bewegung)
 
-Eine Aktion (Angriff,Gespräch,Handel) wird ausgeführt wenn man auf den Charakter zuläuft.
-Durch Enter kann man angreifen, nachdem eine Richtung angegeben wurde.
-Greift man einen Menschen/Mensa-Shop/Mensa-Automaten (absichtlicher oder UNABSICHTLICH) an, wird man exmatrikuliert.
+Eine Aktion (Angriff,GesprÃ¤ch,Handel) wird ausgefÃ¼hrt wenn man auf den
+Charakter zulÃ¤uft.  Durch Enter kann man angreifen, nachdem eine
+Richtung angegeben wurde.  Greift man einen
+Menschen/Mensa-Shop/Mensa-Automaten (absichtlicher oder UNABSICHTLICH)
+an, wird man exmatrikuliert.
 
-Items lassen sich im Ordner sources/items auslesen und unter Umständen konfigurieren
-Sie werden automatisch beim Darüberlaufen eingesammelt.
-	HealingItems (im Inventar)
-	KeyCards (im Invantar) (werden für das Öffnen von Türen benötigt)
-	Waffen (Anzeige links unten im Bildschirm)
+Items lassen sich im Ordner /src/sources/items auslesen und unter
+UmstÃ¤nden konfigurieren Sie werden automatisch beim DarÃ¼berlaufen
+eingesammelt.
++ HealingItems (im Inventar)
++ SchlÃ¼ssel (im Invantar) (werden fÃ¼r das Ã–ffnen von TÃ¼ren benÃ¶tigt)
++ Waffen (Anzeige links unten im Bildschirm)
