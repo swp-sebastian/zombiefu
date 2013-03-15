@@ -41,7 +41,6 @@ public class ZombieSettings {
             try {
                 props.load(new FileInputStream(fileName));
                 System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " geladen.");
-                break;
             } catch (IOException ex) {
                 System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " nicht vorhanden.");
             }
