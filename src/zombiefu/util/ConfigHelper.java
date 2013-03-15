@@ -36,6 +36,9 @@ import zombiefu.player.Discipline;
 
 public class ConfigHelper {
 
+    private static final ColoredChar DEFAULT_BG_CHAR = ColoredChar.create(' ');
+    private static final ColoredChar DEFAULT_FLOOR_CHAR = ColoredChar.create(' ');
+    
     private static HashMap<String, ItemBuilder> items;
     private static HashMap<String, Door> doors;
     private static HashMap<String, ShopBuilder> shops;
@@ -246,15 +249,7 @@ public class ConfigHelper {
     public static boolean isValidChar(char c) {
         return getCharSet().containsKey(c);
     }
-
-    public static ColoredChar getDefaultChar() {
-        if (defaultChar == null) {
-            char c = getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "CharSet.txt")).charAt(0);
-            defaultChar = ColoredChar.create(c, getCharSet().get(c));
-        }
-        return defaultChar;
-    }
-
+    
     private static Actor decodeITMEntry(String s) {
         Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)$").matcher(s);
         Guard.verifyState(m.matches());
@@ -289,6 +284,14 @@ public class ConfigHelper {
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Metadaten ein");
         HashMap<String, String> levelConfig = readConfig(new File(ZombieGame.getMapDirectory(), mapName + ".cfg"));
 
+        // Suche floorChar und bgChar
+        ColoredChar floorChar, bgChar;
+        if (levelConfig.containsKey("defaulttile.char") && levelConfig.containsKey("defaulttile.color")) {
+            floorChar = ColoredChar.create(levelConfig.get("defaulttile.char").charAt(0), Color.decode("0x" + levelConfig.get("defaulttile.color")));
+        } else {
+            floorChar = DEFAULT_FLOOR_CHAR;
+        }        
+        
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
         HashMap<Character, String[]> itemMap = new HashMap<Character, String[]>();
@@ -302,13 +305,6 @@ public class ConfigHelper {
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Maps aus Mapfile");
         String[] level = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".map"));
         ColoredChar[][] chars = new ColoredChar[level.length][level[0].length()];
-
-        ColoredChar floorChar;
-        if (levelConfig.containsKey("defaulttile.char") && levelConfig.containsKey("defaulttile.color")) {
-            floorChar = ColoredChar.create(levelConfig.get("defaulttile.char").charAt(0), Color.decode("0x" + levelConfig.get("defaulttile.color")));
-        } else {
-            floorChar = getDefaultChar();
-        }
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level[i].length(); j++) {
                 if (level[i].charAt(j) == '.') {
@@ -326,7 +322,7 @@ public class ConfigHelper {
 
         // Baue Level
         ZombieTools.log("createLevelFromFile(" + mapName + "): Erzeuge Level");
-        RoomBuilder builder = new RoomBuilder(chars);
+        RoomBuilder builder = new RoomBuilder(chars,floorChar);
         Level lev = new Level(builder.width(), builder.height(), builder, mapName);
 
         // Lade statische Items auf Map
@@ -389,7 +385,7 @@ public class ConfigHelper {
         HashMap<String, String> output = new HashMap<String, String>();
         String[] cfg = getStrings(input);
         for (String st : cfg) {
-            String[] it = st.trim().split("=", 2);
+            String[] it = st.replaceAll("\r?\n?$", "").split("=", 2);
             output.put(it[0], it[1]);
         }
         return output;
