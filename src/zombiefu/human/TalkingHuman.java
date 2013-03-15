@@ -14,15 +14,15 @@ import zombiefu.util.ZombieGame;
  */
 public class TalkingHuman extends Human {
     
-    private String aussage;
+    private String phrase;
 
-    public TalkingHuman(ColoredChar face, String name, String aussage) {
+    public TalkingHuman(ColoredChar face, String name, String phrase) {
         super(face, name);
-        this.aussage = aussage;
+        this.phrase = phrase;
     }
 
     @Override
     public void talkToPlayer(Player pl) {
-        ZombieGame.newMessage(getName() + " sagt: " + aussage);
+        ZombieGame.newMessage(getName() + " sagt: " + phrase);
     }
 }

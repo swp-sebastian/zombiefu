@@ -17,7 +17,8 @@ import zombiefu.actor.Teleporter;
 import zombiefu.util.DamageAnimation;
 import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.human.Human;
-import zombiefu.human.ItemGivingHuman;
+import zombiefu.human.DealingHuman;
+import zombiefu.human.GivingHuman;
 import zombiefu.human.TalkingHuman;
 import zombiefu.items.MensaCard;
 import zombiefu.util.ConfigHelper;
@@ -93,6 +94,7 @@ public class Level extends World {
         for (int i = oldEnemies; i <= newEnemies; i++) {
            addActor(new Zombie());
         }
+        addActor(new GivingHuman(ColoredChar.create('ü'), "Heinz", ConfigHelper.newItemByName("Nuklearrakete")));
     }
 
     protected void fillWithItems() {
