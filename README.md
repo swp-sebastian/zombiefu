@@ -23,14 +23,14 @@ Um zwischen den Maps Campus oder Testraum zu wechseln muss in der Datei
 /src/sources/startinfo.txt die 2. Zeile auskommentiert werden oder nicht.
 
 Steuerung (lässt sich in der config.cfg ändern):
-+ WASD zum Bewegen
-+ '.' tut gar nichts
-+ 'q' und 'e' wechseln die Waffe
-+ 'i' öffnet das Inventar
-+ 'g' GodMode (nur fürs Debugging)
-+ 'g' Schatten/Nicht Schatten (nur fürs Debugging)
-+ <Enter> Angriff
-+ <Esc> Beenden
++ `wasd` zum Bewegen
++ `.` tut gar nichts
++ `q` und `e` wechseln die Waffe
++ `i` öffnet das Inventar
++ `g` GodMode (nur fürs Debugging)
++ `f` Schatten/Nicht Schatten (nur fürs Debugging)
++ `enter` Angriff
++ `esc` Beenden
 
 Charaktere (nicht alle kann man in den Welten finden, sind aber implementiert):
 + Monster/Zombies laufen auf einen zu und attackieren
