@@ -8,15 +8,12 @@ import zombiefu.items.Waffe;
 import zombiefu.util.ConfigHelper;
 
 public class DozentZombie extends Monster {
-
-    public DozentZombie() {
-        super(ColoredChar.create('\u265E', Color.RED), "Prof. Jung",
-                Dice.global.nextInt(20, 50), Dice.global.nextInt(20, 50),
-                Dice.global.nextInt(20, 50), ConfigHelper.newWaffeByName("Feuerlöscher"), 10);
+    
+    private Item item;
+    
+    public DozentZombie(String name,int h, int a,int d,Waffe w,int ects, Item item) {
+        super(ColoredChar.create('\u265E', Color.RED),name,h,a,d,w,ects);
+        this.item = item;
     }
 
-    @Override
-    protected Item itemDroppedOnKill() {
-        return getActiveWeapon();
-    }
 }

@@ -314,6 +314,10 @@ public class ZombieGame {
     public static File getScreenDirectory() {
         return settings.paths.get("screens");
     }
+    
+    public static File getMonsterDirectory(){
+        return settings.paths.get("monster");
+    }
 
     public static Level getGlobalMap() {
         return globalmap;

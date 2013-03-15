@@ -21,6 +21,7 @@ import zombiefu.actor.Door;
 import zombiefu.human.Shop;
 import zombiefu.itembuilder.HealingItemBuilder;
 import zombiefu.itembuilder.ItemBuilder;
+import zombiefu.itembuilder.MonsterBuilder;
 import zombiefu.itembuilder.WaffenBuilder;
 import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
@@ -41,6 +42,7 @@ public class ConfigHelper {
     private static HashMap<String, Door> doors;
     private static HashMap<String, ShopBuilder> shops;
     private static HashMap<String, Level> levels;
+    private static HashMap<String, MonsterBuilder> monsters;
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
     private static HashMap<Character, Boolean> visibleSet;
@@ -179,8 +181,22 @@ public class ConfigHelper {
     }
 
     private static Monster newEnemyByName(String s) {
-        // Unfertig: Enemy-Prototyp
-        return new DozentZombie();
+        if (monsters==null){
+            monsters = new HashMap<String, MonsterBuilder>();
+            String[] monsterInfos = getStrings(new File(ZombieGame.getMonsterDirectory(),"Monster.mom"));
+            for (String t : monsterInfos){
+                String[] infos = t.split(" ");
+                String name = infos[0];
+                int hp = Integer.decode(infos[1]);
+                int attack = Integer.decode(infos[2]);
+                int defense = Integer.decode(infos[3]);
+                Waffe w = newWaffeByName(infos[4]);
+                int ects = Integer.decode(infos[5]);
+                Item m = newItemByName(infos[6]);
+                monsters.put(name,new MonsterBuilder(name,hp,attack,defense,w,ects,m));
+            }
+        }
+        return monsters.get(s).buildMonster();
     }
 
     private static KeyCard getKeyCardByName(String s) {
@@ -257,6 +273,8 @@ public class ConfigHelper {
             return getKeyCardByName(arguments[0]);
         } else if (key.equals("shop")) {
             return newShopByName(arguments[0]);
+        } else if (key.equals("monster")){
+            return newEnemyByName(arguments[0]);
         } else if (key.equals("teleporter")) {
             return new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2])));
         } else {
