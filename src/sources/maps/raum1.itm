@@ -1,5 +1,5 @@
 1 item(Sniper)
-2 item(Mate) enemy(GrausamerZombie)
+2 item(Mate) monster(Dozent)
 3 item(Splittergranate)
 4 item(RoundhouseKick)
 5 key(TestDoor)
