@@ -6,6 +6,8 @@ import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+
+import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 import zombiefu.actor.Creature;
@@ -22,11 +24,17 @@ import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
-public abstract class Monster extends Creature {
+public class Monster extends Creature {
 
     protected MoveAlgorithm movealg;
     private Waffe waffe;
     protected int ectsYield;
+    private Item item;
+    
+    public Monster(String name,int h, int a,int d,Waffe w,int ects, Item item) {
+        this(ColoredChar.create('\u265E', Color.RED),name,h,a,d,w,ects);
+        this.item = item;
+    }
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w, int ects, int s, MoveAlgorithm m) {
         super(face, n, h, a, d);
@@ -106,7 +114,9 @@ public abstract class Monster extends Creature {
         return waffe;
     }
 
-    protected abstract Item itemDroppedOnKill();
+    protected Item itemDroppedOnKill() {
+        return item;
+    }
 
     @Override
     protected void killed(Creature killer) {
@@ -114,7 +124,7 @@ public abstract class Monster extends Creature {
         if (it != null) {
             world().addActor(it, pos());
         }
-        if(ZombieGame.getPlayer() == killer) {
+        else if(ZombieGame.getPlayer() == killer) {
             ZombieGame.getPlayer().giveECTS(ectsYield);
         }
         expire();
