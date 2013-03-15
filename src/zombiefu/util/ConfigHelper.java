@@ -206,7 +206,7 @@ public class ConfigHelper {
     }
 
     public static Level getGlobalMap() {
-        return getLevelByName(getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "levels.txt")));
+        return getLevelByName(getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "weltkarte.txt")));
     }
 
     public static Coordinate getStartPosition() {
