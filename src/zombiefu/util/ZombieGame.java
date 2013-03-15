@@ -4,6 +4,7 @@
  */
 package zombiefu.util;
 
+import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import jade.util.Guard;
@@ -12,10 +13,12 @@ import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.player.Player;
 import zombiefu.builder.ItemBuilder;
 import zombiefu.items.ConsumableItem;
+import zombiefu.items.Item;
 import zombiefu.level.Level;
 import zombiefu.player.Attribut;
 import zombiefu.player.Discipline;
@@ -69,8 +72,13 @@ public class ZombieGame {
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
 
-        player = new Player(ColoredChar.create('\u263B', Color.decode("0x7D26CD")), settings.name, discipline, 100, 5, 5, 5, waffen);
-
+        player = new Player(settings.playerChar, settings.playerName, discipline, settings.playerAttributes);
+        Set<Actor> items = ConfigHelper.decodeITM(settings.playerInventar);
+        for(Actor a: items) {
+            Guard.verifyState(a instanceof Item);
+            player.obtainItem((Item) a);
+        }
+        
         player.changeWorld(ConfigHelper.getStartMap());
         player.setPos(ConfigHelper.getStartPosition());
 
