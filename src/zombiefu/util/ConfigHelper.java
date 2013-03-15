@@ -44,7 +44,7 @@ public class ConfigHelper {
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
     private static HashMap<Character, Boolean> visibleSet;
-    private static Character defaultChar;
+    private static ColoredChar defaultChar;
     private static Level startMap;
     private static Level globalMap;
     private static Coordinate startPosition;
@@ -233,9 +233,10 @@ public class ConfigHelper {
         return getCharSet().containsKey(c);
     }
 
-    public static char getDefaultChar() {
+    public static ColoredChar getDefaultChar() {
         if (defaultChar == null) {
-            defaultChar = getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "CharSet.txt")).charAt(0);
+            char c = getFirstWordOfFile(new File(ZombieGame.getSourceDirectory(), "CharSet.txt")).charAt(0);
+            defaultChar = ColoredChar.create(c, charSet.get(c));
         }
         return defaultChar;
     }
@@ -268,6 +269,15 @@ public class ConfigHelper {
 
         ZombieTools.log("createLevelFromFile(" + mapName + ")");
 
+        // Lese Metadaten ein
+        ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Metadaten ein");
+        HashMap<String, String> levelConfig = new HashMap<String, String>();
+        String[] cfg = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".cfg"));
+        for (String st : cfg) {
+            String[] it = st.trim().split("=", 2);
+            levelConfig.put(it[0], it[1]);
+        }
+
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
         HashMap<Character, String[]> itemMap = new HashMap<Character, String[]>();
@@ -276,6 +286,7 @@ public class ConfigHelper {
             String[] it = st.split(" ", 2);
             itemMap.put(it[0].charAt(0), it[1].split(" "));
         }
+
         // Lese Map ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Maps aus Mapfile");
         String[] level = getStrings(new File(ZombieGame.getMapDirectory(), mapName + ".map"));
@@ -285,7 +296,11 @@ public class ConfigHelper {
                 if (isValidChar(level[i].charAt(j))) {
                     chars[i][j] = ColoredChar.create(level[i].charAt(j));
                 } else if (itemMap.containsKey(level[i].charAt(j))) {
-                    chars[i][j] = ColoredChar.create(getDefaultChar());
+                    if (levelConfig.containsKey("defaulttile.char") && levelConfig.containsKey("defaulttile.color")) {
+                        chars[i][j] = ColoredChar.create(levelConfig.get("defaulttile.char").charAt(0), Color.decode("0x" + levelConfig.get("defaulttile.color")));
+                    } else {
+                        chars[i][j] = getDefaultChar();
+                    }
                 } else {
                     chars[i][j] = ColoredChar.create(level[i].charAt(j), Color.WHITE);
                 }
