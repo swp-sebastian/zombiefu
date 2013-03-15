@@ -181,10 +181,10 @@ public class ConfigHelper {
     }
 
     private static Monster newEnemyByName(String s) {
-        if (monsters==null){
+        if (monsters == null) {
             monsters = new HashMap<String, MonsterBuilder>();
-            String[] monsterInfos = getStrings(new File(ZombieGame.getMonsterDirectory(),"Monster.mon"));
-            for (String t : monsterInfos){
+            String[] monsterInfos = getStrings(new File(ZombieGame.getMonsterDirectory(), "Monster.mon"));
+            for (String t : monsterInfos) {
                 String[] infos = t.split(" ");
                 String name = infos[0];
                 int hp = Integer.decode(infos[1]);
@@ -193,7 +193,7 @@ public class ConfigHelper {
                 Waffe w = newWaffeByName(infos[4]);
                 int ects = Integer.decode(infos[5]);
                 Item m = newItemByName(infos[6]);
-                monsters.put(name,new MonsterBuilder(name,hp,attack,defense,w,ects,m));
+                monsters.put(name, new MonsterBuilder(name, hp, attack, defense, w, ects, m));
             }
         }
         return monsters.get(s).buildMonster();
@@ -268,13 +268,11 @@ public class ConfigHelper {
             return newItemByName(arguments[0]);
         } else if (key.equals("door")) {
             return getDoorByName(arguments[0]);
-        } else if (key.equals("enemy")) {
-            return newEnemyByName(arguments[0]);
         } else if (key.equals("key")) {
             return getKeyCardByName(arguments[0]);
         } else if (key.equals("shop")) {
             return newShopByName(arguments[0]);
-        } else if (key.equals("monster")){
+        } else if (key.equals("monster")) {
             return newEnemyByName(arguments[0]);
         } else if (key.equals("teleporter")) {
             return new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2])));
@@ -317,7 +315,7 @@ public class ConfigHelper {
                     chars[i][j] = floorChar;
                 } else if (isValidChar(level[i].charAt(j))) {
                     char c = level[i].charAt(j);
-                    chars[i][j] = ColoredChar.create(c,getCharSet().get(c));
+                    chars[i][j] = ColoredChar.create(c, getCharSet().get(c));
                 } else if (itemMap.containsKey(level[i].charAt(j))) {
                     chars[i][j] = floorChar;
                 } else {
@@ -344,7 +342,17 @@ public class ConfigHelper {
                 if (itemMap.containsKey(c)) {
                     String[] itemNames = itemMap.get(c);
                     for (String itemName : itemNames) {
-                        lev.addActor(decodeITMEntry(itemName), x, y);
+                        Matcher m = Pattern.compile("(.*)x([0-9]*)$").matcher(itemName);
+                        int anzahl;
+                        if (m.matches()) {
+                            anzahl = Integer.decode(m.group(2));
+                            itemName = m.group(1);
+                        } else {
+                            anzahl = 1;
+                        }
+                        for (int i = 1; i <= anzahl; i++) {
+                            lev.addActor(decodeITMEntry(itemName), x, y);
+                        }
                     }
                 }
             }
