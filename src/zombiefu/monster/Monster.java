@@ -35,28 +35,29 @@ public class Monster extends Creature {
 
     public Monster(String name, int h, int a, int d, Waffe w, int ects,
             Item item) {
-        this(ColoredChar.create('\u265E', Color.RED), name, h, a, d, w, ects);
-        this.item = item;
+        this(ColoredChar.create('\u265E', Color.RED), name, h, a, d, w, ects, 10, new StupidMover(), item);
     }
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w,
-            int ects, int s, MoveAlgorithm m) {
+            int ects, int s, MoveAlgorithm m, Item dropItem) {
         super(face, n, h, a, d);
         waffe = w;
         movealg = m;
         fov = new RayCaster();
         sichtweite = s;
         ectsYield = ects;
-        if (item != null) {
+        if (dropItem == null) {
             if (Dice.global.chance(85)) {
                 this.item = new MensaCard(Dice.global.nextInt(1, 100));
             }
+        } else {
+            this.item = dropItem;
         }
     }
 
     public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w,
             int ects) {
-        this(face, n, h, a, d, w, ects, 10, new StupidMover());
+        this(face, n, h, a, d, w, ects, 10, new StupidMover(), null);
     }
 
     private void moveRandomly() throws NoPlaceToMoveException {
@@ -134,7 +135,7 @@ public class Monster extends Creature {
     }
 
     @Override
-    protected void killed(Creature killer) {
+    public void killed(Creature killer) {
         Item it = itemDroppedOnKill();
         if (it != null) {
             world().addActor(it, pos());

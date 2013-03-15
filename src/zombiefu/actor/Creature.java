@@ -280,7 +280,7 @@ public abstract class Creature extends NotPassableActor {
         }
     }
 
-    protected abstract void killed(Creature killer);
+    public abstract void killed(Creature killer);
 
     private void hurt(int i, Creature hurter) {
         ZombieTools.log(getName() + " hat " + i + " HP verloren. ");

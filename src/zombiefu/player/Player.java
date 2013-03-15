@@ -17,6 +17,7 @@ import zombiefu.exception.MaximumHealthPointException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.CannotBeConsumedException;
 import zombiefu.exception.NoDirectionGivenException;
+import zombiefu.exception.DoesNotPossessThisItem;
 import zombiefu.fov.ViewEverything;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
@@ -196,10 +197,10 @@ public class Player extends Creature implements Camera {
     }
 
     public void changeWorld(World world) {
-        
+
         Guard.verifyState(world instanceof Level);
         Level lvl = (Level) world;
-        
+
         if (bound()) {
             world().removeActor(this);
         }
@@ -230,6 +231,22 @@ public class Player extends Creature implements Camera {
         }
     }
 
+    public Item removeItem(String itemName) throws DoesNotPossessThisItem {
+        if (waffenListe.contains(itemName)) {
+            waffenListe.remove(itemName);
+            return waffen.remove(itemName);
+        } else {
+            for (ConsumableItem item : inventar) {
+                if (item.getName().equals(itemName)) {
+                    inventar.remove(item);
+                    return item;
+                }
+            }
+        }
+
+        throw new DoesNotPossessThisItem();
+    }
+
     @Override
     public Waffe getActiveWeapon() {
         return waffen.get(waffenListe.get(0));
@@ -258,7 +275,7 @@ public class Player extends Creature implements Camera {
     }
 
     @Override
-    protected void killed(Creature killer) {
+    public void killed(Creature killer) {
         ZombieGame.endGame();
     }
 

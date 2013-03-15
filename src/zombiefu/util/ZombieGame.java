@@ -87,15 +87,22 @@ public class ZombieGame {
         frame.topTerm().refreshScreen();
     }
 
-    public static void newMessage(String s) {
+    public static char askPlayerForKeyWithMessage(String s) {
         refreshMainFrame();
         setTopFrameContent(s);
+        char key = 0;
         try {
-            frame.mainTerm().getKey();
+            key = frame.mainTerm().getKey();
         } catch (InterruptedException ex) {
+            Guard.verifyState(false);
         }
 
         setTopFrameContent(null);
+        return key;
+    }
+
+    public static void newMessage(String s) {
+        askPlayerForKeyWithMessage(s);
     }
 
     public static void refreshMainFrame() {

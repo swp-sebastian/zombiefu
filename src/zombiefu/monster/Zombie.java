@@ -10,16 +10,11 @@ import zombiefu.util.ConfigHelper;
 import zombiefu.util.ZombieTools;
 
 public class Zombie extends Monster {
-    
-    private Item item = null;
 
     public Zombie() {
         super(ColoredChar.create('\u263F', ZombieTools.getRandomColor()), "Zombie", Dice.global
                 .nextInt(1, 20), Dice.global.nextInt(1, 20), Dice.global
                 .nextInt(1, 20), ConfigHelper.newWaffeByName("Kralle"), 1);
-        if (Dice.global.chance(85)) {
-            this.item = new MensaCard(Dice.global.nextInt(1, 100)); 
-        }
     }
 
 }

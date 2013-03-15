@@ -1,7 +1,6 @@
 package zombiefu.util;
 
 import jade.core.Actor;
-import jade.core.World;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
@@ -27,13 +26,12 @@ import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
 import zombiefu.actor.Teleporter;
 import zombiefu.itembuilder.ShopBuilder;
+import zombiefu.items.MensaCard;
 import zombiefu.items.Waffe;
 import zombiefu.items.Waffentyp;
 import zombiefu.level.Level;
 import zombiefu.mapgen.RoomBuilder;
-import zombiefu.monster.DozentZombie;
 import zombiefu.monster.Monster;
-import zombiefu.monster.Zombie;
 import zombiefu.player.Discipline;
 
 public class ConfigHelper {
@@ -192,7 +190,7 @@ public class ConfigHelper {
                 int defense = Integer.decode(infos[3]);
                 Waffe w = newWaffeByName(infos[4]);
                 int ects = Integer.decode(infos[5]);
-                Item m = newItemByName(infos[6]);
+                Item m = (Item) decodeITMEntry(infos[6]);
                 monsters.put(name, new MonsterBuilder(name, hp, attack, defense, w, ects, m));
             }
         }
@@ -270,6 +268,8 @@ public class ConfigHelper {
             return getDoorByName(arguments[0]);
         } else if (key.equals("key")) {
             return getKeyCardByName(arguments[0]);
+        } else if (key.equals("mensacard")) {
+            return new MensaCard(Integer.decode(arguments[0]));
         } else if (key.equals("shop")) {
             return newShopByName(arguments[0]);
         } else if (key.equals("monster")) {
