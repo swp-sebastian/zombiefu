@@ -37,12 +37,10 @@ public class ZombieSettings {
         configFiles.add(res + "/config.cfg");
         configFiles.add(System.getProperty("user.home") + "/.zombiefurc");
 
-
         for (String fileName : configFiles) {
             try {
                 props.load(new FileInputStream(fileName));
                 System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " geladen.");
-                break;
             } catch (IOException ex) {
                 System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " nicht vorhanden.");
             }
