@@ -201,7 +201,7 @@ public class ZombieGame {
         }
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferString(0, 0, "Inventarliste:");
-        for (int i = 0; i < inventar.size(); i++) {
+        for (int i = 0; i < inventarList.size(); i++) {
             String[] s = inventarList.get(i);
             frame.mainTerm().bufferString(
                     0,
