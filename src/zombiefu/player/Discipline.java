@@ -11,16 +11,16 @@ import java.util.HashMap;
  * @author tomas
  */
 public enum Discipline {
-
-    POLITICAL_SCIENCE(100, 5, 5, 5, 0, "weapon(Faust)"),
-    COMPUTER_SCIENCE(100, 5, 5, 5, 0, "weapon(Faust)"),
-    MEDICINE(100, 5, 5, 5, 0, "weapon(Faust)"),
-    PHILOSOPHY(100, 5, 5, 5, 0, "weapon(Faust)"),
+//HP, a, v, geschick, geld, waffe
+    POLITICAL_SCIENCE(100, 5, 5, 5, 0, "weapon(Totquatschen)"),
+    COMPUTER_SCIENCE(100, 5, 7, 5, 0, "weapon(Laptop)"),
+    MEDICINE(120, 5, 5, 5, 0, "weapon(Faust)"),
+    PHILOSOPHY(100, 5, 5, 5, 0, "weapon(Suizid)"),
     PHYSICS(100, 5, 5, 5, 0, "weapon(Faust)"),
-    BUSINESS(100, 5, 5, 5, 0, "weapon(Faust)"),
+    BUSINESS(100, 3, 3, 3, 100, "weapon(Besen)"),
     CHEMISTRY(100, 5, 5, 5, 0, "weapon(Faust)"),
-    SPORTS(100, 5, 5, 5, 0, "weapon(Faust)"),
-    MATHEMATICS(100, 5, 5, 5, 0, "weapon(Faust)");
+    SPORTS(100, 7, 5, 5, 0, "weapon(Faust)"),
+    MATHEMATICS(100, 5, 5, 5, 0, "weapon(Differenzierer)");
     
     private HashMap<Attribute, Integer> baseAttributes;
     private String baseItems;
