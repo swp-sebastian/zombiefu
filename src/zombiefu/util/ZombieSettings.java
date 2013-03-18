@@ -122,7 +122,7 @@ public class ZombieSettings {
         def.setProperty("player.attr.att", "5");
         def.setProperty("player.attr.def", "5");
         def.setProperty("player.attr.int", "5");
-        def.setProperty("player.startItems", "item(Faust)");
+        def.setProperty("player.startItems", "weapon(Faust)");
         def.setProperty("player.tile.char", "263B");
         def.setProperty("player.tile.color", "7D26CD");
         def.setProperty("player.start.map", "Weltkarte");

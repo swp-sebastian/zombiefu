@@ -41,7 +41,7 @@ public class Player extends Creature implements Camera {
     private HashMap<String, Weapon> waffen;
     private ArrayList<String> waffenListe;
 
-    public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribut,Integer> attr) {
+    public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribut, Integer> attr) {
 
         super(face, name, attr.get(Attribut.MAXHP), attr.get(Attribut.ATTACK), attr.get(Attribut.DEFENSE));
 
@@ -305,13 +305,13 @@ public class Player extends Creature implements Camera {
 
     public void giveECTS(int e) {
         ects += e;
-        if (ects >= ECTS_FOR_NEXT_SEMESTER) {
+
+        while (ects >= semester * ECTS_FOR_NEXT_SEMESTER) {
             levelUp();
         }
     }
 
     public void levelUp() {
-        ects -= ECTS_FOR_NEXT_SEMESTER;
         semester += 1;
         ZombieGame.refreshBottomFrame();
         Attribut att = ZombieGame.askPlayerForAttrbuteToRaise();
