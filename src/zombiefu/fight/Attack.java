@@ -36,6 +36,7 @@ public class Attack {
     private Direction dir;
     private World world;
     private Set<DamageAnimation> anims;
+    private Coordinate impactPoint;
 
     public Attack(Creature attacker, Direction dir) {
         this.attacker = attacker;
@@ -77,12 +78,9 @@ public class Attack {
         return nPos;
     }
 
-    public void hurtCreature(Creature cr, double faktor) {
+    private void hurtCreature(Creature cr) {
 
-        // Wer keine Weapon hat, kann nicht angreifen!
-        if (weapon == null) {
-            return;
-        }
+        double faktor = getDamageCoefficient(cr);
 
         ZombieTools.log("hurtCreature(): " + attacker.getName() + " hurts "
                 + cr.getName() + " with " + weapon.getName()
@@ -103,13 +101,35 @@ public class Attack {
         cr.hurt(damage, attacker);
     }
 
-    public void hurtCreature(Creature cr) {
-        hurtCreature(cr, 1);
+    private void dazeCreature(Creature cr) {
+        if (Dice.global.chance((int) (100 * weapon.getDazeProbability()))) {
+            ZombieTools.log("dazeCreature(): " + attacker.getName() + " dazes " + cr.getName() + " for " + weapon.getDazeTurns() + " turns.");
+            ZombieGame.newMessage(attacker.getName() + " hat " + cr.getName() + " für " + String.valueOf(weapon.getDazeTurns()) + " Runden gelähmt.");
+            cr.daze(weapon.getDazeTurns(), cr);
+        } else if (weapon.getDamage() == 0) {
+            ZombieGame.newMessage(attacker.getName() + " hat verfehlt.");
+        }
+    }
+
+    private void attackCreature(Creature cr) {
+
+        // Wer keine Weapon hat, kann nicht angreifen!
+        if (weapon == null) {
+            return;
+        }
+
+        if (weapon.getDamage() > 0) {
+            hurtCreature(cr);
+        }
+
+        if (weapon.getDazeTurns() > 0) {
+            dazeCreature(cr);
+        }
     }
 
     private void attackCreatureSet(Collection<Creature> targets) throws NoEnemyHitException {
         for (Creature target : targets) {
-            hurtCreature(target);
+            attackCreature(target);
         }
         if (targets.isEmpty()) {
             throw new NoEnemyHitException();
@@ -144,24 +164,44 @@ public class Attack {
     public void perform() throws WeaponHasNoMunitionException, NoEnemyHitException {
         weapon.useMunition();
 
-        Coordinate ziel;
-
         if (wtype.isRanged()) {
-            ziel = findTargetInDirection(dir, weapon.getRange());
+            impactPoint = findTargetInDirection(dir, weapon.getRange());
         } else {
-            ziel = attacker.pos().getTranslated(dir);
+            impactPoint = attacker.pos().getTranslated(dir);
         }
 
         try {
             if (wtype.isDirected()) {
-                attackCoordinate(ziel);
+                attackCoordinate(impactPoint);
             } else {
-                createDetonation(ziel, weapon.getBlastRadius(), wtype.isRanged());
+                createDetonation(impactPoint, weapon.getBlastRadius(), wtype.isRanged());
             }
         } catch (NoEnemyHitException ex) {
             throw ex;
         } finally {
             clearAllAnimations();
+        }
+    }
+
+    private double getDamageCoefficient(Creature cr) {
+        Guard.argumentIsNotNull(impactPoint);
+        double distance;
+        switch (wtype) {
+            case NAHKAMPF:
+                Guard.verifyState(cr.pos().equals(impactPoint));
+                return 1.0;
+            case FERNKAMPF:
+                Guard.verifyState(cr.pos().equals(impactPoint));
+                distance = attacker.pos().distance(impactPoint) / weapon.getRange();
+                return 1 - distance * distance / 2;
+            case UMKREIS:
+                distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
+                return 1 - distance * distance / 2;
+            case GRANATE:
+                distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
+                return 1 - distance * distance / 2;
+            default:
+                throw new AssertionError(wtype.name());
         }
     }
 }

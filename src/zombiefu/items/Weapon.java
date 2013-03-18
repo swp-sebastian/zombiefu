@@ -44,6 +44,14 @@ public class Weapon extends Item {
         return munition;
     }
 
+    public int getDazeTurns() {
+        return dazeTurns;
+    }
+    
+    public double getDazeProbability() {
+        return dazeProbability;
+    }
+    
     public double getBlastRadius() {
         return blastRadius;
     }
