@@ -2,20 +2,28 @@ package zombiefu.actor;
 
 import jade.util.datatype.ColoredChar;
 import java.awt.Color;
+import zombiefu.util.ZombieGame;
 
 public class Door extends NotPassableActor {
 
     private final String name;
-    
+
     public Door(String name) {
         super(ColoredChar.create('\u25D8', Color.yellow));
         this.name = name;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
-    
-    public void act() {}
 
+    public void act() {
+    }
+
+    public void open() {
+        world().removeActor(this);
+        expire();
+        ZombieGame.newMessage("Du konntest die Tür " + getName() + " aufschließen.");
+        ZombieGame.refreshMainFrame();
+    }
 }
