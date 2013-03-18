@@ -1,34 +1,33 @@
 package zombiefu.builder;
 
-import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
+import java.util.HashMap;
 import java.util.Set;
 import zombiefu.items.Weapon;
 import zombiefu.monster.Monster;
+import zombiefu.player.Attribute;
+import zombiefu.util.ConfigHelper;
+import zombiefu.util.ITMString;
 
 public class MonsterBuilder {
-    
+
     private ColoredChar face;
     private String name;
-    private int hp;
-    private int attack;
-    private int defense;
+    private HashMap<Attribute, Integer> attSet;
     private int ects;
     private Weapon w;
-    private Set<Actor> dropOnDeath;
-    
-    public MonsterBuilder(ColoredChar face, String name,int hp,int attack,int defense, Weapon w, int ects, Set<Actor> dropOnDeath){
+    private ITMString dropOnDeath;
+
+    public MonsterBuilder(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Weapon w, int ects, ITMString dropOnDeath) {
         this.name = name;
         this.face = face;
-        this.hp = hp;
-        this.attack = attack;
-        this.defense = defense;
+        this.attSet = attSet;
         this.w = w;
         this.dropOnDeath = dropOnDeath;
         this.ects = ects;
     }
-    
-    public Monster buildMonster(){
-        return new Monster(face, name,hp,attack,defense,w,ects,dropOnDeath);
+
+    public Monster buildMonster() {
+        return new Monster(face, name, attSet, w, ects, dropOnDeath.getActorSet());
     }
 }

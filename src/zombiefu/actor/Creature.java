@@ -7,6 +7,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import zombiefu.human.Human;
@@ -17,6 +18,7 @@ import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
 import zombiefu.util.DamageAnimation;
 import zombiefu.exception.NoDirectionGivenException;
+import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
@@ -25,40 +27,45 @@ import zombiefu.util.ZombieTools;
 public abstract class Creature extends NotPassableActor {
 
     private static final double EXPERT_BONUS = 1.5; // Faktor
-    
-    protected int healthPoints;
-    protected int attackValue;
-    protected int defenseValue;
+    protected HashMap<Attribute, Integer> attributSet;
     protected Discipline discipline;
-    private int dazed;
+    protected int dazed;
+    protected int healthPoints;
     protected String name;
     protected ViewField fov;
     protected int sichtweite;
     protected boolean godMode;
 
-    public Creature(ColoredChar face, String n, int h, int a, int d) {
+    public static final HashMap<Attribute, Integer> getDefaultAttributeSet() {
+        HashMap<Attribute, Integer> attSet = new HashMap<>();
+        for (Attribute att : Attribute.values()) {
+            attSet.put(att, 1);
+        }
+        return attSet;
+    }
+
+    public Creature(ColoredChar face, String n, HashMap<Attribute, Integer> a) {
         super(face);
         dazed = 0;
         name = n;
-        healthPoints = h;
-        attackValue = a;
-        defenseValue = d;
+        attributSet = a;
+        healthPoints = a.get(Attribute.MAXHP);
+    }
+
+    public Creature(ColoredChar face, String n) {
+        this(face, n, getDefaultAttributeSet());
     }
 
     public Discipline getDiscipline() {
         return discipline;
     }
-    
+
     public boolean isGod() {
         return godMode;
     }
 
-    public int getAttackValue() {
-        return attackValue;
-    }
-
-    public int getDefenseValue() {
-        return defenseValue;
+    public int getAttribute(Attribute att) {
+        return attributSet.get(att);
     }
 
     public int getHealthPoints() {
@@ -67,14 +74,6 @@ public abstract class Creature extends NotPassableActor {
 
     public Collection<Coordinate> getViewField() {
         return fov.getViewField(world(), pos(), sichtweite);
-    }
-
-    public Creature(ColoredChar face, String name) {
-        this(face, name, 1, 1, 1);
-    }
-
-    public Creature(ColoredChar face) {
-        this(face, "Zombie");
     }
 
     public abstract Weapon getActiveWeapon();
@@ -99,16 +98,16 @@ public abstract class Creature extends NotPassableActor {
         if (getActiveWeapon() == null) {
             return;
         }
-        
+
         ZombieTools.log("hurtCreature(): " + getName() + " hurts "
                 + cr.getName() + " with " + getActiveWeapon().getName()
                 + " (Damage: " + getActiveWeapon().getDamage()
-                + ", Experte: " + getActiveWeapon().isExpert(discipline) + "). Attack value: " + attackValue + ", Defense Value: "
-                + cr.defenseValue + ", Faktor: " + faktor);
+                + ", Experte: " + getActiveWeapon().isExpert(discipline) + "). Attack value: " + getAttribute(Attribute.ATTACK) + ", Defense Value: "
+                + cr.getAttribute(Attribute.DEFENSE) + ", Faktor: " + faktor);
 
         // Calculate damage
         int damage = (int) (((double) getActiveWeapon().getDamage())
-                * ((double) attackValue / (double) cr.defenseValue)
+                * ((double) getAttribute(Attribute.ATTACK) / (double) cr.getAttribute(Attribute.DEFENSE))
                 * (double) Dice.global.nextInt(20, 40) / 30 * faktor * (getActiveWeapon().isExpert(discipline) ? EXPERT_BONUS : 1.0));
         if (damage == 0) {
             damage = 1;
@@ -262,15 +261,15 @@ public abstract class Creature extends NotPassableActor {
 
             }
         }
-        
+
         if (this instanceof Monster && !(actor instanceof Player)) {
             throw new CannotMoveToIllegalFieldException();
-        } 
-        
+        }
+
         if (getActiveWeapon().getTyp() == WeaponType.NAHKAMPF) {
             attack(dir);
         } else {
-            if(this instanceof Player) {
+            if (this instanceof Player) {
                 ZombieGame.newMessage("Du trägst keine Nahkampfwaffe!");
             }
             throw new CannotMoveToIllegalFieldException();

@@ -5,22 +5,15 @@ import jade.core.World;
 import jade.gen.Generator;
 import jade.ui.TermPanel;
 import jade.util.Dice;
-import jade.util.datatype.ColoredChar;
 import java.util.ArrayList;
 import zombiefu.monster.Monster;
 import zombiefu.player.Player;
-import zombiefu.human.Shop;
-import zombiefu.monster.Zombie;
 import zombiefu.actor.Door;
 import zombiefu.items.Item;
 import zombiefu.actor.Teleporter;
 import zombiefu.util.DamageAnimation;
 import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.human.Human;
-import zombiefu.human.DealingHuman;
-import zombiefu.human.GivingHuman;
-import zombiefu.human.TalkingHuman;
-import zombiefu.items.MensaCard;
 import zombiefu.util.ConfigHelper;
 import zombiefu.util.ZombieGame;
 
@@ -92,7 +85,7 @@ public class Level extends World {
         int newEnemies = (int) (semester * 0.005 * numberOfPassableFields * Dice.global.nextInt(40, 60) / 50);
         // 6 normale Zombies kommen hinzu
         for (int i = oldEnemies; i <= newEnemies; i++) {
-           addActor(new Zombie());
+           addActor(ConfigHelper.newMonsterByName("Zombie"));
         }
     }
 
