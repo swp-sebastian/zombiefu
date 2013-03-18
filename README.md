@@ -21,8 +21,8 @@ Voraussetzung: Java 7.
 
 ## Anleitung ##
 
-Um zwischen den Maps Campus oder Testraum zu wechseln muss in der Datei
-/src/sources/startinfo.txt die 2. Zeile auskommentiert werden oder nicht.
+Um zwischen den Maps Campus oder Testraum zu wechseln muss in der Datei config.cfg
+der Eintrag `player.start.map` auskommentiert werden oder nicht.
 
 Steuerung (lässt sich in der config.cfg ändern):
 + `wasd` zum Bewegen
@@ -46,7 +46,7 @@ Richtung angegeben wurde.  Greift man einen
 Menschen/Mensa-Shop/Mensa-Automaten (absichtlicher oder UNABSICHTLICH)
 an, wird man exmatrikuliert.
 
-Items lassen sich im Ordner /src/sources/items auslesen und unter
+Items lassen sich im Ordner /res/ auslesen und unter
 Umständen konfigurieren Sie werden automatisch beim Darüberlaufen
 eingesammelt.
 + HealingItems (im Inventar)
