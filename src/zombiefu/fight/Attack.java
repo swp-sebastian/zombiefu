@@ -71,7 +71,7 @@ public class Attack {
 
     private Coordinate getMissileImpactPoint(Direction dir, int maxDistance) {
         Direction noiseDirection = ZombieTools.getRotatedDirection(dir, 90);
-        int noise = (int) Math.floor(((double) maxDistance) * Math.pow(((double) Dice.global.nextInt(1000)) / 1000.0, attacker.getAttribute(Attribute.DEXTERITY) - 3) / (Dice.global.chance() ? 4.0 : -4.0));
+        int noise = (int) Math.floor(((double) maxDistance) * ZombieTools.getRandomDouble(0,1,attacker.getAttribute(Attribute.DEXTERITY) - 3) / (Dice.global.chance() ? 4.0 : -4.0));
 
         Coordinate neu = attacker.pos().getTranslated(dir.dx() * maxDistance, dir.dy() * maxDistance).getTranslated(noiseDirection.dx() * noise, noiseDirection.dy() * noise);
 
@@ -93,7 +93,7 @@ public class Attack {
         // Calculate damage
         int damage = (int) (((double) weapon.getDamage())
                 * ((double) attacker.getAttribute(Attribute.ATTACK) / (double) cr.getAttribute(Attribute.DEFENSE))
-                * (double) Dice.global.nextInt(20, 40) / 30 * faktor * (weapon.isExpert(attacker.getDiscipline()) ? EXPERT_BONUS : 1.0));
+                * ZombieTools.getRandomDouble(0.7, 1.3) * faktor * (weapon.isExpert(attacker.getDiscipline()) ? EXPERT_BONUS : 1.0));
         if (damage == 0) {
             damage = 1;
         }

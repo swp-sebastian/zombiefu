@@ -1,12 +1,12 @@
 package zombiefu.builder;
 
-import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
 import java.util.Set;
 import zombiefu.items.Item;
 import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
 import zombiefu.player.Discipline;
+import zombiefu.util.ZombieTools;
 
 /**
  *
@@ -44,7 +44,7 @@ public class WeaponBuilder extends ItemBuilder {
         if (munition == -1) {
             w.setUnlimitedMunition(true);
         } else {
-            w.addMunition(Dice.global.nextInt(1, munition));
+            w.addMunition((int) (munition * ZombieTools.getRandomDouble(1, munition, -3)));
         }
         return w;
     }

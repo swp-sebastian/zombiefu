@@ -172,10 +172,11 @@ public class ConfigHelper {
             attSet.put(Attribute.ATTACK, config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1);
             attSet.put(Attribute.DEFENSE, config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1);
             attSet.put(Attribute.DEXTERITY, config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1);
+            boolean staticAttributes = config.get("staticAttributes","false").equals("true");
             Weapon w = newWeaponByName(config.get("weapon"));
             int ects = Integer.decode(config.get("ects"));
             ITMString itemDrop = new ITMString(config.get("drop"));
-            monsters.put(s, new MonsterBuilder(c, name, attSet, w, ects, itemDrop));
+            monsters.put(s, new MonsterBuilder(c, name, attSet, w, ects, itemDrop, staticAttributes));
         }
         return monsters.get(s).buildMonster();
     }

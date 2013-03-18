@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
-import zombiefu.util.ZombieGame;
 
 public class ZombieTools {
 
@@ -24,14 +23,31 @@ public class ZombieTools {
             return dir;
         }
         Direction[] dirs = new Direction[]{Direction.NORTH, Direction.NORTHEAST, Direction.EAST, Direction.SOUTHEAST, Direction.SOUTH, Direction.SOUTHWEST, Direction.WEST, Direction.NORTHWEST};
-        for(int i = 0; i < 8; i++)
-            if(dirs[i] == dir)
+        for (int i = 0; i < 8; i++) {
+            if (dirs[i] == dir) {
                 return dirs[(i + rotation / 45) % 8];
+            }
+        }
         return null;
     }
 
     public static Direction getRandomDirection() {
         return Dice.global.choose(getAllowedDirections());
+    }
+
+    public static Double getRandomDouble(double a, double b, int v) {
+        double x = Math.random();
+        if (v > 0) {
+            return 1 - Math.pow(1 - x, v);
+        }
+        if (v < 0) {
+            return Math.pow(x, -v);
+        }
+        return v * (b - a) + a;
+    }
+
+    public static Double getRandomDouble(double a, double b) {
+        return getRandomDouble(a, b, 0);
     }
 
     public static Color getRandomColor(Dice d) {
