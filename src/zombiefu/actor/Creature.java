@@ -251,8 +251,12 @@ public abstract class Creature extends NotPassableActor {
 
         if (this instanceof Player) {
             if (actor instanceof Door) {
-                ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
-                throw new CannotMoveToIllegalFieldException();
+                if (isGod()) {
+                    ((Door) actor).open();
+                } else {
+                    ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
+                    throw new CannotMoveToIllegalFieldException();
+                }
             } else if (actor instanceof Human) {
                 ((Human) actor).talkToPlayer((Player) this);
                 return;
