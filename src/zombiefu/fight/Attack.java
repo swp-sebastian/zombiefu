@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import zombiefu.actor.Creature;
 import zombiefu.actor.NotPassableActor;
 import zombiefu.exception.NoEnemyHitException;
@@ -101,17 +103,17 @@ public class Attack {
         cr.hurt(damage, attacker);
     }
 
-    private void dazeCreature(Creature cr) {
+    private void dazeCreature(Creature cr) throws NoEnemyHitException {
         if (Dice.global.chance((int) (100 * weapon.getDazeProbability()))) {
             ZombieTools.log("dazeCreature(): " + attacker.getName() + " dazes " + cr.getName() + " for " + weapon.getDazeTurns() + " turns.");
             ZombieGame.newMessage(attacker.getName() + " hat " + cr.getName() + " für " + String.valueOf(weapon.getDazeTurns()) + " Runden gelähmt.");
             cr.daze(weapon.getDazeTurns(), cr);
-        } else if (weapon.getDamage() == 0) {
-            ZombieGame.newMessage(attacker.getName() + " hat verfehlt.");
+        } else {
+            throw new NoEnemyHitException();
         }
     }
 
-    private void attackCreature(Creature cr) {
+    private void attackCreature(Creature cr) throws NoEnemyHitException {
 
         // Wer keine Weapon hat, kann nicht angreifen!
         if (weapon == null) {
@@ -123,7 +125,13 @@ public class Attack {
         }
 
         if (weapon.getDazeTurns() > 0) {
-            dazeCreature(cr);
+            try {
+                dazeCreature(cr);
+            } catch (NoEnemyHitException ex) {
+                if (weapon.getDamage() == 0) {
+                    throw ex;
+                }
+            }
         }
     }
 
@@ -161,20 +169,44 @@ public class Attack {
         attackCreatureSet(targets);
     }
 
+    private void shakeImpactPoint() {
+    }
+    
+    public int getSuccessProbability() {
+        return (int) (100.0 - 90.0 * Math.pow(Math.E, attacker.getAttribute(Attribute.DEXTERITY) / (-5.0)));        
+    }
+
     public void perform() throws WeaponHasNoMunitionException, NoEnemyHitException {
         weapon.useMunition();
-
-        if (wtype.isRanged()) {
-            impactPoint = findTargetInDirection(dir, weapon.getRange());
-        } else {
-            impactPoint = attacker.pos().getTranslated(dir);
-        }
-
+        
         try {
-            if (wtype.isDirected()) {
-                attackCoordinate(impactPoint);
-            } else {
-                createDetonation(impactPoint, weapon.getBlastRadius(), wtype.isRanged());
+            switch (wtype) {
+                case NAHKAMPF:
+                    // Dexterity decides, whether the attacker hits
+                    impactPoint = attacker.pos().getTranslated(dir);
+                    if (Dice.global.chance(getSuccessProbability())) {
+                        attackCoordinate(impactPoint);
+                    } else {
+                        throw new NoEnemyHitException();
+                    }
+                    break;
+                case FERNKAMPF:
+                    // Dexterity determines the accuracy
+                    impactPoint = findTargetInDirection(dir, weapon.getRange());
+                    shakeImpactPoint();
+                    attackCoordinate(impactPoint);
+                case UMKREIS:
+                    // Dexterity decides, whether the attacker accidently hits himself
+                    impactPoint = attacker.pos().getTranslated(dir);
+                    createDetonation(impactPoint, weapon.getBlastRadius(), !Dice.global.chance(getSuccessProbability()));
+                    break;
+                case GRANATE:
+                    // Dexterity determines the accuracy
+                    impactPoint = findTargetInDirection(dir, weapon.getRange());
+                    shakeImpactPoint();
+                    createDetonation(impactPoint, weapon.getBlastRadius(), true);
+                default:
+                    throw new AssertionError(wtype.name());
             }
         } catch (NoEnemyHitException ex) {
             throw ex;
@@ -192,16 +224,20 @@ public class Attack {
                 return 1.0;
             case FERNKAMPF:
                 Guard.verifyState(cr.pos().equals(impactPoint));
-                distance = attacker.pos().distance(impactPoint) / weapon.getRange();
-                return 1 - distance * distance / 2;
+                distance = attacker.pos().distance(impactPoint) / ((double) weapon.getRange());
+                return 1.0 - distance * distance / 2.0;
             case UMKREIS:
                 distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
-                return 1 - distance * distance / 2;
+                return 1.0 - distance * distance / 2.0;
             case GRANATE:
                 distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
-                return 1 - distance * distance / 2;
+                return 1.0 - distance * distance / 2.0;
             default:
                 throw new AssertionError(wtype.name());
         }
+    }
+
+    private Exception NoEnemyHitException() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
