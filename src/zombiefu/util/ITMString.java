@@ -35,6 +35,9 @@ public class ITMString {
 
     public Set<Actor> getActorSet() {
         Set<Actor> ret = new HashSet<>();
+        if(itmString == null || itmString.equals("")) {
+            return ret;
+        }
         String[] strings = itmString.split(" ");
         for (String s : strings) {
             Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)x?([0-9]*)$").matcher(s);

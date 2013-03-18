@@ -23,7 +23,7 @@ public class Door extends NotPassableActor {
     public void open() {
         world().removeActor(this);
         expire();
-        ZombieGame.newMessage("Du konntest die Tür " + getName() + " aufschließen.");
         ZombieGame.refreshMainFrame();
+        ZombieGame.newMessage("Du hast die Tür " + getName() + " aufgeschlossen.");
     }
 }

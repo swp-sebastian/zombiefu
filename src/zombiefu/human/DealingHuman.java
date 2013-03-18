@@ -8,7 +8,7 @@ import jade.util.datatype.ColoredChar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import zombiefu.exception.CanNotAffordException;
+import zombiefu.exception.CannotAffordException;
 import zombiefu.exception.DoesNotPossessThisItemException;
 import zombiefu.items.MensaCard;
 import zombiefu.player.Player;

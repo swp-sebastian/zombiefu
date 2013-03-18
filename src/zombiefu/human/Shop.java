@@ -3,7 +3,7 @@ package zombiefu.human;
 import zombiefu.util.ZombieGame;
 import jade.util.datatype.ColoredChar;
 import java.util.HashMap;
-import zombiefu.exception.CanNotAffordException;
+import zombiefu.exception.CannotAffordException;
 import zombiefu.builder.ItemBuilder;
 import zombiefu.player.Player;
 
@@ -28,7 +28,7 @@ public class Shop extends Human {
                 pl.obtainItem(item.buildItem());
             }
             ZombieGame.newMessage("Bitte beehren sie uns bald wieder.");
-        } catch (CanNotAffordException ex) {
+        } catch (CannotAffordException ex) {
             ZombieGame.newMessage("Das kannst Du Dir nicht leisten.");
         }
     }

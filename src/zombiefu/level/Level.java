@@ -6,7 +6,7 @@ import jade.gen.Generator;
 import jade.ui.TermPanel;
 import jade.util.Dice;
 import java.util.ArrayList;
-import zombiefu.monster.Monster;
+import zombiefu.actor.Monster;
 import zombiefu.player.Player;
 import zombiefu.actor.Door;
 import zombiefu.items.Item;
