@@ -11,7 +11,7 @@ import zombiefu.player.Player;
 import zombiefu.actor.Door;
 import zombiefu.items.Item;
 import zombiefu.actor.Teleporter;
-import zombiefu.util.DamageAnimation;
+import zombiefu.fight.DamageAnimation;
 import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.human.Human;
 import zombiefu.util.ConfigHelper;

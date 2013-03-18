@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
@@ -18,6 +20,7 @@ import zombiefu.exception.NoPlaceToMoveException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.TargetNotFoundException;
 import zombiefu.exception.NoDirectionGivenException;
+import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.ki.Dijkstra;
 import zombiefu.ki.MoveAlgorithm;
@@ -51,7 +54,7 @@ public class Monster extends Creature {
             try {
                 tryToMove(d);
                 return;
-            } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
+            } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException | NoEnemyHitException | WeaponHasNoMunitionException ex) {
             }
         }
         throw new NoPlaceToMoveException();
@@ -82,7 +85,7 @@ public class Monster extends Creature {
     protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
         try {
             tryToMove(directionToPlayer());
-        } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
+        } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException | NoEnemyHitException ex) {
         }
     }
 

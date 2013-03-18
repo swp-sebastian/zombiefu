@@ -24,6 +24,7 @@ import zombiefu.exception.CannotBeConsumedException;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.DoesNotPossessThisItemException;
 import zombiefu.exception.MaximumHealthPointException;
+import zombiefu.exception.NoEnemyHitException;
 import zombiefu.fov.ViewEverything;
 import zombiefu.human.Human;
 import zombiefu.items.ConsumableItem;
@@ -182,6 +183,9 @@ public class Player extends Creature implements Camera {
                 ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
                 act();                
             }
+        } catch (NoEnemyHitException ex) {
+            ZombieGame.newMessage("Niemanden getroffen!");
+            act();
         }
         if (!getActiveWeapon().hasMunition()) {
             removeWeapon(getActiveWeapon().getName());
