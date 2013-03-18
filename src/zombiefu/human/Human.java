@@ -16,7 +16,7 @@ public abstract class Human extends Creature {
     }
     
     @Override
-    public void act() {
+    public void pleaseAct() {
     }
 
     @Override
@@ -29,7 +29,6 @@ public abstract class Human extends Creature {
         if (killer == ZombieGame.getPlayer()) {
             ZombieGame.newMessage("Du hast einen Menschen getötet. Exmatrikulation!");
             killer.killed(null);
-
         }
     }
 
@@ -39,4 +38,9 @@ public abstract class Human extends Creature {
     }
 
     public abstract void talkToPlayer(Player pl);
+    
+    @Override
+    public boolean isEnemy(Creature c) {
+        return false;
+    }
 }

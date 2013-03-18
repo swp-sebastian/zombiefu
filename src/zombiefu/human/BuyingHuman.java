@@ -6,7 +6,7 @@ package zombiefu.human;
 
 import jade.util.datatype.ColoredChar;
 import java.util.Map;
-import zombiefu.exception.CanNotAffordException;
+import zombiefu.exception.CannotAffordException;
 import zombiefu.exception.DoesNotPossessThisItemException;
 import zombiefu.items.Item;
 import zombiefu.player.Player;

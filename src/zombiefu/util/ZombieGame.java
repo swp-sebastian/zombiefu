@@ -136,24 +136,22 @@ public class ZombieGame {
 
     public static void refreshBottomFrame() {
         frame.bottomTerm().clearBuffer();
-        frame.bottomTerm().bufferString(
-                0,
-                0,
-                "Waffe: " + player.getActiveWeapon().getName() + " ("
+        String firstLine = "Waffe: " + player.getActiveWeapon().getName() + " ("
                 + player.getActiveWeapon().getMunitionToString()
                 + " / " + player.getActiveWeapon().getDamage() + ") "
                 + " | HP: " + player.getHealthPoints() + "/"
                 + player.getAttribute(Attribute.MAXHP)+ " | A: "
                 + player.getAttribute(Attribute.ATTACK)+ " | D: "
                 + player.getAttribute(Attribute.DEFENSE) + " | I: "
-                + player.getAttribute(Attribute.DEXTERITY));
-        frame.bottomTerm().bufferString(
-                0,
-                1,
-                "Ort: " + ((Level) player.world()).getName() + "(" + player.pos().x() + "|" + player.pos().y() + ")"
+                + player.getAttribute(Attribute.DEXTERITY);
+        String secondLine = "Ort: " + ((Level) player.world()).getName() + "(" + player.pos().x() + "|" + player.pos().y() + ")"
                 + " | € " + player.getMoney() + " | ECTS "
                 + player.getECTS() + " | Sem " + player.getSemester() + " | GodMode: "
-                + (player.isGod() ? "an" : "aus"));
+                + (player.isGod() ? "an" : "aus");
+        if(player.isDazed())
+            secondLine += " | BETÄUBT!";
+        frame.bottomTerm().bufferString(0,0,firstLine);
+        frame.bottomTerm().bufferString(0,1,secondLine);
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
     }
