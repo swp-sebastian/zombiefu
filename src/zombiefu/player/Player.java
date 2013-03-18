@@ -185,7 +185,7 @@ public class Player extends Creature implements Camera {
             }
         } catch (NoEnemyHitException ex) {
             ZombieGame.newMessage("Du hast verfehlt!");
-            act();
+            ex.close();
         }
         if (!getActiveWeapon().hasMunition()) {
             removeWeapon(getActiveWeapon().getName());

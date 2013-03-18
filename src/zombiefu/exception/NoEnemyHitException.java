@@ -4,13 +4,22 @@
  */
 package zombiefu.exception;
 
+import zombiefu.fight.Attack;
+
 /**
  *
  * @author tomas
  */
 public class NoEnemyHitException extends Exception {
 
-    public NoEnemyHitException() {
+    Attack at;
+    
+    public NoEnemyHitException(Attack at) {
+        this.at = at;
+    }
+    
+    public void close() {
+        at.close();
     }
     
 }
