@@ -35,7 +35,6 @@ import zombiefu.util.ZombieTools;
 public class Attack {
 
     private static final double EXPERT_BONUS = 1.5; // Faktor
-    
     private Creature attacker;
     private Weapon weapon;
     private WeaponType wtype;
@@ -73,12 +72,12 @@ public class Attack {
 
     private Coordinate getMissileImpactPoint(Direction dir, int maxDistance) {
         Direction noiseDirection = ZombieTools.getRotatedDirection(dir, 90);
-        int noise = 0;
-        
-        Coordinate neu = attacker.pos().getTranslated(dir.dx()*maxDistance, dir.dy()*maxDistance).getTranslated(noiseDirection.dx()*noise,noiseDirection.dy()*noise);
-        
+        int noise = (int) Math.floor(((double) maxDistance) * Math.pow(((double) Dice.global.nextInt(1000)) / 1000.0, attacker.getAttribute(Attribute.DEXTERITY) - 3) / (Dice.global.chance() ? 4.0 : -4.0));
+
+        Coordinate neu = attacker.pos().getTranslated(dir.dx() * maxDistance, dir.dy() * maxDistance).getTranslated(noiseDirection.dx() * noise, noiseDirection.dy() * noise);
+
         List<Coordinate> partialPath = new ProjectileBresenham(weapon.getRange()).getPartialPath(world, attacker.pos(), neu);
-        
+
         return partialPath.get(partialPath.size() - 1);
     }
 
@@ -194,7 +193,7 @@ public class Attack {
             case NAHKAMPF:
                 Guard.verifyState(cr.pos().equals(impactPoint));
                 return 1.0;
-            case FERNKAMPF:               
+            case FERNKAMPF:
                 dump();
                 Guard.verifyState(cr.pos().equals(impactPoint));
                 distance = attacker.pos().distance(impactPoint) / ((double) weapon.getRange());
@@ -209,7 +208,7 @@ public class Attack {
                 throw new AssertionError(wtype.name());
         }
     }
-    
+
     private int getSuccessProbability() {
         return (int) (100.0 - 90.0 * Math.pow(Math.E, attacker.getAttribute(Attribute.DEXTERITY) / (-5.0)));
     }
@@ -240,7 +239,7 @@ public class Attack {
                     break;
                 case GRANATE:
                     // Dexterity determines the accuracy
-                    impactPoint = getMissileImpactPoint(dir, weapon.getRange());                    
+                    impactPoint = getMissileImpactPoint(dir, weapon.getRange());
                     createDetonation(impactPoint, weapon.getBlastRadius(), true);
                     break;
                 default:
@@ -251,14 +250,13 @@ public class Attack {
         }
         close();
     }
-    
+
     public void close() {
         clearAllAnimations();
     }
 
     // Debug
     private void dump() {
-         ZombieTools.log("Attack-Dump: Attacker " + attacker.getName() + ", Weapon: " + weapon.getName() + " (" + wtype.toString()+ "), Direction: " + dir.toString() + ", impactPoint: " + impactPoint.toString());
+        ZombieTools.log("Attack-Dump: Attacker " + attacker.getName() + ", Weapon: " + weapon.getName() + " (" + wtype.toString() + "), Direction: " + dir.toString() + ", impactPoint: " + impactPoint.toString());
     }
-
 }
