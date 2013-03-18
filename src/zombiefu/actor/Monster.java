@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
@@ -21,7 +19,7 @@ import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.TargetNotFoundException;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.TargetIsNotInThisWorldException;
-import zombiefu.ki.StupidMover;
+import zombiefu.ki.Dijkstra;
 import zombiefu.ki.MoveAlgorithm;
 import zombiefu.player.Attribute;
 import zombiefu.player.Player;
@@ -41,7 +39,7 @@ public class Monster extends Creature {
         ectsYield = ects;
         dropOnDeath = drop;
 
-        movealg = new StupidMover();
+        movealg = new Dijkstra();
         fov = new RayCaster();
         sichtweite = 10;
     }
