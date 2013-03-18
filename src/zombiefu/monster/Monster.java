@@ -3,7 +3,7 @@ package zombiefu.monster;
 import jade.core.Actor;
 import jade.fov.RayCaster;
 import zombiefu.items.MensaCard;
-import zombiefu.items.Waffe;
+import zombiefu.items.Weapon;
 import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
@@ -32,11 +32,11 @@ import zombiefu.util.ZombieTools;
 public class Monster extends Creature {
 
     protected MoveAlgorithm movealg;
-    private Waffe waffe;
+    private Weapon waffe;
     protected int ectsYield;
     private Set<Actor> dropOnDeath;
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w,
+    public Monster(ColoredChar face, String n, int h, int a, int d, Weapon w,
             int ects, int s, MoveAlgorithm m, Set<Actor> dropOnDeath) {
         super(face, n, h, a, d);
         waffe = w;
@@ -54,12 +54,12 @@ public class Monster extends Creature {
         }
     }
 
-    public Monster(ColoredChar face, String name, int h, int a, int d, Waffe w, int ects,
+    public Monster(ColoredChar face, String name, int h, int a, int d, Weapon w, int ects,
             Set<Actor> dropOnDeath) {
         this(face, name, h, a, d, w, ects, 10, new StupidMover(), dropOnDeath);
     }
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Waffe w,
+    public Monster(ColoredChar face, String n, int h, int a, int d, Weapon w,
             int ects) {
         this(face, n, h, a, d, w, ects, 10, new StupidMover(), null);
     }
@@ -130,7 +130,7 @@ public class Monster extends Creature {
     }
 
     @Override
-    public Waffe getActiveWeapon() {
+    public Weapon getActiveWeapon() {
         return waffe;
     }
 

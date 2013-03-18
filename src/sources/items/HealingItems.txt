@@ -1,4 +1,0 @@
-// Benutzung:
-// Name HP Char Farbe
-Kaffee 40 ☕ CD853F
-Mate 30 M EE7621

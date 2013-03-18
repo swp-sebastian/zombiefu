@@ -3,7 +3,7 @@ package zombiefu.builder;
 import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
 import java.util.Set;
-import zombiefu.items.Waffe;
+import zombiefu.items.Weapon;
 import zombiefu.monster.Monster;
 
 public class MonsterBuilder {
@@ -14,10 +14,10 @@ public class MonsterBuilder {
     private int attack;
     private int defense;
     private int ects;
-    private Waffe w;
+    private Weapon w;
     private Set<Actor> dropOnDeath;
     
-    public MonsterBuilder(ColoredChar face, String name,int hp,int attack,int defense, Waffe w, int ects, Set<Actor> dropOnDeath){
+    public MonsterBuilder(ColoredChar face, String name,int hp,int attack,int defense, Weapon w, int ects, Set<Actor> dropOnDeath){
         this.name = name;
         this.face = face;
         this.hp = hp;
