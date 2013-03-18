@@ -32,7 +32,7 @@ public class Player extends Creature implements Camera {
 
     private final static int ECTS_FOR_NEXT_SEMESTER = 30;
     private final static ViewField DEFAULT_VIEWFIELD = new RayCaster();
-    private int intelligenceValue;
+    private int dexterityValue;
     private int money;
     private int ects;
     private int semester;
@@ -41,12 +41,12 @@ public class Player extends Creature implements Camera {
     private HashMap<String, Weapon> waffen;
     private ArrayList<String> waffenListe;
 
-    public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribut, Integer> attr) {
+    public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribute, Integer> attr) {
 
-        super(face, name, attr.get(Attribut.MAXHP), attr.get(Attribut.ATTACK), attr.get(Attribut.DEFENSE));
+        super(face, name, attr.get(Attribute.MAXHP), attr.get(Attribute.ATTACK), attr.get(Attribute.DEFENSE));
 
-        this.maximalHealthPoints = attr.get(Attribut.MAXHP);
-        this.intelligenceValue = attr.get(Attribut.INTELLIGENCE);
+        this.maximalHealthPoints = attr.get(Attribute.MAXHP);
+        this.dexterityValue = attr.get(Attribute.DEXTERITY);
         this.godMode = true;
         this.money = 0;
         this.ects = 0;
@@ -77,8 +77,8 @@ public class Player extends Creature implements Camera {
         return maximalHealthPoints;
     }
 
-    public int getIntelligenceValue() {
-        return intelligenceValue;
+    public int getDexterity() {
+        return dexterityValue;
     }
 
     public HashMap<String, ArrayList<ConsumableItem>> getInventar() {
@@ -314,7 +314,7 @@ public class Player extends Creature implements Camera {
     public void levelUp() {
         semester += 1;
         ZombieGame.refreshBottomFrame();
-        Attribut att = ZombieGame.askPlayerForAttrbuteToRaise();
+        Attribute att = ZombieGame.askPlayerForAttrbuteToRaise();
         int step = att.getStep();
         switch (att) {
             case MAXHP:
@@ -326,8 +326,8 @@ public class Player extends Creature implements Camera {
             case DEFENSE:
                 defenseValue += step;
                 break;
-            case INTELLIGENCE:
-                intelligenceValue += step;
+            case DEXTERITY:
+                dexterityValue += step;
                 break;
             default:
                 throw new AssertionError(att.name());

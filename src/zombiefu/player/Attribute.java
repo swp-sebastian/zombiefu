@@ -8,15 +8,15 @@ package zombiefu.player;
  *
  * @author tomas
  */
-public enum Attribut {
+public enum Attribute {
     MAXHP(10),
     ATTACK(1),
     DEFENSE(1),
-    INTELLIGENCE(1);
+    DEXTERITY(1);
     
     private int step;
     
-    private Attribut(int step) {
+    private Attribute(int step) {
         this.step = step;        
     }
     

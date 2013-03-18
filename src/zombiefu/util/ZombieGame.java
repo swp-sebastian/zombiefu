@@ -20,7 +20,7 @@ import zombiefu.builder.ItemBuilder;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
-import zombiefu.player.Attribut;
+import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
 
@@ -68,17 +68,32 @@ public class ZombieGame {
     public static void initialize() {
         Discipline discipline = askPlayerForDiscipline();
         globalmap = ConfigHelper.getLevelByName(settings.globalMap);
-
-        ArrayList<String> waffen = new ArrayList<String>();
-        waffen.add("SuperFist");
-
-        player = new Player(settings.playerChar, settings.playerName, discipline, settings.playerAttributes);
-        Set<Actor> items = ConfigHelper.decodeITM(settings.playerInventar);
+        
+        // Attribute laden.
+        HashMap<Attribute,Integer> atts = new HashMap<Attribute,Integer>();
+        for(Attribute att: Attribute.values()) {
+            Integer setting = settings.playerAttributes.get(att); 
+            if(setting == null) {
+                atts.put(att, setting);
+            } else {
+                atts.put(att, discipline.getBaseAttribute(att));
+            }
+        }
+        
+        // Spieler erzeugen        
+        player = new Player(settings.playerChar, settings.playerName, discipline, atts);
+        
+        // StartItems erzeugen
+        Set<Actor> items = ConfigHelper.decodeITM(settings.playerInventar == null ? discipline.getItems(): settings.playerInventar);
         for (Actor a : items) {
             Guard.verifyState(a instanceof Item);
             player.obtainItem((Item) a);
         }
-
+        
+        // Gib Spieler Geld
+        player.addMoney(discipline.getMoney());
+        
+        // Setze Spieler in Welt
         player.changeWorld(ConfigHelper.getLevelByName(settings.playerStartMap));
         if (player.world().insideBounds(settings.playerStartCoord)) {
             player.setPos(settings.playerStartCoord);
@@ -131,7 +146,7 @@ public class ZombieGame {
                 + player.getMaximalHealthPoints() + " | A: "
                 + player.getAttackValue() + " | D: "
                 + player.getDefenseValue() + " | I: "
-                + player.getIntelligenceValue());
+                + player.getDexterity());
         frame.bottomTerm().bufferString(
                 0,
                 1,
@@ -291,22 +306,22 @@ public class ZombieGame {
         return output;
     }
 
-    public static Attribut askPlayerForAttrbuteToRaise() {
+    public static Attribute askPlayerForAttrbuteToRaise() {
         char alpha = showStaticImage("askForAttribute");
-        Attribut output;
+        Attribute output;
 
         switch (alpha) {
             case 'a':
-                output = Attribut.MAXHP;
+                output = Attribute.MAXHP;
                 break;
             case 'b':
-                output = Attribut.ATTACK;
+                output = Attribute.ATTACK;
                 break;
             case 'c':
-                output = Attribut.DEFENSE;
+                output = Attribute.DEFENSE;
                 break;
             case 'd':
-                output = Attribut.INTELLIGENCE;
+                output = Attribute.DEXTERITY;
                 break;
             default:
                 output = askPlayerForAttrbuteToRaise();
