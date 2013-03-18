@@ -3,6 +3,7 @@ package zombiefu.items;
 import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
 import java.util.Set;
+import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.player.Discipline;
 
 /**
@@ -62,7 +63,10 @@ public class Weapon extends Item {
         }
     }
 
-    public void useMunition() {
+    public void useMunition() throws WeaponHasNoMunitionException {
+        if (munition == 0) {
+            throw new WeaponHasNoMunitionException();
+        }
         if (munition == -1) {
             return;
         }
