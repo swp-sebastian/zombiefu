@@ -38,8 +38,8 @@ public class Player extends Creature implements Camera {
     private int semester;
     private int maximalHealthPoints;
     private HashMap<String, ArrayList<ConsumableItem>> inventar;
-    private HashMap<String, Weapon> waffen;
-    private ArrayList<String> waffenListe;
+    private HashMap<String, Weapon> weapons;
+    private ArrayList<String> weaponsList;
 
     public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribute, Integer> attr) {
 
@@ -54,8 +54,8 @@ public class Player extends Creature implements Camera {
         this.discipline = discipline;
 
         this.inventar = new HashMap<String, ArrayList<ConsumableItem>>();
-        this.waffen = new HashMap<String, Weapon>();
-        this.waffenListe = new ArrayList<String>();
+        this.weapons = new HashMap<String, Weapon>();
+        this.weaponsList = new ArrayList<String>();
 
         this.sichtweite = 20;
         this.fov = DEFAULT_VIEWFIELD;
@@ -179,15 +179,18 @@ public class Player extends Creature implements Camera {
             ZombieGame.newMessage("Du hast keine Munition für " + getActiveWeapon().getName());
             act();
         }
+        if (!getActiveWeapon().hasMunition()) {
+            removeWeapon(getActiveWeapon().getName());
+        }
     }
 
     public void switchWeapon(boolean backwards) {
         if (backwards) {
-            String tmp = waffenListe.remove(waffen.size() - 1);
-            waffenListe.add(0, tmp);
+            String tmp = weaponsList.remove(weapons.size() - 1);
+            weaponsList.add(0, tmp);
         } else {
-            String tmp = waffenListe.remove(0);
-            waffenListe.add(tmp);
+            String tmp = weaponsList.remove(0);
+            weaponsList.add(tmp);
         }
     }
 
@@ -211,12 +214,12 @@ public class Player extends Creature implements Camera {
     public void obtainItem(Item i) {
         if (i instanceof Weapon) {
             Weapon w = (Weapon) i;
-            if (waffenListe.contains(w.getName())) {
-                waffen.get(w.getName()).addMunition(w.getMunition());
+            if (weaponsList.contains(w.getName())) {
+                weapons.get(w.getName()).addMunition(w.getMunition());
                 w.expire();
             } else {
-                waffen.put(w.getName(), w);
-                waffenListe.add(w.getName());
+                weapons.put(w.getName(), w);
+                weaponsList.add(w.getName());
             }
         } else if (i instanceof ConsumableItem) {
             ConsumableItem c = (ConsumableItem) i;
@@ -238,10 +241,17 @@ public class Player extends Creature implements Camera {
         }
     }
 
+    public void removeWeapon(String itemName) {
+        if (weaponsList.contains(itemName)) {
+            weaponsList.remove(itemName);
+            weapons.remove(itemName);
+        }
+    }
+
     public Item removeItem(String itemName) throws DoesNotPossessThisItemException {
-        if (waffenListe.contains(itemName)) {
-            waffenListe.remove(itemName);
-            return waffen.remove(itemName);
+        if (weaponsList.contains(itemName)) {
+            weaponsList.remove(itemName);
+            return weapons.remove(itemName);
         } else {
             return removeConsumableItemFromInventar(itemName);
         }
@@ -249,7 +259,7 @@ public class Player extends Creature implements Camera {
 
     @Override
     public Weapon getActiveWeapon() {
-        return waffen.get(waffenListe.get(0));
+        return weapons.get(weaponsList.get(0));
     }
 
     public void heal(int i) throws MaximumHealthPointException {

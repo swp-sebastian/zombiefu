@@ -198,17 +198,14 @@ public abstract class Creature extends NotPassableActor {
     }
 
     public void attack(Direction dir) throws WeaponHasNoMunitionException {
-        if (!getActiveWeapon().hasMunition()) {
-            throw new WeaponHasNoMunitionException();
-        }
         WeaponType typ = getActiveWeapon().getTyp();
+        getActiveWeapon().useMunition();
         Coordinate ziel;
         if (typ.isRanged()) {
             ziel = findTargetInDirection(dir, getActiveWeapon().getRange());
         } else {
             ziel = pos().getTranslated(dir);
         }
-        getActiveWeapon().useMunition();
         if (typ.isDirected()) {
             attackCoordinate(ziel);
         } else {
