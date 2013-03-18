@@ -29,21 +29,21 @@ import zombiefu.ui.ZombieFrame;
  * @author tomas
  */
 public class ZombieGame {
-    
+
     private static ZombieSettings settings;
     private static ZombieFrame frame;
     private static Player player;
     private static Level globalmap;
-    
+
     public static void createGame(String[] args, String name) {
-        settings = new ZombieSettings(args, "src/sources");
+        settings = new ZombieSettings(args, "res");
         frame = new ZombieFrame(name);
     }
-    
+
     public static ZombieSettings getSettings() {
         return settings;
     }
-    
+
     public static char showStaticImage(String file) {
         try { //bevor fortgefahren wird
             ColoredChar[][] start = ConfigHelper.getImage(file);
@@ -61,32 +61,32 @@ public class ZombieGame {
             frame.mainTerm().refreshScreen();
         } catch (IOException ex) {
         }
-        
+
         return askPlayerForKey();
     }
-    
+
     public static void initialize() {
         Discipline discipline = askPlayerForDiscipline();
         globalmap = ConfigHelper.getLevelByName(settings.globalMap);
-        
+
         ArrayList<String> waffen = new ArrayList<String>();
         waffen.add("SuperFist");
-        
+
         player = new Player(settings.playerChar, settings.playerName, discipline, settings.playerAttributes);
         Set<Actor> items = ConfigHelper.decodeITM(settings.playerInventar);
         for (Actor a : items) {
             Guard.verifyState(a instanceof Item);
             player.obtainItem((Item) a);
         }
-        
+
         player.changeWorld(ConfigHelper.getLevelByName(settings.playerStartMap));
         if (player.world().insideBounds(settings.playerStartCoord)) {
             player.setPos(settings.playerStartCoord);
         }
-        
+
         frame.mainTerm().registerCamera(player, 40, 17);
     }
-    
+
     public static void setTopFrameContent(String s) {
         frame.topTerm().clearBuffer();
         if (s != null) {
@@ -94,7 +94,7 @@ public class ZombieGame {
         }
         frame.topTerm().refreshScreen();
     }
-    
+
     public static char askPlayerForKeyWithMessage(String s) {
         refreshMainFrame();
         setTopFrameContent(s);
@@ -104,21 +104,21 @@ public class ZombieGame {
         } catch (InterruptedException ex) {
             Guard.verifyState(false);
         }
-        
+
         setTopFrameContent(null);
         return key;
     }
-    
+
     public static void newMessage(String s) {
         askPlayerForKeyWithMessage(s);
     }
-    
+
     public static void refreshMainFrame() {
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferCameras();
         frame.mainTerm().refreshScreen();
     }
-    
+
     public static void refreshBottomFrame() {
         frame.bottomTerm().clearBuffer();
         frame.bottomTerm().bufferString(
@@ -142,7 +142,7 @@ public class ZombieGame {
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
     }
-    
+
     public static void startGame() {
         while (!player.expired()) {
             refreshMainFrame();
@@ -151,16 +151,16 @@ public class ZombieGame {
         }
         System.exit(0);
     }
-    
+
     public static void showHelp() {
         showStaticImage("help");
         refreshMainFrame();
     }
-    
+
     public static Player getPlayer() {
         return player;
     }
-    
+
     public static char askPlayerForKey() {
         try {
             return frame.mainTerm().getKey();
@@ -169,7 +169,7 @@ public class ZombieGame {
             return 0;
         }
     }
-    
+
     public static Direction askPlayerForDirection()
             throws NoDirectionGivenException {
         setTopFrameContent("Bitte gib die Richtung an.");
@@ -184,7 +184,7 @@ public class ZombieGame {
         }
         return d;
     }
-    
+
     public static String askPlayerForItemInInventar() {
         String output = null;
         HashMap<String, ArrayList<ConsumableItem>> inventar = getPlayer().getInventar();
@@ -218,21 +218,21 @@ public class ZombieGame {
         refreshMainFrame();
         return output;
     }
-    
+
     public static ItemBuilder askPlayerForItemToBuy(HashMap<ItemBuilder, Integer> itemMap) {
-        
+
         if (itemMap.isEmpty()) {
             ZombieGame.newMessage("Dieser Shop hat keine Artikel.");
             return null;
         }
-        
+
         ItemBuilder output = null;
-        
+
         ArrayList<ItemBuilder> itemSet = new ArrayList<ItemBuilder>();
         for (ItemBuilder it : itemMap.keySet()) {
             itemSet.add(it);
         }
-        
+
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferString(0, 0, "Artikel:");
         for (int i = 0; i < itemSet.size(); i++) {
@@ -250,11 +250,11 @@ public class ZombieGame {
         refreshMainFrame();
         return output;
     }
-    
+
     public static Discipline askPlayerForDiscipline() {
         char alpha = showStaticImage("discipline");
         Discipline output;
-        
+
         switch (alpha) {
             case 'a':
                 output = Discipline.POLITICAL_SCIENCE;
@@ -290,11 +290,11 @@ public class ZombieGame {
         Guard.argumentIsNotNull(output);
         return output;
     }
-    
+
     public static Attribut askPlayerForAttrbuteToRaise() {
         char alpha = showStaticImage("askForAttribute");
         Attribut output;
-        
+
         switch (alpha) {
             case 'a':
                 output = Attribut.MAXHP;
@@ -316,15 +316,15 @@ public class ZombieGame {
         System.out.println(output);
         return output;
     }
-    
+
     public static File getResourceDirectory(String identifier) {
         return settings.paths.get(identifier);
     }
-    
+
     public static Level getGlobalMap() {
         return globalmap;
     }
-    
+
     public static void endGame() {
         // TODO: Im Endscreen dynamisch Informationen anzeigen.
         showStaticImage("endscreen");
