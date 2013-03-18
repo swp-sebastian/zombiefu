@@ -10,17 +10,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import zombiefu.human.Human;
-import zombiefu.monster.Monster;
+import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.WeaponHasNoMunitionException;
+import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
 import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
 import zombiefu.util.DamageAnimation;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
-import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
@@ -36,7 +35,7 @@ public abstract class Creature extends NotPassableActor {
     protected int sichtweite;
     protected boolean godMode;
 
-    public static final HashMap<Attribute, Integer> getDefaultAttributeSet() {
+    public static HashMap<Attribute, Integer> getDefaultAttributeSet() {
         HashMap<Attribute, Integer> attSet = new HashMap<>();
         for (Attribute att : Attribute.values()) {
             attSet.put(att, 1);
@@ -62,6 +61,16 @@ public abstract class Creature extends NotPassableActor {
 
     public boolean isGod() {
         return godMode;
+    }
+
+    public boolean isDazed() {
+        return dazed > 0;
+    }
+
+    public void daze(int d, Creature dazer) {
+        dazed = d;
+        ZombieGame.refreshBottomFrame();
+        ZombieGame.newMessage(dazer.getName() + " hat " + getName() + " gelähmt.");
     }
 
     public int getAttribute(Attribute att) {
@@ -224,60 +233,48 @@ public abstract class Creature extends NotPassableActor {
         attack(dir);
     }
 
-    public void tryToMove(Direction dir)
-            throws CannotMoveToIllegalFieldException,
-            WeaponHasNoMunitionException {
-        Guard.argumentIsNotNull(world());
-        Guard.argumentIsNotNull(dir);
+    protected abstract boolean isEnemy(Creature enemy);
+
+    public abstract void pleaseAct();
+
+    @Override
+    public void act() {
         if (dazed > 0) {
             dazed--;
-            return;
+        } else {
+            pleaseAct();
         }
+    }
+
+    public void tryToMove(Direction dir) throws CannotMoveToIllegalFieldException, CannotAttackWithoutMeleeWeaponException, CannnotMoveToNonPassableActorException {
+
+        Guard.argumentIsNotNull(world());
+        Guard.argumentIsNotNull(dir);
+
         if (dir == Direction.ORIGIN) {
             return;
         }
+
         Coordinate targetField = pos().getTranslated(dir);
-        if (!world().insideBounds(targetField)
-                || !world().passableAt(targetField)) {
+        if (!world().insideBounds(targetField) || !world().passableAt(targetField)) {
             throw new CannotMoveToIllegalFieldException();
         }
 
-        NotPassableActor actor = world().getActorAt(NotPassableActor.class,
-                pos().getTranslated(dir));
+        NotPassableActor actor = world().getActorAt(NotPassableActor.class, pos().getTranslated(dir));
         if (actor == null) {
             move(dir);
             return;
         }
 
-        if (this instanceof Player) {
-            if (actor instanceof Door) {
-                if (isGod()) {
-                    ((Door) actor).open();
-                } else {
-                    ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
-                    throw new CannotMoveToIllegalFieldException();
-                }
-            } else if (actor instanceof Human) {
-                ((Human) actor).talkToPlayer((Player) this);
-                return;
-            } else if (!(actor instanceof Monster)) {
-                throw new CannotMoveToIllegalFieldException();
-
+        if (actor instanceof Creature && isEnemy((Creature) actor)) {
+            if (getActiveWeapon().getTyp() == WeaponType.NAHKAMPF) {
+                attackCoordinate(actor.pos());
+            } else {
+                throw new CannotAttackWithoutMeleeWeaponException();
             }
         }
-
-        if (this instanceof Monster && !(actor instanceof Player)) {
-            throw new CannotMoveToIllegalFieldException();
-        }
-
-        if (getActiveWeapon().getTyp() == WeaponType.NAHKAMPF) {
-            attack(dir);
-        } else {
-            if (this instanceof Player) {
-                ZombieGame.newMessage("Du trägst keine Nahkampfwaffe!");
-            }
-            throw new CannotMoveToIllegalFieldException();
-        }
+        
+        throw new CannnotMoveToNonPassableActorException(actor);
     }
 
     public abstract void killed(Creature killer);

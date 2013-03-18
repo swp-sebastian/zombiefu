@@ -2,11 +2,9 @@ package zombiefu.builder;
 
 import jade.util.datatype.ColoredChar;
 import java.util.HashMap;
-import java.util.Set;
 import zombiefu.items.Weapon;
-import zombiefu.monster.Monster;
+import zombiefu.actor.Monster;
 import zombiefu.player.Attribute;
-import zombiefu.util.ConfigHelper;
 import zombiefu.util.ITMString;
 
 public class MonsterBuilder {

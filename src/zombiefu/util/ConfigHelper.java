@@ -1,10 +1,8 @@
 package zombiefu.util;
 
 import jade.core.Actor;
-import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
-import jade.util.datatype.Coordinate;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,13 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import zombiefu.actor.Door;
 import zombiefu.human.Shop;
 import zombiefu.builder.FoodBuilder;
@@ -28,18 +22,16 @@ import zombiefu.builder.MonsterBuilder;
 import zombiefu.builder.WeaponBuilder;
 import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
-import zombiefu.actor.Teleporter;
 import zombiefu.builder.HumanBuilder;
 import zombiefu.builder.ShopBuilder;
 import zombiefu.exception.ActorConfigNotFoundException;
 import zombiefu.human.Human;
 import zombiefu.items.Food;
-import zombiefu.items.MensaCard;
 import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
 import zombiefu.level.Level;
 import zombiefu.mapgen.RoomBuilder;
-import zombiefu.monster.Monster;
+import zombiefu.actor.Monster;
 import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 
@@ -173,7 +165,7 @@ public class ConfigHelper {
             ActorConfig config = ActorConfig.getConfig("monsters", s);
             String name = config.getName();
             ColoredChar c = config.getChar();
-            HashMap<Attribute,Integer> attSet = new HashMap<>();
+            HashMap<Attribute, Integer> attSet = new HashMap<>();
             attSet.put(Attribute.MAXHP, config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : 1);
             attSet.put(Attribute.ATTACK, config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1);
             attSet.put(Attribute.DEFENSE, config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1);
@@ -195,7 +187,7 @@ public class ConfigHelper {
             ActorConfig config = ActorConfig.getConfig("humans", s);
             String name = config.getName();
             ColoredChar c = config.getChar();
-            
+
             Item offerItem = config.contains("deal.offerItem") ? new ITMString(config.get("deal.offerItem")).getSingleItem() : null;
             Integer offerMoney = config.contains("deal.offerMoney") ? Integer.decode(config.get("deal.offerMoney")) : null;
             Integer requestMoney = config.contains("deal.requestMoney") ? Integer.decode(config.get("deal.requestMoney")) : null;

@@ -1,4 +1,4 @@
-package zombiefu.monster;
+package zombiefu.actor;
 
 import jade.core.Actor;
 import jade.fov.RayCaster;
@@ -11,8 +11,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import zombiefu.actor.Creature;
-import zombiefu.builder.ItemBuilder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import zombiefu.exception.CannnotMoveToNonPassableActorException;
+import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.NoPlaceToMoveException;
 import zombiefu.exception.WeaponHasNoMunitionException;
@@ -33,25 +35,15 @@ public class Monster extends Creature {
     protected int ectsYield;
     private Set<Actor> dropOnDeath;
 
-    public Monster(ColoredChar face, String n, HashMap<Attribute,Integer> attSet, Weapon w,
-            int ects, int s, MoveAlgorithm m, Set<Actor> drop) {
+    public Monster(ColoredChar face, String n, HashMap<Attribute, Integer> attSet, Weapon w, int ects, Set<Actor> drop) {
         super(face, n, attSet);
         waffe = w;
-        movealg = m;
-        fov = new RayCaster();
-        sichtweite = s;
         ectsYield = ects;
         dropOnDeath = drop;
-    }
 
-    public Monster(ColoredChar face, String n, HashMap<Attribute,Integer> attSet, Weapon w, int ects,
-            Set<Actor> dropOnDeath) {
-        this(face, n, attSet, w, ects, 10, new StupidMover(), dropOnDeath);
-    }
-
-    public Monster(ColoredChar face, String n, HashMap<Attribute,Integer> attSet, Weapon w,
-            int ects) {
-        this(face, n, attSet, w, ects, 10, new StupidMover(), null);
+        movealg = new StupidMover();
+        fov = new RayCaster();
+        sichtweite = 10;
     }
 
     private void moveRandomly() throws NoPlaceToMoveException {
@@ -61,8 +53,7 @@ public class Monster extends Creature {
             try {
                 tryToMove(d);
                 return;
-            } catch (CannotMoveToIllegalFieldException ex) {
-            } catch (WeaponHasNoMunitionException ex) {
+            } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
             }
         }
         throw new NoPlaceToMoveException();
@@ -90,32 +81,26 @@ public class Monster extends Creature {
         return movealg.directionTo(world(), pos(), getPlayerPosition());
     }
 
-    protected void moveToPlayer() throws TargetIsNotInThisWorldException,
-            TargetNotFoundException, WeaponHasNoMunitionException {
+    protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
         try {
             tryToMove(directionToPlayer());
-        } catch (CannotMoveToIllegalFieldException ex) {
-            // Logger.getLogger(Monster.class.getName()).log(Level.SEVERE, null,
-            // ex);
+        } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
         }
     }
 
     @Override
-    public void act() {
+    public void pleaseAct() {
         try {
             if (positionIsVisible(getPlayerPosition())) {
                 moveToPlayer();
                 return;
             }
-        } catch (TargetIsNotInThisWorldException ex) {
-        } catch (TargetNotFoundException ex) {
-        } catch (WeaponHasNoMunitionException ex) {
+        } catch (TargetIsNotInThisWorldException | TargetNotFoundException | WeaponHasNoMunitionException ex) {
         }
         try {
             moveRandomly();
         } catch (NoPlaceToMoveException ex) {
             ZombieTools.log(getName() + ": Cannot move - doing nothing");
-            return;
         }
     }
 
@@ -143,10 +128,13 @@ public class Monster extends Creature {
         // TODO: Überprüfen, ob Gegner wirklich in einer Linie ist
         try {
             return directionToPlayer();
-        } catch (TargetNotFoundException e) {
-            throw new NoDirectionGivenException();
-        } catch (TargetIsNotInThisWorldException ex) {
+        } catch (TargetNotFoundException | TargetIsNotInThisWorldException e) {
             throw new NoDirectionGivenException();
         }
+    }
+
+    @Override
+    protected boolean isEnemy(Creature enemy) {
+        return enemy instanceof Player;
     }
 }
