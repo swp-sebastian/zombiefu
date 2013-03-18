@@ -9,16 +9,16 @@ import zombiefu.player.Discipline;
  *
  * @author tomas
  */
-public class Waffe extends Item {
+public class Weapon extends Item {
 
     protected int damage;
-    protected Waffentyp wtyp;
+    protected WeaponType wtyp;
     protected double blastRadius;
     protected int range;
     protected int munition;
     protected Set<Discipline> experts;
 
-    public Waffe(ColoredChar c, String n, int d, Waffentyp w, Set<Discipline> experts, double radius, int range) {
+    public Weapon(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, double radius, int range) {
         super(c, n);
         this.damage = d;
         this.wtyp = w;
@@ -44,7 +44,7 @@ public class Waffe extends Item {
         return blastRadius;
     }
 
-    public Waffentyp getTyp() {
+    public WeaponType getTyp() {
         return wtyp;
     }
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import zombiefu.items.Waffe;
+import zombiefu.items.Weapon;
 import zombiefu.player.Attribut;
 import zombiefu.util.Action;
 
@@ -34,8 +34,8 @@ public class ZombieSettings {
         props = new Properties(defaults(res));
 
         List<String> configFiles = new ArrayList<String>();
-        configFiles.add(res + "/config.cfg");
         configFiles.add(System.getProperty("user.home") + "/.zombiefurc");
+        configFiles.add(res + "/config.cfg");
 
         for (String fileName : configFiles) {
             try {
@@ -57,7 +57,7 @@ public class ZombieSettings {
         playerAttributes.put(Attribut.INTELLIGENCE, Integer.decode(props.getProperty("player.attr.int")));
         playerStartMap = props.getProperty("player.start.map");
         playerStartCoord = new Coordinate(Integer.decode(props.getProperty("player.start.x")), Integer.decode(props.getProperty("player.start.y")));
-
+        
         // Weltkarte
         globalMap = props.getProperty("globalmap");
 
@@ -85,11 +85,12 @@ public class ZombieSettings {
         paths = new HashMap<String, File>();
         paths.put("base", new File(props.getProperty("dir.base")));
         paths.put("maps", new File(props.getProperty("dir.maps")));
-        paths.put("items", new File(props.getProperty("dir.items")));
         paths.put("screens", new File(props.getProperty("dir.screens")));
         paths.put("shops", new File(props.getProperty("dir.shops")));
-        paths.put("monster", new File(props.getProperty("dir.monster")));
+        paths.put("monsters", new File(props.getProperty("dir.monsters")));
         paths.put("humans", new File(props.getProperty("dir.humans")));
+        paths.put("weapons", new File(props.getProperty("dir.weapons")));
+        paths.put("food", new File(props.getProperty("dir.food")));
 
         // Überprüfen, ob Pfade lesbar sind.
         Iterator itr = paths.values().iterator();
@@ -105,11 +106,12 @@ public class ZombieSettings {
         // Default Verzeichnis-Layout
         def.setProperty("dir.base", res);
         def.setProperty("dir.maps", res + "/maps");
-        def.setProperty("dir.items", res + "/items");
         def.setProperty("dir.screens", res + "/screens");
         def.setProperty("dir.shops", res + "/shops");
-        def.setProperty("dir.monster", res + "/monster");
+        def.setProperty("dir.monsters", res + "/monsters");
         def.setProperty("dir.humans", res + "/humans");
+        def.setProperty("dir.weapons", res + "/weapons");
+        def.setProperty("dir.food", res + "/food");
 
         // Default Debug Einstellung (aus)
         def.setProperty("debug", "false");
@@ -126,7 +128,7 @@ public class ZombieSettings {
         def.setProperty("player.start.map", "Weltkarte");
         def.setProperty("player.start.x", "15");
         def.setProperty("player.start.y", "53");
-
+        
         def.setProperty("globalmap", "Weltkarte");
 
         // Default Keybindings

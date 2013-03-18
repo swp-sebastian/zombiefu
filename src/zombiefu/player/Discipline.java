@@ -4,7 +4,7 @@
  */
 package zombiefu.player;
 
-import zombiefu.items.Waffentyp;
+import zombiefu.items.WeaponType;
 
 /**
  *
@@ -29,7 +29,7 @@ public enum Discipline {
                 return d;
             }
         }
-        throw new IllegalArgumentException("Ungültige Discipline-Name");
+        throw new IllegalArgumentException("Ungültige Discipline-Name: " + string);
     }
     
 }

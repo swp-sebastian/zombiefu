@@ -6,11 +6,11 @@ import zombiefu.exception.MaximumHealthPointException;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 
-public class HealingItem extends ConsumableItem {
+public class Food extends ConsumableItem {
 
     private int heilkraft;
 
-    public HealingItem(ColoredChar face, String name, int h) {
+    public Food(ColoredChar face, String name, int h) {
         super(face, name);
         heilkraft = h;
     }

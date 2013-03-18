@@ -13,8 +13,8 @@ import zombiefu.human.Human;
 import zombiefu.monster.Monster;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.WeaponHasNoMunitionException;
-import zombiefu.items.Waffe;
-import zombiefu.items.Waffentyp;
+import zombiefu.items.Weapon;
+import zombiefu.items.WeaponType;
 import zombiefu.util.DamageAnimation;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.player.Discipline;
@@ -77,7 +77,7 @@ public abstract class Creature extends NotPassableActor {
         this(face, "Zombie");
     }
 
-    public abstract Waffe getActiveWeapon();
+    public abstract Weapon getActiveWeapon();
 
     @Override
     public void setPos(int x, int y) {
@@ -95,7 +95,7 @@ public abstract class Creature extends NotPassableActor {
 
     public void hurtCreature(Creature cr, double faktor) {
 
-        // Wer keine Waffe hat, kann nicht angreifen!
+        // Wer keine Weapon hat, kann nicht angreifen!
         if (getActiveWeapon() == null) {
             return;
         }
@@ -201,7 +201,7 @@ public abstract class Creature extends NotPassableActor {
         if (!getActiveWeapon().hasMunition()) {
             throw new WeaponHasNoMunitionException();
         }
-        Waffentyp typ = getActiveWeapon().getTyp();
+        WeaponType typ = getActiveWeapon().getTyp();
         Coordinate ziel;
         if (typ.isRanged()) {
             ziel = findTargetInDirection(dir, getActiveWeapon().getRange());
@@ -220,7 +220,7 @@ public abstract class Creature extends NotPassableActor {
     public void attack() throws NoDirectionGivenException,
             WeaponHasNoMunitionException {
         Direction dir;
-        if (getActiveWeapon().getTyp() != Waffentyp.UMKREIS) {
+        if (getActiveWeapon().getTyp() != WeaponType.UMKREIS) {
             dir = getAttackDirection();
         } else {
             dir = Direction.ORIGIN;
@@ -270,7 +270,7 @@ public abstract class Creature extends NotPassableActor {
             throw new CannotMoveToIllegalFieldException();
         } 
         
-        if (getActiveWeapon().getTyp() == Waffentyp.NAHKAMPF) {
+        if (getActiveWeapon().getTyp() == WeaponType.NAHKAMPF) {
             attack(dir);
         } else {
             if(this instanceof Player) {
