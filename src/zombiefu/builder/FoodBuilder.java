@@ -1,18 +1,18 @@
 package zombiefu.builder;
 
 import jade.util.datatype.ColoredChar;
-import zombiefu.items.HealingItem;
+import zombiefu.items.Food;
 import zombiefu.items.Item;
 
 /**
  *
  * @author tba
  */
-public class HealingItemBuilder extends ItemBuilder {
+public class FoodBuilder extends ItemBuilder {
 
     private int heilkraft;
 
-    public HealingItemBuilder(ColoredChar face, String name, int h) {
+    public FoodBuilder(ColoredChar face, String name, int h) {
         this.face = face;
         this.name = name;
         this.heilkraft = h;
@@ -20,6 +20,6 @@ public class HealingItemBuilder extends ItemBuilder {
 
     @Override
     public Item buildItem() {
-        return new HealingItem(face,name,heilkraft);
+        return new Food(face,name,heilkraft);
     }
 }

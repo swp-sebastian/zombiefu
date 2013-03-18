@@ -3,7 +3,7 @@ package zombiefu.human;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import zombiefu.actor.Creature;
-import zombiefu.items.Waffe;
+import zombiefu.items.Weapon;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 
@@ -18,7 +18,7 @@ public abstract class Human extends Creature {
     }
 
     @Override
-    public Waffe getActiveWeapon() {
+    public Weapon getActiveWeapon() {
         return null;
     }
 

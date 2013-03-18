@@ -1,7 +1,7 @@
 package zombiefu.player;
 
 import jade.core.World;
-import zombiefu.items.Waffe;
+import zombiefu.items.Weapon;
 import jade.fov.RayCaster;
 import jade.fov.ViewField;
 import jade.ui.Camera;
@@ -38,7 +38,7 @@ public class Player extends Creature implements Camera {
     private int semester;
     private int maximalHealthPoints;
     private HashMap<String, ArrayList<ConsumableItem>> inventar;
-    private HashMap<String, Waffe> waffen;
+    private HashMap<String, Weapon> waffen;
     private ArrayList<String> waffenListe;
 
     public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribut,Integer> attr) {
@@ -54,7 +54,7 @@ public class Player extends Creature implements Camera {
         this.discipline = discipline;
 
         this.inventar = new HashMap<String, ArrayList<ConsumableItem>>();
-        this.waffen = new HashMap<String, Waffe>();
+        this.waffen = new HashMap<String, Weapon>();
         this.waffenListe = new ArrayList<String>();
 
         this.sichtweite = 20;
@@ -209,8 +209,8 @@ public class Player extends Creature implements Camera {
     }
 
     public void obtainItem(Item i) {
-        if (i instanceof Waffe) {
-            Waffe w = (Waffe) i;
+        if (i instanceof Weapon) {
+            Weapon w = (Weapon) i;
             if (waffenListe.contains(w.getName())) {
                 waffen.get(w.getName()).addMunition(w.getMunition());
                 w.expire();
@@ -248,7 +248,7 @@ public class Player extends Creature implements Camera {
     }
 
     @Override
-    public Waffe getActiveWeapon() {
+    public Weapon getActiveWeapon() {
         return waffen.get(waffenListe.get(0));
     }
 

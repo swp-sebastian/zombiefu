@@ -8,7 +8,7 @@ package zombiefu.items;
  *
  * @author tomas
  */
-public enum Waffentyp {
+public enum WeaponType {
 
     NAHKAMPF(false, true),
     FERNKAMPF(true, true),
@@ -17,7 +17,7 @@ public enum Waffentyp {
     private boolean ranged;
     private boolean directed;
 
-    private Waffentyp(boolean r, boolean d) {
+    private WeaponType(boolean r, boolean d) {
         this.ranged = r;
         this.directed = d;
     }
@@ -30,8 +30,8 @@ public enum Waffentyp {
         return directed;
     }
 
-    public static Waffentyp getTypeFromString(String string) {
-        for (Waffentyp w : Waffentyp.values()) {
+    public static WeaponType getTypeFromString(String string) {
+        for (WeaponType w : WeaponType.values()) {
             String s = w.toString().toLowerCase();
             s = Character.toUpperCase(s.charAt(0)) + s.substring(1);
             if (s.equals(string)) {

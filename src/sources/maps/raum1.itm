@@ -1,7 +1,7 @@
 1 human(Nuklearschenker)
-2 item(Mate) monster(Dozent)x3
-3 item(Splittergranate)
-4 item(RoundhouseKick)
+2 food(Mate) monster(Dozent)x3
+3 weapon(Splittergranate)
+4 weapon(RoundhouseKick)
 5 key(TestDoor)
 6 door(TestDoor) teleporter(raum2,33,2)
 7 shop(Mensa-Automat)
