@@ -1,4 +1,4 @@
 1 key(Info)
-2 door(Info) teleporter(Info_Ebene1_test,95,78)
+2 door(Info) teleporter(info1,95,78)
 3 shop(Mensa-Automat)
 4 shop(Waffen)

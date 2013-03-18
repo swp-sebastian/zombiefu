@@ -12,15 +12,17 @@ import jade.util.datatype.Direction;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import zombiefu.actor.Creature;
-import zombiefu.actor.NotPassableActor;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
+import static zombiefu.items.WeaponType.FERNKAMPF;
+import static zombiefu.items.WeaponType.GRANATE;
+import static zombiefu.items.WeaponType.NAHKAMPF;
+import static zombiefu.items.WeaponType.UMKREIS;
 import zombiefu.player.Attribute;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
@@ -31,7 +33,7 @@ import zombiefu.util.ZombieTools;
  */
 public class Attack {
 
-    private static final double EXPERT_BONUS = 1.5; // Faktor
+    private static final double EXPERT_BONUS = 1.75; // Faktor
     private Creature attacker;
     private Weapon weapon;
     private WeaponType wtype;
@@ -67,17 +69,15 @@ public class Attack {
         anims.clear();
     }
 
-    private Coordinate findTargetInDirection(Direction dir, int maxDistance) {
-        Coordinate nPos = attacker.pos();
-        int dcounter = 0;
-        do {
-            nPos = nPos.getTranslated(dir);
-            if (!world.insideBounds(nPos) || !world.passableAt(nPos)) {
-                return nPos.getTranslated(ZombieTools.getReversedDirection(dir));
-            }
-            dcounter++;
-        } while (world.getActorsAt(NotPassableActor.class, nPos).isEmpty() && dcounter < maxDistance);
-        return nPos;
+    private Coordinate getMissileImpactPoint(Direction dir, int maxDistance) {
+        Direction noiseDirection = ZombieTools.getRotatedDirection(dir, 90);
+        int noise = (int) Math.floor(((double) maxDistance) * ZombieTools.getRandomDouble(0,1,attacker.getAttribute(Attribute.DEXTERITY) - 3) / (Dice.global.chance() ? 4.0 : -4.0));
+
+        Coordinate neu = attacker.pos().getTranslated(dir.dx() * maxDistance, dir.dy() * maxDistance).getTranslated(noiseDirection.dx() * noise, noiseDirection.dy() * noise);
+
+        List<Coordinate> partialPath = new ProjectileBresenham(weapon.getRange()).getPartialPath(world, attacker.pos(), neu);
+
+        return partialPath.get(partialPath.size() - 1);
     }
 
     private void hurtCreature(Creature cr) {
@@ -88,12 +88,12 @@ public class Attack {
                 + cr.getName() + " with " + weapon.getName()
                 + " (Damage: " + weapon.getDamage()
                 + ", Experte: " + weapon.isExpert(attacker.getDiscipline()) + "). Attack value: " + attacker.getAttribute(Attribute.ATTACK) + ", Defense Value: "
-                + cr.getAttribute(Attribute.DEFENSE) + ", Faktor: " + faktor);
+                + cr.getAttribute(Attribute.DEFENSE) + ", Faktor: " + (Math.round(100*faktor) / 100.0));
 
         // Calculate damage
         int damage = (int) (((double) weapon.getDamage())
                 * ((double) attacker.getAttribute(Attribute.ATTACK) / (double) cr.getAttribute(Attribute.DEFENSE))
-                * (double) Dice.global.nextInt(20, 40) / 30 * faktor * (weapon.isExpert(attacker.getDiscipline()) ? EXPERT_BONUS : 1.0));
+                * ZombieTools.getRandomDouble(0.7, 1.3) * faktor * (weapon.isExpert(attacker.getDiscipline()) ? EXPERT_BONUS : 1.0));
         if (damage == 0) {
             damage = 1;
         }
@@ -109,7 +109,7 @@ public class Attack {
             ZombieGame.newMessage(attacker.getName() + " hat " + cr.getName() + " für " + String.valueOf(weapon.getDazeTurns()) + " Runden gelähmt.");
             cr.daze(weapon.getDazeTurns(), cr);
         } else {
-            throw new NoEnemyHitException();
+            throw new NoEnemyHitException(this);
         }
     }
 
@@ -140,7 +140,7 @@ public class Attack {
             attackCreature(target);
         }
         if (targets.isEmpty()) {
-            throw new NoEnemyHitException();
+            throw new NoEnemyHitException(this);
         }
     }
 
@@ -169,52 +169,6 @@ public class Attack {
         attackCreatureSet(targets);
     }
 
-    private void shakeImpactPoint() {
-    }
-    
-    public int getSuccessProbability() {
-        return (int) (100.0 - 90.0 * Math.pow(Math.E, attacker.getAttribute(Attribute.DEXTERITY) / (-5.0)));        
-    }
-
-    public void perform() throws WeaponHasNoMunitionException, NoEnemyHitException {
-        weapon.useMunition();
-        
-        try {
-            switch (wtype) {
-                case NAHKAMPF:
-                    // Dexterity decides, whether the attacker hits
-                    impactPoint = attacker.pos().getTranslated(dir);
-                    if (Dice.global.chance(getSuccessProbability())) {
-                        attackCoordinate(impactPoint);
-                    } else {
-                        throw new NoEnemyHitException();
-                    }
-                    break;
-                case FERNKAMPF:
-                    // Dexterity determines the accuracy
-                    impactPoint = findTargetInDirection(dir, weapon.getRange());
-                    shakeImpactPoint();
-                    attackCoordinate(impactPoint);
-                case UMKREIS:
-                    // Dexterity decides, whether the attacker accidently hits himself
-                    impactPoint = attacker.pos().getTranslated(dir);
-                    createDetonation(impactPoint, weapon.getBlastRadius(), !Dice.global.chance(getSuccessProbability()));
-                    break;
-                case GRANATE:
-                    // Dexterity determines the accuracy
-                    impactPoint = findTargetInDirection(dir, weapon.getRange());
-                    shakeImpactPoint();
-                    createDetonation(impactPoint, weapon.getBlastRadius(), true);
-                default:
-                    throw new AssertionError(wtype.name());
-            }
-        } catch (NoEnemyHitException ex) {
-            throw ex;
-        } finally {
-            clearAllAnimations();
-        }
-    }
-
     private double getDamageCoefficient(Creature cr) {
         Guard.argumentIsNotNull(impactPoint);
         double distance;
@@ -237,7 +191,54 @@ public class Attack {
         }
     }
 
-    private Exception NoEnemyHitException() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private int getSuccessProbability() {
+        return (int) (100.0 - 90.0 * Math.pow(Math.E, attacker.getAttribute(Attribute.DEXTERITY) / (-5.0)));
+    }
+
+    public void perform() throws WeaponHasNoMunitionException, NoEnemyHitException {
+        weapon.useMunition();
+
+        try {
+            switch (wtype) {
+                case NAHKAMPF:
+                    // Dexterity decides, whether the attacker hits
+                    impactPoint = attacker.pos().getTranslated(dir);
+                    if (Dice.global.chance(getSuccessProbability())) {
+                        attackCoordinate(impactPoint);
+                    } else {
+                        throw new NoEnemyHitException(this);
+                    }
+                    break;
+                case FERNKAMPF:
+                    // Dexterity determines the accuracy
+                    impactPoint = getMissileImpactPoint(dir, weapon.getRange());
+                    attackCoordinate(impactPoint);
+                    break;
+                case UMKREIS:
+                    // Dexterity decides, whether the attacker accidently hits himself
+                    impactPoint = attacker.pos().getTranslated(dir);
+                    createDetonation(impactPoint, weapon.getBlastRadius(), !Dice.global.chance(getSuccessProbability()));
+                    break;
+                case GRANATE:
+                    // Dexterity determines the accuracy
+                    impactPoint = getMissileImpactPoint(dir, weapon.getRange());
+                    createDetonation(impactPoint, weapon.getBlastRadius(), true);
+                    break;
+                default:
+                    throw new AssertionError(wtype.name());
+            }
+        } catch (NoEnemyHitException ex) {
+            throw ex;
+        }
+        close();
+    }
+
+    public void close() {
+        clearAllAnimations();
+    }
+
+    // Debug
+    private void dump() {
+        ZombieTools.log("Attack-Dump: Attacker " + attacker.getName() + ", Weapon: " + weapon.getName() + " (" + wtype.toString() + "), Direction: " + dir.toString() + ", impactPoint: " + impactPoint.toString());
     }
 }

@@ -177,15 +177,20 @@ public class Player extends Creature implements Camera {
             act();
         } catch (CannnotMoveToNonPassableActorException ex) {
             NotPassableActor actor = ex.getActor();
-            if(actor instanceof Human) {
+            if (actor instanceof Human) {
                 ((Human) actor).talkToPlayer(this);
-            } else if(actor instanceof Door) {
-                ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
-                act();                
+            } else if (actor instanceof Door) {
+                if (isGod()) {
+                    ((Door) actor).open();
+                    ZombieGame.newMessage("Die Tür wurde mit göttlicher Macht geöffnet.");
+                } else {
+                    ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
+                    act();
+                }
             }
         } catch (NoEnemyHitException ex) {
             ZombieGame.newMessage("Du hast verfehlt!");
-            act();
+            ex.close();
         }
         if (!getActiveWeapon().hasMunition()) {
             removeWeapon(getActiveWeapon().getName());
