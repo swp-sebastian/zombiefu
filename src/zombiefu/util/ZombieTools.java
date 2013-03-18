@@ -16,18 +16,17 @@ public class ZombieTools {
     }
 
     public static Direction getReversedDirection(Direction dir) {
-        switch (dir) {
-            case NORTH:
-                return Direction.SOUTH;
-            case SOUTH:
-                return Direction.NORTH;
-            case EAST:
-                return Direction.WEST;
-            case WEST:
-                return Direction.EAST;
-            case ORIGIN:
-                return Direction.ORIGIN;
+        return getRotatedDirection(dir, 180);
+    }
+
+    public static Direction getRotatedDirection(Direction dir, int rotation) {
+        if (dir == Direction.ORIGIN) {
+            return dir;
         }
+        Direction[] dirs = new Direction[]{Direction.NORTH, Direction.NORTHEAST, Direction.EAST, Direction.SOUTHEAST, Direction.SOUTH, Direction.SOUTHWEST, Direction.WEST, Direction.NORTHWEST};
+        for(int i = 0; i < 8; i++)
+            if(dirs[i] == dir)
+                return dirs[(i + rotation / 45) % 8];
         return null;
     }
 
@@ -71,5 +70,4 @@ public class ZombieTools {
     public static void logError(String s) {
         System.out.println(s);
     }
-
 }

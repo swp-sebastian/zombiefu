@@ -12,9 +12,8 @@ import jade.util.datatype.Direction;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import zombiefu.actor.Creature;
 import zombiefu.actor.NotPassableActor;
 import zombiefu.exception.NoEnemyHitException;
@@ -36,6 +35,7 @@ import zombiefu.util.ZombieTools;
 public class Attack {
 
     private static final double EXPERT_BONUS = 1.5; // Faktor
+    
     private Creature attacker;
     private Weapon weapon;
     private WeaponType wtype;
@@ -71,17 +71,15 @@ public class Attack {
         anims.clear();
     }
 
-    private Coordinate findTargetInDirection(Direction dir, int maxDistance) {
-        Coordinate nPos = attacker.pos();
-        int dcounter = 0;
-        do {
-            nPos = nPos.getTranslated(dir);
-            if (!world.insideBounds(nPos) || !world.passableAt(nPos)) {
-                return nPos.getTranslated(ZombieTools.getReversedDirection(dir));
-            }
-            dcounter++;
-        } while (world.getActorsAt(NotPassableActor.class, nPos).isEmpty() && dcounter < maxDistance);
-        return nPos;
+    private Coordinate getMissileImpactPoint(Direction dir, int maxDistance) {
+        Direction noiseDirection = ZombieTools.getRotatedDirection(dir, 90);
+        int noise = 0;
+        
+        Coordinate neu = attacker.pos().getTranslated(dir.dx()*maxDistance, dir.dy()*maxDistance).getTranslated(noiseDirection.dx()*noise,noiseDirection.dy()*noise);
+        
+        List<Coordinate> partialPath = new ProjectileBresenham(weapon.getRange()).getPartialPath(world, attacker.pos(), neu);
+        
+        return partialPath.get(partialPath.size() - 1);
     }
 
     private void hurtCreature(Creature cr) {
@@ -232,7 +230,7 @@ public class Attack {
                     break;
                 case FERNKAMPF:
                     // Dexterity determines the accuracy
-                    impactPoint = findTargetInDirection(dir, weapon.getRange());
+                    impactPoint = getMissileImpactPoint(dir, weapon.getRange());
                     attackCoordinate(impactPoint);
                     break;
                 case UMKREIS:
@@ -242,7 +240,7 @@ public class Attack {
                     break;
                 case GRANATE:
                     // Dexterity determines the accuracy
-                    impactPoint = findTargetInDirection(dir, weapon.getRange());                    
+                    impactPoint = getMissileImpactPoint(dir, weapon.getRange());                    
                     createDetonation(impactPoint, weapon.getBlastRadius(), true);
                     break;
                 default:
