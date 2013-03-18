@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import zombiefu.actor.Creature;
-import zombiefu.actor.NotPassableActor;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.items.Weapon;
@@ -34,7 +33,7 @@ import zombiefu.util.ZombieTools;
  */
 public class Attack {
 
-    private static final double EXPERT_BONUS = 1.5; // Faktor
+    private static final double EXPERT_BONUS = 1.75; // Faktor
     private Creature attacker;
     private Weapon weapon;
     private WeaponType wtype;
@@ -89,7 +88,7 @@ public class Attack {
                 + cr.getName() + " with " + weapon.getName()
                 + " (Damage: " + weapon.getDamage()
                 + ", Experte: " + weapon.isExpert(attacker.getDiscipline()) + "). Attack value: " + attacker.getAttribute(Attribute.ATTACK) + ", Defense Value: "
-                + cr.getAttribute(Attribute.DEFENSE) + ", Faktor: " + faktor);
+                + cr.getAttribute(Attribute.DEFENSE) + ", Faktor: " + (Math.round(100*faktor) / 100.0));
 
         // Calculate damage
         int damage = (int) (((double) weapon.getDamage())
@@ -170,22 +169,6 @@ public class Attack {
         attackCreatureSet(targets);
     }
 
-    private void shakeImpactPoint() {
-        Guard.verifyState(!attacker.pos().equals(impactPoint));
-        int shakeIntensity = 1;
-
-        if (shakeIntensity == 0) {
-            return;
-        }
-
-        if (impactPoint.x() == attacker.x()) {
-            impactPoint.getTranslated(shakeIntensity, 0);
-        } else {
-            impactPoint.getTranslated(0, shakeIntensity);
-        }
-
-    }
-
     private double getDamageCoefficient(Creature cr) {
         Guard.argumentIsNotNull(impactPoint);
         double distance;
@@ -194,7 +177,6 @@ public class Attack {
                 Guard.verifyState(cr.pos().equals(impactPoint));
                 return 1.0;
             case FERNKAMPF:
-                dump();
                 Guard.verifyState(cr.pos().equals(impactPoint));
                 distance = attacker.pos().distance(impactPoint) / ((double) weapon.getRange());
                 return 1.0 - distance * distance / 2.0;
