@@ -6,7 +6,7 @@ package zombiefu.human;
 
 import jade.util.datatype.ColoredChar;
 import java.util.Map;
-import zombiefu.exception.CanNotAffordException;
+import zombiefu.exception.CannotAffordException;
 import zombiefu.items.Item;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
@@ -40,7 +40,7 @@ public class SellingHuman extends DealingHuman {
             pl.pay(requestMoney);
             pl.obtainItem(offerItem);
             return true;
-        } catch (CanNotAffordException ex) {
+        } catch (CannotAffordException ex) {
             ZombieGame.newMessage("Das kannst Du Dir nicht leisten.");
             return false;
         }

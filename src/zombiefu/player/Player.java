@@ -12,21 +12,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import zombiefu.actor.Creature;
-import zombiefu.exception.CanNotAffordException;
+import zombiefu.actor.Door;
+import zombiefu.actor.Monster;
+import zombiefu.actor.NotPassableActor;
+import zombiefu.exception.CannnotMoveToNonPassableActorException;
+import zombiefu.exception.CannotAffordException;
+import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
-import zombiefu.exception.MaximumHealthPointException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.CannotBeConsumedException;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.DoesNotPossessThisItemException;
+import zombiefu.exception.MaximumHealthPointException;
+import zombiefu.exception.NoEnemyHitException;
 import zombiefu.fov.ViewEverything;
+import zombiefu.human.Human;
 import zombiefu.items.ConsumableItem;
 import zombiefu.items.Item;
 import zombiefu.level.Level;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 import zombiefu.util.Action;
-import zombiefu.util.ConfigHelper;
 
 public class Player extends Creature implements Camera {
 
@@ -74,7 +80,7 @@ public class Player extends Creature implements Camera {
     }
 
     @Override
-    public void act() {
+    public void pleaseAct() {
         try {
             char key = ZombieGame.askPlayerForKey();
 
@@ -166,6 +172,20 @@ public class Player extends Creature implements Camera {
         } catch (WeaponHasNoMunitionException ex) {
             ZombieGame.newMessage("Du hast keine Munition für " + getActiveWeapon().getName());
             act();
+        } catch (CannotAttackWithoutMeleeWeaponException ex) {
+            ZombieGame.newMessage("Du trägst keine Nahkampfwaffe!");
+            act();
+        } catch (CannnotMoveToNonPassableActorException ex) {
+            NotPassableActor actor = ex.getActor();
+            if(actor instanceof Human) {
+                ((Human) actor).talkToPlayer(this);
+            } else if(actor instanceof Door) {
+                ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
+                act();                
+            }
+        } catch (NoEnemyHitException ex) {
+            ZombieGame.newMessage("Du hast verfehlt!");
+            act();
         }
         if (!getActiveWeapon().hasMunition()) {
             removeWeapon(getActiveWeapon().getName());
@@ -250,17 +270,6 @@ public class Player extends Creature implements Camera {
         return weapons.get(weaponsList.get(0));
     }
 
-    public void heal(int i) throws MaximumHealthPointException {
-        ZombieTools.log(getName() + " hat " + i + " HP geheilt. ");
-        if (healthPoints == attributSet.get(Attribute.MAXHP)) {
-            throw new MaximumHealthPointException();
-        }
-        healthPoints += i;
-        if (healthPoints >= attributSet.get(Attribute.MAXHP)) {
-            healthPoints = attributSet.get(Attribute.MAXHP);
-        }
-    }
-
     private void consumeItem(String itemName) {
         ZombieGame.newMessage("Du benutzt '" + itemName + "'.");
         ConsumableItem it;
@@ -286,9 +295,9 @@ public class Player extends Creature implements Camera {
         this.money += m;
     }
 
-    public void pay(int m) throws CanNotAffordException {
+    public void pay(int m) throws CannotAffordException {
         if (m > money) {
-            throw new CanNotAffordException();
+            throw new CannotAffordException();
         } else {
             this.money -= m;
             ZombieGame.refreshBottomFrame();
@@ -315,5 +324,21 @@ public class Player extends Creature implements Camera {
         Attribute att = ZombieGame.askPlayerForAttrbuteToRaise();
         attributSet.put(att, attributSet.get(att) + att.getStep());
         ZombieGame.refreshBottomFrame();
+    }
+
+    public void heal(int i) throws MaximumHealthPointException {
+        ZombieTools.log(getName() + " hat " + i + " HP geheilt. ");
+        if (healthPoints == attributSet.get(Attribute.MAXHP)) {
+            throw new MaximumHealthPointException();
+        }
+        healthPoints += i;
+        if (healthPoints >= attributSet.get(Attribute.MAXHP)) {
+            healthPoints = attributSet.get(Attribute.MAXHP);
+        }
+    }
+
+    @Override
+    protected boolean isEnemy(Creature enemy) {
+        return enemy instanceof Monster;
     }
 }

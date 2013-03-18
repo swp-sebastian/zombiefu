@@ -1,6 +1,5 @@
 package zombiefu.items;
 
-import jade.util.Dice;
 import jade.util.datatype.ColoredChar;
 import java.util.Set;
 import zombiefu.exception.WeaponHasNoMunitionException;
@@ -17,9 +16,11 @@ public class Weapon extends Item {
     protected double blastRadius;
     protected int range;
     protected int munition;
+    protected double dazeProbability;
+    protected int dazeTurns;
     protected Set<Discipline> experts;
 
-    public Weapon(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, double radius, int range) {
+    public Weapon(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, double radius, int range, int dazeTurns, double dazeProbability) {
         super(c, n);
         this.damage = d;
         this.wtyp = w;
@@ -27,6 +28,8 @@ public class Weapon extends Item {
         this.range = range;
         this.munition = 0;
         this.experts = experts;
+        this.dazeTurns = dazeTurns;
+        this.dazeProbability = dazeProbability;
     }
 
     public int getDamage() {
@@ -41,6 +44,14 @@ public class Weapon extends Item {
         return munition;
     }
 
+    public int getDazeTurns() {
+        return dazeTurns;
+    }
+    
+    public double getDazeProbability() {
+        return dazeProbability;
+    }
+    
     public double getBlastRadius() {
         return blastRadius;
     }
@@ -51,8 +62,8 @@ public class Weapon extends Item {
 
     public boolean hasMunition() {
         return munition != 0;
-    }
-
+    }    
+    
     public void addMunition(int m) {
         if (munition == -1) {
             return;
@@ -92,5 +103,5 @@ public class Weapon extends Item {
     public boolean isExpert(Discipline a) {
         return experts.contains(a);
     }
-            
+    
 }

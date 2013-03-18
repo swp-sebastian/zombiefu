@@ -21,9 +21,11 @@ public class WeaponBuilder extends ItemBuilder {
     private double blastRadius;
     private int range;
     private int munition;
+    private int dazeTurns;
+    private double dazeProbability;
     private Set<Discipline> experts;
 
-    public WeaponBuilder(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, int munition, double radius, int range) {
+    public WeaponBuilder(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, int munition, double radius, int range, int dazeTurns, double dazeProbability) {
         this.face = c;
         this.name = n;
         this.damage = d;
@@ -32,23 +34,13 @@ public class WeaponBuilder extends ItemBuilder {
         this.blastRadius = radius;
         this.range = range;
         this.experts = experts;
-    }
-
-    public WeaponBuilder(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, int munition, double radius) {
-        this(c, n, d, w, experts, munition, radius, DEFAULT_RANGE);
-    }
-
-    public WeaponBuilder(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, int munition, int range) {
-        this(c, n, d, w, experts, munition, DEFAULT_RADIUS, range);
-    }
-
-    public WeaponBuilder(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, int munition) {
-        this(c, n, d, w, experts, munition, DEFAULT_RADIUS, DEFAULT_RANGE);
+        this.dazeTurns = dazeTurns;
+        this.dazeProbability = dazeProbability;
     }
 
     @Override
     public Item buildItem() {
-        Weapon w = new Weapon(face, name, damage, wtyp, experts, blastRadius, range);
+        Weapon w = new Weapon(face, name, damage, wtyp, experts, blastRadius, range, dazeTurns, dazeProbability);
         if (munition == -1) {
             w.setUnlimitedMunition(true);
         } else {

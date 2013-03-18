@@ -26,12 +26,16 @@ public class ActorConfig {
 
     public ActorConfig(String restype, String name) throws ActorConfigNotFoundException {
         this.name = name;
-        this.config = new HashMap<String, String>();
+        this.config = new HashMap<>();
         File file = new File(ZombieGame.getResourceDirectory(restype), name + ".cfg");
         String[] cfg = ConfigHelper.getStrings(file);
-        if(!file.exists() || !file.canRead())
+        if (!file.exists() || !file.canRead()) {
             throw new ActorConfigNotFoundException();
+        }
         for (String st : cfg) {
+            if (st.trim().isEmpty()) {
+                continue;
+            }
             String[] it = st.replaceAll("\r?\n?$", "").split("=", 2);
             config.put(it[0], it[1]);
         }
@@ -45,11 +49,11 @@ public class ActorConfig {
             return null;
         }
     }
-    
+
     public String get(String s, String def) {
         return config.containsKey(s) ? config.get(s) : def;
     }
-    
+
     public String get(String s) {
         return config.containsKey(s) ? config.get(s) : null;
     }
@@ -83,7 +87,7 @@ public class ActorConfig {
     }
 
     public HashMap<String, String> getSubConfig(String s) {
-        HashMap<String, String> subConfig = new HashMap<String, String>();
+        HashMap<String, String> subConfig = new HashMap<>();
         Pattern pattern = Pattern.compile("^" + s + "\\.(\\w+)$");
         for (String m : config.keySet()) {
             Matcher matcher = pattern.matcher(m);
@@ -94,5 +98,4 @@ public class ActorConfig {
         }
         return subConfig;
     }
-
 }

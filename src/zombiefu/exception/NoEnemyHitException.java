@@ -8,9 +8,9 @@ package zombiefu.exception;
  *
  * @author tomas
  */
-public class CanNotAffordException extends Exception {
+public class NoEnemyHitException extends Exception {
 
-    public CanNotAffordException() {
+    public NoEnemyHitException() {
     }
     
 }
