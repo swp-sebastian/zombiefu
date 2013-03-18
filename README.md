@@ -15,6 +15,8 @@ ehrfürchtige Erstis oder respekt-einflößende Dozenten, den Kampf an.
 
 ## Starten ##
 
+Voraussetzung: Java 7.
+
 `ant run`
 
 ## Anleitung ##
