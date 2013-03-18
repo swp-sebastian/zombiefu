@@ -51,10 +51,10 @@ public class ZombieSettings {
         playerChar = ColoredChar.create(ZombieTools.getCharFromString(props.getProperty("player.tile.char")), ZombieTools.getColorFromString(props.getProperty("player.tile.color")));
         playerInventar = props.getProperty("player.startItems");
         playerAttributes = new HashMap<Attribute, Integer>();
-        playerAttributes.put(Attribute.MAXHP, Integer.decode(props.getProperty("player.attr.hp")));
-        playerAttributes.put(Attribute.ATTACK, Integer.decode(props.getProperty("player.attr.att")));
-        playerAttributes.put(Attribute.DEFENSE, Integer.decode(props.getProperty("player.attr.def")));
-        playerAttributes.put(Attribute.DEXTERITY, Integer.decode(props.getProperty("player.attr.int")));
+        playerAttributes.put(Attribute.MAXHP, props.getProperty("player.attr.hp") == null ? null : Integer.decode(props.getProperty("player.attr.hp")));
+        playerAttributes.put(Attribute.ATTACK, props.getProperty("player.attr.att") == null ? null : Integer.decode(props.getProperty("player.attr.att")));
+        playerAttributes.put(Attribute.DEFENSE, props.getProperty("player.attr.def") == null ? null : Integer.decode(props.getProperty("player.attr.def")));
+        playerAttributes.put(Attribute.DEXTERITY, props.getProperty("player.attr.dex") == null ? null : Integer.decode(props.getProperty("player.attr.dex")));
         playerStartMap = props.getProperty("player.start.map");
         playerStartCoord = new Coordinate(Integer.decode(props.getProperty("player.start.x")), Integer.decode(props.getProperty("player.start.y")));
         
