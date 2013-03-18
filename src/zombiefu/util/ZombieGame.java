@@ -74,9 +74,9 @@ public class ZombieGame {
         for(Attribute att: Attribute.values()) {
             Integer setting = settings.playerAttributes.get(att); 
             if(setting == null) {
-                atts.put(att, setting);
-            } else {
                 atts.put(att, discipline.getBaseAttribute(att));
+            } else {
+                atts.put(att, setting);
             }
         }
         
