@@ -32,21 +32,17 @@ public class Player extends Creature implements Camera {
 
     private final static int ECTS_FOR_NEXT_SEMESTER = 30;
     private final static ViewField DEFAULT_VIEWFIELD = new RayCaster();
-    private int dexterityValue;
     private int money;
     private int ects;
     private int semester;
-    private int maximalHealthPoints;
     private HashMap<String, ArrayList<ConsumableItem>> inventar;
     private HashMap<String, Weapon> weapons;
     private ArrayList<String> weaponsList;
 
     public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribute, Integer> attr) {
 
-        super(face, name, attr.get(Attribute.MAXHP), attr.get(Attribute.ATTACK), attr.get(Attribute.DEFENSE));
+        super(face, name, attr);
 
-        this.maximalHealthPoints = attr.get(Attribute.MAXHP);
-        this.dexterityValue = attr.get(Attribute.DEXTERITY);
         this.godMode = true;
         this.money = 0;
         this.ects = 0;
@@ -71,14 +67,6 @@ public class Player extends Creature implements Camera {
 
     public int getMoney() {
         return money;
-    }
-
-    public int getMaximalHealthPoints() {
-        return maximalHealthPoints;
-    }
-
-    public int getDexterity() {
-        return dexterityValue;
     }
 
     public HashMap<String, ArrayList<ConsumableItem>> getInventar() {
@@ -264,12 +252,12 @@ public class Player extends Creature implements Camera {
 
     public void heal(int i) throws MaximumHealthPointException {
         ZombieTools.log(getName() + " hat " + i + " HP geheilt. ");
-        if (healthPoints == maximalHealthPoints) {
+        if (healthPoints == attributSet.get(Attribute.MAXHP)) {
             throw new MaximumHealthPointException();
         }
         healthPoints += i;
-        if (healthPoints >= maximalHealthPoints) {
-            healthPoints = maximalHealthPoints;
+        if (healthPoints >= attributSet.get(Attribute.MAXHP)) {
+            healthPoints = attributSet.get(Attribute.MAXHP);
         }
     }
 
@@ -325,23 +313,7 @@ public class Player extends Creature implements Camera {
         semester += 1;
         ZombieGame.refreshBottomFrame();
         Attribute att = ZombieGame.askPlayerForAttrbuteToRaise();
-        int step = att.getStep();
-        switch (att) {
-            case MAXHP:
-                maximalHealthPoints += step;
-                break;
-            case ATTACK:
-                attackValue += step;
-                break;
-            case DEFENSE:
-                defenseValue += step;
-                break;
-            case DEXTERITY:
-                dexterityValue += step;
-                break;
-            default:
-                throw new AssertionError(att.name());
-        }
+        attributSet.put(att, attributSet.get(att) + att.getStep());
         ZombieGame.refreshBottomFrame();
     }
 }

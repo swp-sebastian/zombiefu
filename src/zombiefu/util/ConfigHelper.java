@@ -40,6 +40,7 @@ import zombiefu.items.WeaponType;
 import zombiefu.level.Level;
 import zombiefu.mapgen.RoomBuilder;
 import zombiefu.monster.Monster;
+import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 
 public class ConfigHelper {
@@ -133,7 +134,7 @@ public class ConfigHelper {
         return levels.get(s);
     }
 
-    private static Door getDoorByName(String s) {
+    public static Door getDoorByName(String s) {
         if (doors == null) {
             doors = new HashMap<String, Door>();
         }
@@ -143,7 +144,7 @@ public class ConfigHelper {
         return doors.get(s);
     }
 
-    private static Shop newShopByName(String s) {
+    public static Shop newShopByName(String s) {
         if (shops == null) {
             shops = new HashMap<String, ShopBuilder>();
         }
@@ -172,13 +173,15 @@ public class ConfigHelper {
             ActorConfig config = ActorConfig.getConfig("monsters", s);
             String name = config.getName();
             ColoredChar c = config.getChar();
-            int hp = Integer.decode(config.get("baseAttr.hp"));
-            int attack = Integer.decode(config.get("baseAttr.att"));
-            int defense = Integer.decode(config.get("baseAttr.def"));
+            HashMap<Attribute,Integer> attSet = new HashMap<>();
+            attSet.put(Attribute.MAXHP, config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : 1);
+            attSet.put(Attribute.ATTACK, config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1);
+            attSet.put(Attribute.DEFENSE, config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1);
+            attSet.put(Attribute.DEXTERITY, config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1);
             Weapon w = newWeaponByName(config.get("weapon"));
             int ects = Integer.decode(config.get("ects"));
-            Set<Actor> m = decodeITM(config.get("drop"));
-            monsters.put(s, new MonsterBuilder(c, name, hp, attack, defense, w, ects, m));
+            ITMString itemDrop = new ITMString(config.get("drop"));
+            monsters.put(s, new MonsterBuilder(c, name, attSet, w, ects, itemDrop));
         }
         return monsters.get(s).buildMonster();
     }
@@ -192,7 +195,8 @@ public class ConfigHelper {
             ActorConfig config = ActorConfig.getConfig("humans", s);
             String name = config.getName();
             ColoredChar c = config.getChar();
-            Item offerItem = config.contains("deal.offerItem") ? (Item) decodeITM(config.get("deal.offerItem")).iterator().next() : null;
+            
+            Item offerItem = config.contains("deal.offerItem") ? new ITMString(config.get("deal.offerItem")).getSingleItem() : null;
             Integer offerMoney = config.contains("deal.offerMoney") ? Integer.decode(config.get("deal.offerMoney")) : null;
             Integer requestMoney = config.contains("deal.requestMoney") ? Integer.decode(config.get("deal.requestMoney")) : null;
             String requestItem = config.get("deal.requestItem");
@@ -248,44 +252,6 @@ public class ConfigHelper {
 
     public static boolean isValidChar(char c) {
         return getCharSet().containsKey(c);
-    }
-
-    public static Set<Actor> decodeITM(String entry) {
-        Set<Actor> ret = new HashSet<Actor>();
-        String[] strings = entry.split(" ");
-        for (String s : strings) {
-            Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)x?([0-9]*)$").matcher(s);
-            Guard.verifyState(m.matches());
-            String key = m.group(1);
-            String[] arguments = m.group(2).split("\\s?,\\s?");
-            int anzahl = m.group(3).isEmpty() ? 1 : Integer.decode(m.group(3));
-            // Tomas: Ich möchte hier eigentlich switch benutzen, aber ich 
-            // darf nicht, weil Java 6 das nicht kann. Grrrrrr!
-            for (int i = 1; i <= anzahl; i++) {
-                if (key.equals("food")) {
-                    ret.add(newFoodByName(arguments[0]));
-                } else if (key.equals("weapon")) {
-                    ret.add(newWeaponByName(arguments[0]));
-                } else if (key.equals("door")) {
-                    ret.add(getDoorByName(arguments[0]));
-                } else if (key.equals("key")) {
-                    ret.add(getKeyCardByName(arguments[0]));
-                } else if (key.equals("mensacard")) {
-                    ret.add(new MensaCard(arguments.length > 1 ? Dice.global.nextInt(Integer.decode(arguments[0]), Integer.decode(arguments[1])) : Integer.decode(arguments[0])));
-                } else if (key.equals("shop")) {
-                    ret.add(newShopByName(arguments[0]));
-                } else if (key.equals("human")) {
-                    ret.add(newHumanByName(arguments[0]));
-                } else if (key.equals("monster")) {
-                    ret.add(newMonsterByName(arguments[0]));
-                } else if (key.equals("teleporter")) {
-                    ret.add(new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2]))));
-                } else {
-                    throw new IllegalArgumentException("decodeITMEntry(" + s + "): Ungültiges Item");
-                }
-            }
-        }
-        return ret;
     }
 
     public static Level createLevelFromFile(String mapName) {
@@ -354,7 +320,7 @@ public class ConfigHelper {
                     c = ' ';
                 }
                 if (itemMap.containsKey(c)) {
-                    Set<Actor> actors = decodeITM(itemMap.get(c));
+                    Set<Actor> actors = new ITMString(itemMap.get(c)).getActorSet();
                     for (Actor a : actors) {
                         lev.addActor(a, x, y);
                     }

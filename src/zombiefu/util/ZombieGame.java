@@ -84,7 +84,7 @@ public class ZombieGame {
         player = new Player(settings.playerChar, settings.playerName, discipline, atts);
         
         // StartItems erzeugen
-        Set<Actor> items = ConfigHelper.decodeITM(settings.playerInventar == null ? discipline.getItems(): settings.playerInventar);
+        Set<Actor> items = new ITMString(settings.playerInventar == null ? discipline.getItems(): settings.playerInventar).getActorSet();
         for (Actor a : items) {
             Guard.verifyState(a instanceof Item);
             player.obtainItem((Item) a);
@@ -143,10 +143,10 @@ public class ZombieGame {
                 + player.getActiveWeapon().getMunitionToString()
                 + " / " + player.getActiveWeapon().getDamage() + ") "
                 + " | HP: " + player.getHealthPoints() + "/"
-                + player.getMaximalHealthPoints() + " | A: "
-                + player.getAttackValue() + " | D: "
-                + player.getDefenseValue() + " | I: "
-                + player.getDexterity());
+                + player.getAttribute(Attribute.MAXHP)+ " | A: "
+                + player.getAttribute(Attribute.ATTACK)+ " | D: "
+                + player.getAttribute(Attribute.DEFENSE) + " | I: "
+                + player.getAttribute(Attribute.DEXTERITY));
         frame.bottomTerm().bufferString(
                 0,
                 1,

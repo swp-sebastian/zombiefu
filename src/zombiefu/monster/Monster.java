@@ -2,29 +2,26 @@ package zombiefu.monster;
 
 import jade.core.Actor;
 import jade.fov.RayCaster;
-import zombiefu.items.MensaCard;
 import zombiefu.items.Weapon;
-import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
-
-import java.awt.Color;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import zombiefu.actor.Creature;
+import zombiefu.builder.ItemBuilder;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.NoPlaceToMoveException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.TargetNotFoundException;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.TargetIsNotInThisWorldException;
-import zombiefu.items.Item;
 import zombiefu.ki.StupidMover;
 import zombiefu.ki.MoveAlgorithm;
+import zombiefu.player.Attribute;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
@@ -36,32 +33,25 @@ public class Monster extends Creature {
     protected int ectsYield;
     private Set<Actor> dropOnDeath;
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Weapon w,
-            int ects, int s, MoveAlgorithm m, Set<Actor> dropOnDeath) {
-        super(face, n, h, a, d);
+    public Monster(ColoredChar face, String n, HashMap<Attribute,Integer> attSet, Weapon w,
+            int ects, int s, MoveAlgorithm m, Set<Actor> drop) {
+        super(face, n, attSet);
         waffe = w;
         movealg = m;
         fov = new RayCaster();
         sichtweite = s;
         ectsYield = ects;
-        if (dropOnDeath == null) {
-            this.dropOnDeath = new HashSet<Actor>();
-            if (Dice.global.chance(85)) {
-                this.dropOnDeath.add(new MensaCard(Dice.global.nextInt(1, 100)));
-            }
-        } else {
-            this.dropOnDeath = dropOnDeath;
-        }
+        dropOnDeath = drop;
     }
 
-    public Monster(ColoredChar face, String name, int h, int a, int d, Weapon w, int ects,
+    public Monster(ColoredChar face, String n, HashMap<Attribute,Integer> attSet, Weapon w, int ects,
             Set<Actor> dropOnDeath) {
-        this(face, name, h, a, d, w, ects, 10, new StupidMover(), dropOnDeath);
+        this(face, n, attSet, w, ects, 10, new StupidMover(), dropOnDeath);
     }
 
-    public Monster(ColoredChar face, String n, int h, int a, int d, Weapon w,
+    public Monster(ColoredChar face, String n, HashMap<Attribute,Integer> attSet, Weapon w,
             int ects) {
-        this(face, n, h, a, d, w, ects, 10, new StupidMover(), null);
+        this(face, n, attSet, w, ects, 10, new StupidMover(), null);
     }
 
     private void moveRandomly() throws NoPlaceToMoveException {
