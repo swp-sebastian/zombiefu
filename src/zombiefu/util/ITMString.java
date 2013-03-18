@@ -35,7 +35,7 @@ public class ITMString {
 
     public Set<Actor> getActorSet() {
         Set<Actor> ret = new HashSet<>();
-        if(itmString == null || itmString.equals("")) {
+        if(itmString == null || itmString.isEmpty()) {
             return ret;
         }
         String[] strings = itmString.split(" ");

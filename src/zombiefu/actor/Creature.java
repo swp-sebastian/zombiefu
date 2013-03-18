@@ -1,22 +1,18 @@
 package zombiefu.actor;
 
 import jade.fov.ViewField;
-import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
 import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
-import zombiefu.fight.DamageAnimation;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.fight.Attack;

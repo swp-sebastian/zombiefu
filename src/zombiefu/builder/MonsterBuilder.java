@@ -6,6 +6,8 @@ import zombiefu.items.Weapon;
 import zombiefu.actor.Monster;
 import zombiefu.player.Attribute;
 import zombiefu.util.ITMString;
+import zombiefu.util.ZombieGame;
+import zombiefu.util.ZombieTools;
 
 public class MonsterBuilder {
 
@@ -13,19 +15,32 @@ public class MonsterBuilder {
     private String name;
     private HashMap<Attribute, Integer> attSet;
     private int ects;
-    private Weapon w;
+    private Weapon weapon;
     private ITMString dropOnDeath;
+    private boolean staticAttributes;
 
-    public MonsterBuilder(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Weapon w, int ects, ITMString dropOnDeath) {
+    public MonsterBuilder(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Weapon w, int ects, ITMString dropOnDeath, boolean staticAttributes) {
         this.name = name;
         this.face = face;
         this.attSet = attSet;
-        this.w = w;
+        this.weapon = w;
         this.dropOnDeath = dropOnDeath;
         this.ects = ects;
+        this.staticAttributes = staticAttributes;
     }
 
     public Monster buildMonster() {
-        return new Monster(face, name, attSet, w, ects, dropOnDeath.getActorSet());
+        HashMap<Attribute, Integer> calcAtt;
+        if (staticAttributes) {
+            calcAtt = attSet;
+        } else {
+            calcAtt = new HashMap<>();
+            double plvl = (double) ZombieGame.getPlayer().getSemester();
+            double faktor = (plvl + 1.0) / 2.0 * ZombieTools.getRandomDouble(0.8, 1.2);
+            for (Attribute att : Attribute.values()) {
+                calcAtt.put(att, (int) (attSet.get(att) * faktor));
+            }
+        }
+        return new Monster(face, name, calcAtt, weapon, ects, dropOnDeath.getActorSet());
     }
 }
