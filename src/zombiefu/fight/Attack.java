@@ -71,7 +71,7 @@ public class Attack {
 
     private Coordinate getMissileImpactPoint(Direction dir, int maxDistance) {
         Direction noiseDirection = ZombieTools.getRotatedDirection(dir, 90);
-        int noise = (int) Math.floor(((double) maxDistance) * ZombieTools.getRandomDouble(0,1,attacker.getAttribute(Attribute.DEXTERITY) - 3) / (Dice.global.chance() ? 4.0 : -4.0));
+        int noise = (int) Math.floor(((double) maxDistance) * ZombieTools.getRandomDouble(0, 1, attacker.getAttribute(Attribute.DEXTERITY) - 3) / (Dice.global.chance() ? 4.0 : -4.0));
 
         Coordinate neu = attacker.pos().getTranslated(dir.dx() * maxDistance, dir.dy() * maxDistance).getTranslated(noiseDirection.dx() * noise, noiseDirection.dy() * noise);
 
@@ -80,26 +80,27 @@ public class Attack {
         return partialPath.get(partialPath.size() - 1);
     }
 
-    private void hurtCreature(Creature cr) {
-
+    private int calulateDamage(Creature cr) {
         double faktor = getDamageCoefficient(cr);
 
         ZombieTools.log("hurtCreature(): " + attacker.getName() + " hurts "
                 + cr.getName() + " with " + weapon.getName()
                 + " (Damage: " + weapon.getDamage()
                 + ", Experte: " + weapon.isExpert(attacker.getDiscipline()) + "). Attack value: " + attacker.getAttribute(Attribute.ATTACK) + ", Defense Value: "
-                + cr.getAttribute(Attribute.DEFENSE) + ", Faktor: " + (Math.round(100*faktor) / 100.0));
+                + cr.getAttribute(Attribute.DEFENSE) + ", Faktor: " + (Math.round(100 * faktor) / 100.0));
 
-        // Calculate damage
         int damage = (int) (((double) weapon.getDamage())
                 * ((double) attacker.getAttribute(Attribute.ATTACK) / (double) cr.getAttribute(Attribute.DEFENSE))
                 * ZombieTools.getRandomDouble(0.7, 1.3) * faktor * (weapon.isExpert(attacker.getDiscipline()) ? EXPERT_BONUS : 1.0));
         if (damage == 0) {
             damage = 1;
         }
+        return damage;
+    }
 
+    private void hurtCreature(Creature cr) {
+        int damage = calulateDamage(cr);
         ZombieGame.newMessage(attacker.getName() + " hat " + cr.getName() + " " + damage + " Schadenspunkte hinzugefügt.");
-
         cr.hurt(damage, attacker);
     }
 
@@ -181,6 +182,9 @@ public class Attack {
                 distance = attacker.pos().distance(impactPoint) / ((double) weapon.getRange());
                 return 1.0 - distance * distance / 2.0;
             case UMKREIS:
+                if (cr == attacker) {
+                    return 0.25;
+                }
                 distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
                 return 1.0 - distance * distance / 2.0;
             case GRANATE:
