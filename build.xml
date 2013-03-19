@@ -29,6 +29,15 @@
     <delete dir="${target}" />
   </target>
 
+  <target name="debug" description="run debug version" depends="compile">
+    <java classname="zombiefu.ZombieFU">
+      <classpath>
+        <pathelement path="${classes}"/>
+        <pathelement path="${res}" />
+      </classpath>
+    </java>
+  </target>
+
   <target name="run" depends="dist">
     <java jar="${target}/zombiefu.jar" fork="true"/>
   </target>
