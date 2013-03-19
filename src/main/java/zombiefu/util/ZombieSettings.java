@@ -91,7 +91,7 @@ public class ZombieSettings {
         paths.put("humans", new File(props.getProperty("dir.humans")));
         paths.put("weapons", new File(props.getProperty("dir.weapons")));
         paths.put("food", new File(props.getProperty("dir.food")));
-        System.out.println(paths);
+
         // Überprüfen, ob Pfade lesbar sind.
         Iterator itr = paths.values().iterator();
         while (itr.hasNext()) {

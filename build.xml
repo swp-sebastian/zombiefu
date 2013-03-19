@@ -7,10 +7,10 @@
 
   <target name="init">
     <mkdir dir="${target}" />
-    <mkdir dir="${classes}" />
   </target>
 
   <target name="compile" depends="init" description="compile the source">
+    <mkdir dir="${classes}" />
     <javac srcdir="${src}" destdir="${classes}" />
   </target>
 
