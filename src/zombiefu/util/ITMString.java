@@ -12,8 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.print.attribute.AttributeSet;
 import zombiefu.actor.Teleporter;
 import zombiefu.items.Item;
+import zombiefu.items.RandomItemGenerator;
 import zombiefu.items.MensaCard;
 import static zombiefu.util.ConfigHelper.getKeyCardByName;
 import static zombiefu.util.ConfigHelper.newFoodByName;
@@ -62,7 +64,7 @@ public class ITMString {
                         ret.add(ConfigHelper.getKeyCardByName(arguments[0]));
                         break;
                     case "mensacard":
-                        ret.add(new MensaCard(arguments.length > 1 ? Dice.global.nextInt(Integer.decode(arguments[0]), Integer.decode(arguments[1])) : Integer.decode(arguments[0])));
+                        ret.add(new MensaCard(Integer.decode(arguments[0])));
                         break;
                     case "shop":
                         ret.add(ConfigHelper.newShopByName(arguments[0]));
@@ -72,6 +74,9 @@ public class ITMString {
                         break;
                     case "monster":
                         ret.add(ConfigHelper.newMonsterByName(arguments[0]));
+                        break;
+                    case "random":
+                        ret.add(RandomItemGenerator.fromString(arguments[0]).getRandomItem());
                         break;
                     case "teleporter":
                         ret.add(new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2]))));

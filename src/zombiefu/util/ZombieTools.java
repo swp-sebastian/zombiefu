@@ -50,6 +50,21 @@ public class ZombieTools {
         return getRandomDouble(a, b, 0);
     }
 
+    public static int getRandomIndex(int... args) {
+        int sum = 0;
+        for (int arg : args) {
+            sum += arg;
+        }
+        int random = Dice.global.nextInt(sum);
+        int sc = 0;
+        for(int i = 0; i < args.length; i++) {
+            sc += args[i];
+            if(random < sc)
+                return i;            
+        }
+        throw new ArithmeticException();
+    }
+
     public static Color getRandomColor(Dice d) {
         return new Color(d.nextInt(0, 255), d.nextInt(0, 255),
                 d.nextInt(0, 255));
