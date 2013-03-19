@@ -33,17 +33,12 @@ public class ZombieSettings {
     public ZombieSettings(String[] args, String res) {
         props = new Properties(defaults(res));
 
-        List<String> configFiles = new ArrayList<String>();
-        configFiles.add(System.getProperty("user.home") + "/.zombiefurc");
-        configFiles.add(res + "/config.cfg");
-
-        for (String fileName : configFiles) {
-            try {
-                props.load(new FileInputStream(fileName));
-                System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " geladen.");
-            } catch (IOException ex) {
-                System.out.println("ZombieSettings: Konfigurationsdatei " + fileName + " nicht vorhanden.");
-            }
+        String userconfig = System.getProperty("user.home") + "/.zombiefurc";
+        try {
+            props.load(new FileInputStream(userconfig));
+            System.out.println("ZombieSettings: User-Konfigurationsdatei " + userconfig + " geladen.");
+        } catch (IOException ex) {
+            System.out.println("ZombieSettings: Keine User-Konfigurationsdatei " + userconfig + " vorhanden. Benutze defaults.");
         }
 
         // Spielerinfo
