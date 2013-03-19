@@ -3,6 +3,7 @@
   <property name="build" location="build" />
   <property name="dist"  location="dist" />
 
+
   <target name="init">
     <mkdir dir="${build}" />
   </target>
@@ -13,7 +14,9 @@
 
   <target name="dist" depends="compile" description="generate the distribution">
     <mkdir dir="${dist}/" />
-    <jar jarfile="${dist}/zombiefu.jar" basedir="${build}">
+    <jar jarfile="${dist}/zombiefu.jar">
+      <fileset dir="${build}" />
+      <fileset dir="." includes="res/**"/>
       <manifest>
         <attribute name="Built-By" value="${user.name}" />
         <attribute name="Main-Class" value="zombiefu.ZombieFU" />
