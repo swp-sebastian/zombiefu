@@ -28,7 +28,7 @@ public class ProjectileBresenham extends PathFinder {
         Guard.argumentsAreNotNull(world, start, end);
         Guard.argumentsInsideBounds(start.x(), start.y(), world.width(), world.height());
 
-        List<Coordinate> path = new ArrayList<>();
+        List<Coordinate> path = new ArrayList<Coordinate>();
         int dx = end.x() - start.x();
         int dy = end.y() - start.y();
 

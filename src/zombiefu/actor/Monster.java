@@ -52,7 +52,10 @@ public class Monster extends Creature {
             try {
                 tryToMove(d);
                 return;
-            } catch (CannotMoveToIllegalFieldException | WeaponHasNoMunitionException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
+            } catch (CannotMoveToIllegalFieldException ex){
+            } catch(WeaponHasNoMunitionException ex){
+            } catch (CannotAttackWithoutMeleeWeaponException ex){
+            } catch (CannnotMoveToNonPassableActorException ex) {
             } catch (NoEnemyHitException ex) {
                 ex.close();
             }
@@ -85,7 +88,9 @@ public class Monster extends Creature {
     protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
         try {
             tryToMove(directionToPlayer());
-        } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
+        } catch (CannotMoveToIllegalFieldException ex){
+        } catch (CannotAttackWithoutMeleeWeaponException ex){
+        } catch (CannnotMoveToNonPassableActorException ex) {
         } catch (NoEnemyHitException ex) {
             ex.close();
         }
@@ -98,7 +103,9 @@ public class Monster extends Creature {
                 moveToPlayer();
                 return;
             }
-        } catch (TargetIsNotInThisWorldException | TargetNotFoundException | WeaponHasNoMunitionException ex) {
+        } catch (TargetIsNotInThisWorldException ex){
+        } catch (TargetNotFoundException ex){
+        } catch (WeaponHasNoMunitionException ex) {
         }
         try {
             moveRandomly();
@@ -131,7 +138,9 @@ public class Monster extends Creature {
         // TODO: Überprüfen, ob Gegner wirklich in einer Linie ist
         try {
             return directionToPlayer();
-        } catch (TargetNotFoundException | TargetIsNotInThisWorldException e) {
+        } catch (TargetNotFoundException ex) {
+            throw new NoDirectionGivenException();
+        } catch (TargetIsNotInThisWorldException e) {
             throw new NoDirectionGivenException();
         }
     }
