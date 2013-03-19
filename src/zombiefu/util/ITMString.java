@@ -36,7 +36,7 @@ public class ITMString {
     }
 
     public Set<Actor> getActorSet() {
-        Set<Actor> ret = new HashSet<>();
+        Set<Actor> ret = new HashSet<Actor>();
         if(itmString == null || itmString.isEmpty()) {
             return ret;
         }
@@ -47,43 +47,29 @@ public class ITMString {
             String key = m.group(1);
             String[] arguments = m.group(2).split("\\s?,\\s?");
             int anzahl = m.group(3).isEmpty() ? 1 : Integer.decode(m.group(3));
-            // Tomas: Ich möchte hier eigentlich switch benutzen, aber ich 
-            // darf nicht, weil Java 6 das nicht kann. Grrrrrr!
             for (int i = 1; i <= anzahl; i++) {
-                switch (key) {
-                    case "food":
-                        ret.add(ConfigHelper.newFoodByName(arguments[0]));
-                        break;
-                    case "weapon":
-                        ret.add(ConfigHelper.newWeaponByName(arguments[0]));
-                        break;
-                    case "door":
-                        ret.add(ConfigHelper.getDoorByName(arguments[0]));
-                        break;
-                    case "key":
-                        ret.add(ConfigHelper.getKeyCardByName(arguments[0]));
-                        break;
-                    case "mensacard":
-                        ret.add(new MensaCard(Integer.decode(arguments[0])));
-                        break;
-                    case "shop":
-                        ret.add(ConfigHelper.newShopByName(arguments[0]));
-                        break;
-                    case "human":
-                        ret.add(ConfigHelper.newHumanByName(arguments[0]));
-                        break;
-                    case "monster":
-                        ret.add(ConfigHelper.newMonsterByName(arguments[0]));
-                        break;
-                    case "random":
-                        ret.add(RandomItemGenerator.fromString(arguments[0]).getRandomItem());
-                        break;
-                    case "teleporter":
-                        ret.add(new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2]))));
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid ITM String");
-                }
+            if (key.equals("food"))
+                ret.add(ConfigHelper.newFoodByName(arguments[0]));
+            else if (key.equals("weapon"))
+                ret.add(ConfigHelper.newWeaponByName(arguments[0]));
+            else if (key.equals("door"))
+                ret.add(ConfigHelper.getDoorByName(arguments[0]));
+            else if (key.equals("key"))
+                ret.add(ConfigHelper.getKeyCardByName(arguments[0]));
+            else if (key.equals("mensacard"))
+                ret.add(new MensaCard(Integer.decode(arguments[0])));
+            else if (key.equals("shop"))
+                ret.add(ConfigHelper.newShopByName(arguments[0]));
+            else if (key.equals("human"))
+                ret.add(ConfigHelper.newHumanByName(arguments[0]));
+            else if (key.equals("monster"))
+                ret.add(ConfigHelper.newMonsterByName(arguments[0]));
+            else if (key.equals("random"))
+                ret.add(RandomItemGenerator.fromString(arguments[0]).getRandomItem());
+            else if (key.equals("teleporter"))
+                ret.add(new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2]))));
+            else
+                throw new IllegalArgumentException("Invalid ITM String");
             }
         }
         return ret;

@@ -52,10 +52,9 @@ public class Monster extends Creature {
             try {
                 tryToMove(d);
                 return;
-            } catch (CannotMoveToIllegalFieldException | WeaponHasNoMunitionException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
             } catch (NoEnemyHitException ex) {
                 ex.close();
-            }
+            }catch (Exception e){}
         }
         throw new NoPlaceToMoveException();
     }
@@ -85,10 +84,9 @@ public class Monster extends Creature {
     protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
         try {
             tryToMove(directionToPlayer());
-        } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
         } catch (NoEnemyHitException ex) {
             ex.close();
-        }
+        } catch (Exception e){}
     }
 
     @Override
@@ -98,7 +96,7 @@ public class Monster extends Creature {
                 moveToPlayer();
                 return;
             }
-        } catch (TargetIsNotInThisWorldException | TargetNotFoundException | WeaponHasNoMunitionException ex) {
+        } catch (Exception ex) {
         }
         try {
             moveRandomly();
@@ -131,7 +129,9 @@ public class Monster extends Creature {
         // TODO: Überprüfen, ob Gegner wirklich in einer Linie ist
         try {
             return directionToPlayer();
-        } catch (TargetNotFoundException | TargetIsNotInThisWorldException e) {
+        } catch (TargetNotFoundException e) {
+            throw new NoDirectionGivenException();
+        } catch (TargetIsNotInThisWorldException e){
             throw new NoDirectionGivenException();
         }
     }

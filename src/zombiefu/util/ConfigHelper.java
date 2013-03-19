@@ -50,9 +50,9 @@ public class ConfigHelper {
     private static HashMap<Character, Boolean> visibleSet;
 
     private static void initCharSet() {
-        charSet = new HashMap<>();
-        passSet = new HashMap<>();
-        visibleSet = new HashMap<>();
+        charSet = new HashMap<Character,Color>();
+        passSet = new HashMap<Character,Boolean>();
+        visibleSet = new HashMap<Character,Boolean>();
         String[] settings = getStrings(new File(ZombieGame.getResourceDirectory("base"), "CharSet.txt"));
         for (int i = 0; i < settings.length; i++) {
             String[] setting = settings[i].split(" ");
@@ -76,7 +76,7 @@ public class ConfigHelper {
 
     private static FoodBuilder getFoodBuilderByName(String s) throws ActorConfigNotFoundException {
         if (food == null) {
-            food = new HashMap<>();
+            food = new HashMap<String,FoodBuilder>();
         }
         if (!food.containsKey(s)) {
             ZombieTools.log("getFoodBuilderByName(" + s + "): Erzeuge FoodBuilder");
@@ -91,7 +91,7 @@ public class ConfigHelper {
 
     private static WeaponBuilder getWeaponBuilderByName(String s) throws ActorConfigNotFoundException {
         if (weapons == null) {
-            weapons = new HashMap<>();
+            weapons = new HashMap<String,WeaponBuilder>();
         }
         if (!weapons.containsKey(s)) {
             ZombieTools.log("getWeaponBuilderByName(" + s + "): Erzeuge WeaponBuilder");
@@ -107,7 +107,7 @@ public class ConfigHelper {
             Integer dazeTurns = Integer.decode(config.get("daze.turns","0"));
             Double dazeProbability = Double.valueOf(config.get("daze.probability","0"));
             String expertsStr = config.get("experts");
-            Set<Discipline> experts = new HashSet<>();
+            Set<Discipline> experts = new HashSet<Discipline>();
             if (expertsStr != null) {
                 for (String exp : expertsStr.split(" ")) {
                     experts.add(Discipline.getTypeFromString(exp));
@@ -120,7 +120,7 @@ public class ConfigHelper {
 
     public static Level getLevelByName(String s) {
         if (levels == null) {
-            levels = new HashMap<>();
+            levels = new HashMap<String,Level>();
         }
         if (!levels.containsKey(s)) {
             levels.put(s, createLevelFromFile(s));
@@ -130,7 +130,7 @@ public class ConfigHelper {
 
     public static Door getDoorByName(String s) {
         if (doors == null) {
-            doors = new HashMap<>();
+            doors = new HashMap<String,Door>();
         }
         if (!doors.containsKey(s)) {
             doors.put(s, new Door(s));
@@ -140,12 +140,12 @@ public class ConfigHelper {
 
     public static Shop newShopByName(String s) {
         if (shops == null) {
-            shops = new HashMap<>();
+            shops = new HashMap<String,ShopBuilder>();
         }
         if (!shops.containsKey(s)) {
             String[] shop = getStrings(new File(ZombieGame.getResourceDirectory("shops"), s + ".shop"));
             String[] charInfo = shop[0].split(" ");
-            HashMap<ItemBuilder, Integer> items = new HashMap<>();
+            HashMap<ItemBuilder, Integer> items = new HashMap<ItemBuilder,Integer>();
             for (int i = 1; i < shop.length; i++) {
                 String[] it = shop[i].split(" ");
                 ItemBuilder itb = getItemBuilderByName(it[0]);
@@ -160,14 +160,14 @@ public class ConfigHelper {
 
     public static Monster newMonsterByName(String s) {
         if (monsters == null) {
-            monsters = new HashMap<>();
+            monsters = new HashMap<String,MonsterBuilder>();
         }
         if (!monsters.containsKey(s)) {
             ZombieTools.log("newMonsterByName(" + s + "): Erzeuge MonsterBuilder");
             ActorConfig config = ActorConfig.getConfig("monsters", s);
             String name = config.getName();
             ColoredChar c = config.getChar();
-            HashMap<Attribute, Integer> attSet = new HashMap<>();
+            HashMap<Attribute, Integer> attSet = new HashMap<Attribute,Integer>();
             attSet.put(Attribute.MAXHP, config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : 1);
             attSet.put(Attribute.ATTACK, config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1);
             attSet.put(Attribute.DEFENSE, config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1);
@@ -183,7 +183,7 @@ public class ConfigHelper {
 
     public static Human newHumanByName(String s) {
         if (humans == null) {
-            humans = new HashMap<>();
+            humans = new HashMap<String,HumanBuilder>();
         }
         if (!humans.containsKey(s)) {
             ZombieTools.log("newHumanByName(" + s + "): Erzeuge HumanBuilder");
@@ -273,7 +273,7 @@ public class ConfigHelper {
 
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
-        HashMap<Character, String> itemMap = new HashMap<>();
+        HashMap<Character, String> itemMap = new HashMap<Character,String>();
         String[] items = getStrings(new File(ZombieGame.getResourceDirectory("maps"), mapName + ".itm"));
         for (String st : items) {
             String[] it = st.split(" ", 2);
@@ -327,7 +327,7 @@ public class ConfigHelper {
     }
 
     public static String[] getStrings(File input) {
-        LinkedList<String> lines = new LinkedList<>();
+        LinkedList<String> lines = new LinkedList<String>();
         try {
             InputStreamReader reader = new InputStreamReader(new FileInputStream(input), "UTF-8");
             BufferedReader text = new BufferedReader(reader);

@@ -50,7 +50,7 @@ public class Attack {
         this.wtype = this.weapon.getTyp();
         this.world = attacker.world();
 
-        this.anims = new HashSet<>();
+        this.anims = new HashSet<DamageAnimation>();
     }
 
     private void createAnimation(Coordinate c) {
@@ -152,7 +152,7 @@ public class Attack {
 
     private void createDetonation(Coordinate c, double blastRadius, boolean includeCenter) throws NoEnemyHitException {
         // TODO: Verschönern (mit RayCaster)
-        Collection<Creature> targets = new HashSet<>();
+        Collection<Creature> targets = new HashSet<Creature>();
 
         int blastMax = (int) Math.ceil(blastRadius);
 

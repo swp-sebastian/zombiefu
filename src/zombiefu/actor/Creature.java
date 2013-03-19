@@ -33,7 +33,7 @@ public abstract class Creature extends NotPassableActor {
     protected boolean godMode;
 
     public static HashMap<Attribute, Integer> getDefaultAttributeSet() {
-        HashMap<Attribute, Integer> attSet = new HashMap<>();
+        HashMap<Attribute, Integer> attSet = new HashMap<Attribute,Integer>();
         for (Attribute att : Attribute.values()) {
             attSet.put(att, 1);
         }
