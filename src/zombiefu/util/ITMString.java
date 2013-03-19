@@ -34,7 +34,7 @@ public class ITMString {
     }
 
     public Set<Actor> getActorSet() {
-        Set<Actor> ret = new HashSet<>();
+        Set<Actor> ret = new HashSet<Actor>();
         if(itmString == null || itmString.isEmpty()) {
             return ret;
         }
@@ -48,35 +48,43 @@ public class ITMString {
             // Tomas: Ich möchte hier eigentlich switch benutzen, aber ich 
             // darf nicht, weil Java 6 das nicht kann. Grrrrrr!
             for (int i = 1; i <= anzahl; i++) {
-                switch (key) {
-                    case "food":
+                if (key.equals("food")){
                         ret.add(ConfigHelper.newFoodByName(arguments[0]));
                         break;
-                    case "weapon":
+                }
+                else if (key.equals("weapon")){
                         ret.add(ConfigHelper.newWeaponByName(arguments[0]));
                         break;
-                    case "door":
+                }
+                else if (key.equals("door")){
                         ret.add(ConfigHelper.getDoorByName(arguments[0]));
                         break;
-                    case "key":
+                }
+                else if (key.equals("key")){
                         ret.add(ConfigHelper.getKeyCardByName(arguments[0]));
                         break;
-                    case "mensacard":
+                }
+                else if (key.equals("mensacard")){
                         ret.add(new MensaCard(arguments.length > 1 ? Dice.global.nextInt(Integer.decode(arguments[0]), Integer.decode(arguments[1])) : Integer.decode(arguments[0])));
                         break;
-                    case "shop":
+                }
+                else if (key.equals("shop")){
                         ret.add(ConfigHelper.newShopByName(arguments[0]));
                         break;
-                    case "human":
+                }
+                else if (key.equals("human")){
                         ret.add(ConfigHelper.newHumanByName(arguments[0]));
                         break;
-                    case "monster":
+                }
+                else if (key.equals("monster")){
                         ret.add(ConfigHelper.newMonsterByName(arguments[0]));
                         break;
-                    case "teleporter":
+                }
+                else if (key.equals("teleporter")){
                         ret.add(new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2]))));
                         break;
-                    default:
+                }
+                else{
                         throw new IllegalArgumentException("Invalid ITM String");
                 }
             }

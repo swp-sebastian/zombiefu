@@ -26,7 +26,7 @@ public class ActorConfig {
 
     public ActorConfig(String restype, String name) throws ActorConfigNotFoundException {
         this.name = name;
-        this.config = new HashMap<>();
+        this.config = new HashMap<String,String>();
         File file = new File(ZombieGame.getResourceDirectory(restype), name + ".cfg");
         String[] cfg = ConfigHelper.getStrings(file);
         if (!file.exists() || !file.canRead()) {
@@ -87,7 +87,7 @@ public class ActorConfig {
     }
 
     public HashMap<String, String> getSubConfig(String s) {
-        HashMap<String, String> subConfig = new HashMap<>();
+        HashMap<String, String> subConfig = new HashMap<String, String>();
         Pattern pattern = Pattern.compile("^" + s + "\\.(\\w+)$");
         for (String m : config.keySet()) {
             Matcher matcher = pattern.matcher(m);

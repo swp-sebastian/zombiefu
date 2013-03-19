@@ -34,7 +34,7 @@ public class MonsterBuilder {
         if (staticAttributes) {
             calcAtt = attSet;
         } else {
-            calcAtt = new HashMap<>();
+            calcAtt = new HashMap<Attribute,Integer>();
             double plvl = (double) ZombieGame.getPlayer().getSemester();
             double faktor = (plvl + 1.0) / 2.0 * ZombieTools.getRandomDouble(0.8, 1.2);
             for (Attribute att : Attribute.values()) {

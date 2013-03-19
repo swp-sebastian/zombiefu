@@ -29,7 +29,7 @@ public enum Discipline {
     private Discipline(int hp, int att, int def, int dex, int money, String items) {
         baseMoney = money;
         baseItems = items;
-        baseAttributes = new HashMap<>();
+        baseAttributes = new HashMap<Attribute,Integer>();
         baseAttributes.put(Attribute.MAXHP, hp);
         baseAttributes.put(Attribute.ATTACK, att);
         baseAttributes.put(Attribute.DEFENSE, def);
