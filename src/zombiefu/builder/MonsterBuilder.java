@@ -18,6 +18,7 @@ public class MonsterBuilder {
     private Weapon weapon;
     private ITMString dropOnDeath;
     private boolean staticAttributes;
+    private double habitatRadius;
 
     public MonsterBuilder(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Weapon w, int ects, ITMString dropOnDeath, boolean staticAttributes) {
         this.name = name;
@@ -27,6 +28,7 @@ public class MonsterBuilder {
         this.dropOnDeath = dropOnDeath;
         this.ects = ects;
         this.staticAttributes = staticAttributes;
+        this.habitatRadius = 6.0; // TODO
     }
 
     public Monster buildMonster() {
@@ -41,6 +43,7 @@ public class MonsterBuilder {
                 calcAtt.put(att, (int) (attSet.get(att) * faktor));
             }
         }
-        return new Monster(face, name, calcAtt, weapon, ects, dropOnDeath.getActorSet());
+        return new Monster(face, name, calcAtt, weapon, ects, dropOnDeath.getActorSet(),habitatRadius);
     }
+    
 }

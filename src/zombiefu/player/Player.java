@@ -292,7 +292,7 @@ public class Player extends Creature implements Camera {
     }
 
     @Override
-    public void killed(Creature killer) {
+    public void kill(Creature killer) {
         ZombieGame.endGame();
     }
 

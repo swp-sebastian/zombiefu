@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
@@ -20,7 +22,9 @@ import zombiefu.exception.TargetNotFoundException;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.TargetIsNotInThisWorldException;
+import zombiefu.ki.CircularHabitat;
 import zombiefu.ki.Dijkstra;
+import zombiefu.ki.Habitat;
 import zombiefu.ki.MoveAlgorithm;
 import zombiefu.player.Attribute;
 import zombiefu.player.Player;
@@ -33,16 +37,19 @@ public class Monster extends Creature {
     private Weapon waffe;
     protected int ectsYield;
     private Set<Actor> dropOnDeath;
+    private Habitat habitat;
+    private double maxDistance;
 
-    public Monster(ColoredChar face, String n, HashMap<Attribute, Integer> attSet, Weapon w, int ects, Set<Actor> drop) {
-        super(face, n, attSet);
-        waffe = w;
-        ectsYield = ects;
-        dropOnDeath = drop;
+    public Monster(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Weapon waffe, int ectsYield, Set<Actor> dropOnDeath, double maxDistance) {
+        super(face, name, attSet);
+        this.waffe = waffe;
+        this.ectsYield = ectsYield;
+        this.dropOnDeath = dropOnDeath;
+        this.maxDistance = maxDistance;
 
-        movealg = new Dijkstra();
-        fov = new RayCaster();
-        sichtweite = 10;
+        this.movealg = new Dijkstra();
+        this.fov = new RayCaster();
+        this.sichtweite = 10;
     }
 
     private void moveRandomly() throws NoPlaceToMoveException {
@@ -60,31 +67,31 @@ public class Monster extends Creature {
         throw new NoPlaceToMoveException();
     }
 
-    private Coordinate getPlayerPosition()
-            throws TargetIsNotInThisWorldException {
+    private Coordinate getPlayerPosition() throws TargetIsNotInThisWorldException {
         Guard.argumentIsNotNull(world());
-        Player player = world().getActor(Player.class);
+        Player player = ZombieGame.getPlayer();
 
-        if (player == null) {
+        if (player.world() != world()) {
             throw new TargetIsNotInThisWorldException();
         }
 
         return player.pos();
     }
 
-    protected boolean positionIsVisible(Coordinate pos)
-            throws TargetIsNotInThisWorldException {
+    private boolean positionIsVisible(Coordinate pos) throws TargetIsNotInThisWorldException {
         return fov.getViewField(world(), pos(), sichtweite).contains(pos);
     }
 
-    protected Direction directionToPlayer() throws TargetNotFoundException,
-            TargetIsNotInThisWorldException {
-        return movealg.directionTo(world(), pos(), getPlayerPosition());
+    private Direction getDirectionTo(Coordinate coord) throws TargetNotFoundException {
+        return movealg.directionTo(world(), pos(), coord);
+    }
+    private void moveToCoordinate(Coordinate coord) throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
+        moveToDirection(getDirectionTo(coord));
     }
 
-    protected void moveToPlayer() throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
+    private void moveToDirection(Direction dir) throws TargetIsNotInThisWorldException, WeaponHasNoMunitionException {
         try {
-            tryToMove(directionToPlayer());
+            tryToMove(dir);
         } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
         } catch (NoEnemyHitException ex) {
             ex.close();
@@ -92,14 +99,28 @@ public class Monster extends Creature {
     }
 
     @Override
-    public void pleaseAct() {
+    protected void pleaseAct() {
+        
+        if (habitat == null) {
+            habitat = new CircularHabitat(this, maxDistance);
+        }
+        
         try {
             if (positionIsVisible(getPlayerPosition())) {
-                moveToPlayer();
+                moveToCoordinate(getPlayerPosition());
                 return;
             }
         } catch (TargetIsNotInThisWorldException | TargetNotFoundException | WeaponHasNoMunitionException ex) {
         }
+
+        if (!habitat.atHome()) {
+            try {
+                moveToCoordinate(habitat.home());
+                return;
+            } catch (TargetIsNotInThisWorldException | TargetNotFoundException | WeaponHasNoMunitionException ex) {
+            }
+        }
+
         try {
             moveRandomly();
         } catch (NoPlaceToMoveException ex) {
@@ -113,7 +134,7 @@ public class Monster extends Creature {
     }
 
     @Override
-    public void killed(Creature killer) {
+    public void kill(Creature killer) {
         for (Actor it : dropOnDeath) {
             world().addActor(it, pos());
         }
@@ -130,7 +151,7 @@ public class Monster extends Creature {
     protected Direction getAttackDirection() throws NoDirectionGivenException {
         // TODO: Überprüfen, ob Gegner wirklich in einer Linie ist
         try {
-            return directionToPlayer();
+            return getDirectionTo(getPlayerPosition());
         } catch (TargetNotFoundException | TargetIsNotInThisWorldException e) {
             throw new NoDirectionGivenException();
         }

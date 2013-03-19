@@ -32,14 +32,6 @@ public abstract class Creature extends NotPassableActor {
     protected int sichtweite;
     protected boolean godMode;
 
-    public static HashMap<Attribute, Integer> getDefaultAttributeSet() {
-        HashMap<Attribute, Integer> attSet = new HashMap<>();
-        for (Attribute att : Attribute.values()) {
-            attSet.put(att, 1);
-        }
-        return attSet;
-    }
-
     public Creature(ColoredChar face, String n, HashMap<Attribute, Integer> a) {
         super(face);
         dazed = 0;
@@ -50,6 +42,24 @@ public abstract class Creature extends NotPassableActor {
 
     public Creature(ColoredChar face, String n) {
         this(face, n, getDefaultAttributeSet());
+    }
+    
+    public abstract Weapon getActiveWeapon();
+
+    protected abstract Direction getAttackDirection() throws NoDirectionGivenException;
+
+    protected abstract boolean isEnemy(Creature enemy);
+
+    protected abstract void pleaseAct();
+
+    public abstract void kill(Creature killer);
+
+    public static HashMap<Attribute, Integer> getDefaultAttributeSet() {
+        HashMap<Attribute, Integer> attSet = new HashMap<>();
+        for (Attribute att : Attribute.values()) {
+            attSet.put(att, 1);
+        }
+        return attSet;
     }
 
     public Discipline getDiscipline() {
@@ -82,8 +92,6 @@ public abstract class Creature extends NotPassableActor {
         return fov.getViewField(world(), pos(), sichtweite);
     }
 
-    public abstract Weapon getActiveWeapon();
-
     @Override
     public void setPos(int x, int y) {
         if (world().passableAt(x, y)) {
@@ -95,9 +103,6 @@ public abstract class Creature extends NotPassableActor {
         return name;
     }
 
-    protected abstract Direction getAttackDirection()
-            throws NoDirectionGivenException;
-
     public void attack() throws NoDirectionGivenException, WeaponHasNoMunitionException, NoEnemyHitException {
         Direction dir;
         if (getActiveWeapon().getTyp() != WeaponType.UMKREIS) {
@@ -107,10 +112,6 @@ public abstract class Creature extends NotPassableActor {
         }
         new Attack(this, dir).perform();
     }
-
-    protected abstract boolean isEnemy(Creature enemy);
-
-    public abstract void pleaseAct();
 
     @Override
     public void act() {
@@ -152,15 +153,13 @@ public abstract class Creature extends NotPassableActor {
         throw new CannnotMoveToNonPassableActorException(actor);
     }
 
-    public abstract void killed(Creature killer);
-
     public void hurt(int i, Creature hurter) {
         ZombieTools.log(getName() + " hat " + i + " HP verloren. ");
         if (godMode) {
             return;
         }
         if (i >= healthPoints) {
-            killed(hurter);
+            kill(hurter);
         } else {
             healthPoints -= i;
         }

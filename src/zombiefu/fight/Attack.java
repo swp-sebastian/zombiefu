@@ -183,7 +183,7 @@ public class Attack {
                 return 1.0 - distance * distance / 2.0;
             case UMKREIS:
                 if (cr == attacker) {
-                    return 0.25;
+                    return 0.5;
                 }
                 distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
                 return 1.0 - distance * distance / 2.0;
