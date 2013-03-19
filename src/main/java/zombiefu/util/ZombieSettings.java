@@ -57,7 +57,7 @@ public class ZombieSettings {
         playerAttributes.put(Attribute.DEXTERITY, props.getProperty("player.attr.dex") == null ? null : Integer.decode(props.getProperty("player.attr.dex")));
         playerStartMap = props.getProperty("player.start.map");
         playerStartCoord = new Coordinate(Integer.decode(props.getProperty("player.start.x")), Integer.decode(props.getProperty("player.start.y")));
-        
+
         // Weltkarte
         globalMap = props.getProperty("globalmap");
 
@@ -91,7 +91,7 @@ public class ZombieSettings {
         paths.put("humans", new File(props.getProperty("dir.humans")));
         paths.put("weapons", new File(props.getProperty("dir.weapons")));
         paths.put("food", new File(props.getProperty("dir.food")));
-
+        System.out.println(paths);
         // Überprüfen, ob Pfade lesbar sind.
         Iterator itr = paths.values().iterator();
         while (itr.hasNext()) {
@@ -123,7 +123,7 @@ public class ZombieSettings {
         def.setProperty("player.start.map", "Weltkarte");
         def.setProperty("player.start.x", "15");
         def.setProperty("player.start.y", "53");
-        
+
         def.setProperty("globalmap", "Weltkarte");
 
         // Default Keybindings

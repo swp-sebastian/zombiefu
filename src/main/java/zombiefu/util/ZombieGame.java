@@ -36,7 +36,7 @@ public class ZombieGame {
     private static Level globalmap;
 
     public static void createGame(String[] args, String name) {
-        settings = new ZombieSettings(args, "res");
+        settings = new ZombieSettings(args, "src/main/resources/zombiefu");
         frame = new ZombieFrame(name);
     }
 
@@ -68,31 +68,31 @@ public class ZombieGame {
     public static void initialize() {
         Discipline discipline = askPlayerForDiscipline();
         globalmap = ConfigHelper.getLevelByName(settings.globalMap);
-        
+
         // Attribute laden.
         HashMap<Attribute,Integer> atts = new HashMap<Attribute,Integer>();
         for(Attribute att: Attribute.values()) {
-            Integer setting = settings.playerAttributes.get(att); 
+            Integer setting = settings.playerAttributes.get(att);
             if(setting == null) {
                 atts.put(att, discipline.getBaseAttribute(att));
             } else {
                 atts.put(att, setting);
             }
         }
-        
-        // Spieler erzeugen        
+
+        // Spieler erzeugen
         player = new Player(settings.playerChar, settings.playerName, discipline, atts);
-        
+
         // StartItems erzeugen
         Set<Actor> items = new ITMString(settings.playerInventar == null ? discipline.getItems(): settings.playerInventar).getActorSet();
         for (Actor a : items) {
             Guard.verifyState(a instanceof Item);
             player.obtainItem((Item) a);
         }
-        
+
         // Gib Spieler Geld
         player.addMoney(discipline.getMoney());
-        
+
         // Setze Spieler in Welt
         player.changeWorld(ConfigHelper.getLevelByName(settings.playerStartMap));
         if (player.world().insideBounds(settings.playerStartCoord)) {
