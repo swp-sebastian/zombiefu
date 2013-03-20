@@ -18,7 +18,7 @@ import zombiefu.util.ZombieTools;
  *
  * @author tomas
  */
-public class Dijkstra implements MoveAlgorithm {
+public class Dijkstra implements ChaseAlgorithm {
 
     private int maxDistance;
 

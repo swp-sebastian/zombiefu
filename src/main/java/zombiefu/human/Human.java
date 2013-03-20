@@ -4,15 +4,16 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.HashMap;
 import zombiefu.actor.Creature;
+import zombiefu.actor.NonPlayer;
 import zombiefu.items.Weapon;
 import zombiefu.player.Attribute;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 
-public abstract class Human extends Creature {
+public abstract class Human extends NonPlayer {
 
     public Human(ColoredChar face, String name) {
-        super(face, name, getDefaultAttributeSet());
+        super(face, name, getDefaultAttributeSet(),0);
     }
     
     @Override

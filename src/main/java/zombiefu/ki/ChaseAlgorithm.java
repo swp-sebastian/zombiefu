@@ -13,7 +13,7 @@ import zombiefu.exception.TargetNotFoundException;
  *
  * @author tomas
  */
-public interface MoveAlgorithm {
+public interface ChaseAlgorithm {
     
     public Direction directionTo(World w, Coordinate start, Coordinate ziel) throws TargetNotFoundException;
     

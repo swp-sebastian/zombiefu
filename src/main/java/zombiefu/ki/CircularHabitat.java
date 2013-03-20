@@ -6,6 +6,7 @@ package zombiefu.ki;
 
 import jade.util.datatype.Coordinate;
 import zombiefu.actor.Monster;
+import zombiefu.actor.NonPlayer;
 
 /**
  *
@@ -13,11 +14,11 @@ import zombiefu.actor.Monster;
  */
 public class CircularHabitat implements Habitat {
 
-    private Monster monster;
+    private NonPlayer monster;
     private double maxDistance;
     private Coordinate center;
 
-    public CircularHabitat(Monster monster, double maxDistance) {
+    public CircularHabitat(NonPlayer monster, double maxDistance) {
         this.monster = monster;
         this.maxDistance = maxDistance;
         this.center = monster.pos();
