@@ -43,4 +43,9 @@ public abstract class Human extends NonPlayer {
     public boolean isEnemy(Creature c) {
         return false;
     }
+    
+    @Override
+    public boolean hasUnlimitedMunition() {
+        return true;
+    }
 }

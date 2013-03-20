@@ -49,6 +49,8 @@ public abstract class Creature extends NotPassableActor {
     protected abstract void pleaseAct();
 
     public abstract void kill(Creature killer);
+    
+    public abstract boolean hasUnlimitedMunition();
 
     public Discipline getDiscipline() {
         return discipline;

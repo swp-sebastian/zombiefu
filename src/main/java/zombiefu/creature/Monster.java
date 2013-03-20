@@ -105,4 +105,10 @@ public class Monster extends NonPlayer {
     protected boolean isEnemy(Creature enemy) {
         return enemy instanceof Player;
     }
+
+    @Override
+    public boolean hasUnlimitedMunition() {
+        return true;
+    }
+    
 }

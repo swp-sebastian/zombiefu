@@ -346,4 +346,9 @@ public class Player extends Creature implements Camera {
     protected boolean isEnemy(Creature enemy) {
         return enemy instanceof Monster;
     }
+    
+    @Override
+    public boolean hasUnlimitedMunition() {
+        return isGod();
+    }
 }

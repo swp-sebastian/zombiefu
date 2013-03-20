@@ -196,7 +196,9 @@ public class Attack {
     }
 
     public void perform() throws WeaponHasNoMunitionException, NoEnemyHitException {
-        weapon.useMunition();
+        if (!attacker.hasUnlimitedMunition()) {
+            weapon.useMunition();   
+        }
 
         try {
             switch (wtype) {
