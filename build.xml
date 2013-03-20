@@ -5,17 +5,21 @@
   <property name="target" location="target" />
   <property name="classes" location="${target}/classes" />
 
+  <tstamp>
+    <format property="datetime" pattern="yyyy-MM-dd-HHmm" />
+  </tstamp>
+
   <target name="init">
     <mkdir dir="${target}" />
   </target>
 
   <target name="compile" depends="init" description="compile the source">
     <mkdir dir="${classes}" />
-    <javac srcdir="${src}" destdir="${classes}" />
+    <javac srcdir="${src}" destdir="${classes}" includeantruntime="false" />
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
-    <jar jarfile="${target}/zombiefu.jar">
+    <jar jarfile="${target}/zombiefu-${datetime}.jar">
       <fileset dir="${classes}" />
       <fileset dir="${res}" />
       <manifest>
@@ -23,6 +27,7 @@
         <attribute name="Main-Class" value="zombiefu.ZombieFU" />
       </manifest>
     </jar>
+    <symlink link="${target}/zombiefu.jar" resource="${target}/zombiefu-${datetime}.jar"/>
   </target>
 
   <target name="clean" description="clean up">
