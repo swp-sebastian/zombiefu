@@ -49,7 +49,7 @@ public class Player extends Creature implements Camera {
 
         super(face, name, attr);
 
-        this.godMode = true;
+        this.godMode = false;
         this.money = 0;
         this.ects = 0;
         this.semester = 1;
