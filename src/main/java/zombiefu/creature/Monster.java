@@ -5,6 +5,7 @@ import zombiefu.items.Weapon;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import java.util.List;
 import java.util.Set;
 import zombiefu.exception.NoPlaceToMoveException;
 import zombiefu.exception.WeaponHasNoMunitionException;
@@ -13,6 +14,7 @@ import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.fight.Attack;
+import zombiefu.fight.ProjectileBresenham;
 import zombiefu.items.WeaponType;
 import zombiefu.ki.CircularHabitat;
 import zombiefu.player.Player;
@@ -35,6 +37,15 @@ public class Monster extends NonPlayer {
         this.dropOnDeath = dropOnDeath;
     }
 
+    private boolean canHitTarget(Coordinate c) {
+        if (x() != c.x() && y() != c.y()) {
+            // Nicht in einer Linie.
+            return false;
+        }
+        List<Coordinate> path = new ProjectileBresenham(getActiveWeapon().getRange()).getPartialPath(world(), pos(), c);
+        return path.get(path.size() - 1).equals(c);
+    }
+
     @Override
     protected void pleaseAct() {
 
@@ -45,11 +56,17 @@ public class Monster extends NonPlayer {
         try {
             Coordinate pos = getPlayerPosition();
             if (positionIsVisible(pos)) {
-                if (getActiveWeapon().getTyp().isRanged() && false) {
+                if (getActiveWeapon().getTyp().isRanged() && canHitTarget(pos)) {
+                    System.out.println("hier bin ich");
+                    try {
+                        new Attack(this, pos().directionTo(pos)).perform();
+                        return;
+                    } catch (NoEnemyHitException ex) {
+                        return;
+                    }
                 }
 
                 if (getActiveWeapon().getTyp() == WeaponType.UMKREIS && pos().distance(getPlayerPosition()) <= getActiveWeapon().getBlastRadius()) {
-                    System.out.println("hier bin ich");
                     try {
                         new Attack(this, null).perform();
                         return;
@@ -110,5 +127,4 @@ public class Monster extends NonPlayer {
     public boolean hasUnlimitedMunition() {
         return true;
     }
-    
 }
