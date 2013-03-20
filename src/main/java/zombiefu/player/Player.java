@@ -220,7 +220,7 @@ public class Player extends Creature implements Camera {
             fov = new ViewEverything();
         } else {
             fov = DEFAULT_VIEWFIELD;
-            lvl.fillWithEnemies();
+            lvl.refill();
         }
     }
 
