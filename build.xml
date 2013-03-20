@@ -1,4 +1,4 @@
-<project default="dist" basedir=".">
+<project default="run" basedir=".">
   <property name="src" location="src/main/java" />
   <property name="res" location="src/main/resources" />
 

@@ -1,0 +1,8 @@
+1 teleporter(Weltkarte,52,53)
+s weapon(Stuhl)
+r random(common)
+b weapon(Besen)
+f weapon(Feuerloescher)
+k weapon(Kettensaege)
+m food(Mate)
+a food(Kaffee)
