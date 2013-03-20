@@ -43,7 +43,6 @@ public class MonsterBuilder {
                 calcAtt.put(att, (int) (attSet.get(att) * faktor));
             }
         }
-        return new Monster(face, name, calcAtt, weapon, ects, dropOnDeath.getActorSet(),habitatRadius);
+        return new Monster(face, name, calcAtt, weapon, ects, dropOnDeath.getActorSet(), habitatRadius);
     }
-    
 }

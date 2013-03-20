@@ -37,7 +37,7 @@ public class ITMString {
 
     public Set<Actor> getActorSet() {
         Set<Actor> ret = new HashSet<>();
-        if(itmString == null || itmString.isEmpty()) {
+        if (itmString == null || itmString.isEmpty()) {
             return ret;
         }
         String[] strings = itmString.split(" ");
@@ -47,8 +47,6 @@ public class ITMString {
             String key = m.group(1);
             String[] arguments = m.group(2).split("\\s?,\\s?");
             int anzahl = m.group(3).isEmpty() ? 1 : Integer.decode(m.group(3));
-            // Tomas: Ich möchte hier eigentlich switch benutzen, aber ich 
-            // darf nicht, weil Java 6 das nicht kann. Grrrrrr!
             for (int i = 1; i <= anzahl; i++) {
                 switch (key) {
                     case "food":
@@ -76,7 +74,10 @@ public class ITMString {
                         ret.add(ConfigHelper.newMonsterByName(arguments[0]));
                         break;
                     case "random":
-                        ret.add(RandomItemGenerator.fromString(arguments[0]).getRandomItem());
+                        Item randomItem = RandomItemGenerator.fromString(arguments[0]).getRandomItem();
+                        if (randomItem != null) {
+                            ret.add(randomItem);
+                        }
                         break;
                     case "teleporter":
                         ret.add(new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2]))));
@@ -88,12 +89,12 @@ public class ITMString {
         }
         return ret;
     }
-    
+
     public Item getSingleItem() {
         Set<Actor> actorSet = getActorSet();
         Guard.verifyState(actorSet.size() == 1);
         Actor actor = actorSet.iterator().next();
         Guard.verifyState(actor instanceof Item);
-        return (Item) actor;        
+        return (Item) actor;
     }
 }
