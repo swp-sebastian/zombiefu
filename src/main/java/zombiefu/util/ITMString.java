@@ -28,13 +28,13 @@ import static zombiefu.util.ConfigHelper.newWeaponByName;
  * @author tomas
  */
 public class ITMString {
-
+    
     private String itmString;
-
+    
     public ITMString(String s) {
         itmString = s;
     }
-
+    
     public Set<Actor> getActorSet() {
         Set<Actor> ret = new HashSet<>();
         if (itmString == null || itmString.isEmpty()) {
@@ -47,49 +47,50 @@ public class ITMString {
             String key = m.group(1);
             String[] arguments = m.group(2).split("\\s?,\\s?");
             int anzahl = m.group(3).isEmpty() ? 1 : Integer.decode(m.group(3));
+            Actor a;
             for (int i = 1; i <= anzahl; i++) {
                 switch (key) {
                     case "food":
-                        ret.add(ConfigHelper.newFoodByName(arguments[0]));
+                        a = ConfigHelper.newFoodByName(arguments[0]);
                         break;
                     case "weapon":
-                        ret.add(ConfigHelper.newWeaponByName(arguments[0]));
+                        a = ConfigHelper.newWeaponByName(arguments[0]);
                         break;
                     case "door":
-                        ret.add(ConfigHelper.getDoorByName(arguments[0]));
+                        a = ConfigHelper.getDoorByName(arguments[0]);
                         break;
                     case "key":
-                        ret.add(ConfigHelper.getKeyCardByName(arguments[0]));
+                        a = ConfigHelper.getKeyCardByName(arguments[0]);
                         break;
                     case "mensacard":
-                        ret.add(new MensaCard(Integer.decode(arguments[0])));
+                        a = new MensaCard(Integer.decode(arguments[0]));
                         break;
                     case "shop":
-                        ret.add(ConfigHelper.newShopByName(arguments[0]));
+                        a = ConfigHelper.newShopByName(arguments[0]);
                         break;
                     case "human":
-                        ret.add(ConfigHelper.newHumanByName(arguments[0]));
+                        a = ConfigHelper.newHumanByName(arguments[0]);
                         break;
                     case "monster":
-                        ret.add(ConfigHelper.newMonsterByName(arguments[0]));
+                        a = ConfigHelper.newMonsterByName(arguments[0]);
                         break;
                     case "random":
-                        Item randomItem = RandomItemGenerator.fromString(arguments[0]).getRandomItem();
-                        if (randomItem != null) {
-                            ret.add(randomItem);
-                        }
+                        a = RandomItemGenerator.fromString(arguments[0]).getRandomItem();
                         break;
                     case "teleporter":
-                        ret.add(new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2]))));
+                        a = new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2])));
                         break;
                     default:
                         throw new IllegalArgumentException("Invalid ITM String");
+                }
+                if (a != null) {
+                    ret.add(a);
                 }
             }
         }
         return ret;
     }
-
+    
     public Item getSingleItem() {
         Set<Actor> actorSet = getActorSet();
         Guard.verifyState(actorSet.size() == 1);

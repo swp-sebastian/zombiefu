@@ -13,7 +13,7 @@ public class Shop extends Human {
     String name;
 
     public Shop(ColoredChar face, String name, HashMap<ItemBuilder, Integer> inventar) {
-        super(face, name);
+        super(face, name, null);
         this.items = inventar;
         this.name = name;
     }
