@@ -30,7 +30,7 @@
   </target>
 
   <target name="debug" description="run debug version" depends="compile">
-    <java classname="zombiefu.ZombieFU">
+    <java classname="zombiefu.ZombieFU" fork="true">
       <classpath>
         <pathelement path="${classes}"/>
         <pathelement path="${res}" />
