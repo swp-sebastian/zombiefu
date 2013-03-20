@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package zombiefu.actor;
+package zombiefu.creature;
 
 import jade.fov.RayCaster;
 import jade.util.Guard;
@@ -32,13 +32,13 @@ import zombiefu.util.ZombieTools;
  *
  * @author tomas
  */
-public abstract class NonPlayer extends Creature {    
+public abstract class NonPlayer extends Creature {
 
     protected ChaseAlgorithm movealg;
     protected Habitat habitat;
     protected double maxDistance;
 
-    public NonPlayer(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, double maxDistance) {
+    public NonPlayer(ColoredChar face, String name, AttributeSet attSet, double maxDistance) {
         super(face, name, attSet);
         this.maxDistance = maxDistance;
 
@@ -48,6 +48,15 @@ public abstract class NonPlayer extends Creature {
     }
 
     protected void moveRandomly() throws NoPlaceToMoveException {
+
+        if (!habitat.atHome()) {
+            try {
+                moveToCoordinate(habitat.home());
+                return;
+            } catch (TargetIsNotInThisWorldException | TargetNotFoundException | WeaponHasNoMunitionException ex) {
+            }
+        }
+
         List<Direction> dirs = ZombieTools.getAllowedDirections();
         Collections.shuffle(dirs);
         for (Direction d : dirs) {
@@ -80,7 +89,7 @@ public abstract class NonPlayer extends Creature {
     protected Direction getDirectionTo(Coordinate coord) throws TargetNotFoundException {
         return movealg.directionTo(world(), pos(), coord);
     }
-   
+
     protected void moveToCoordinate(Coordinate coord) throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
         moveToDirection(getDirectionTo(coord));
     }
@@ -93,5 +102,4 @@ public abstract class NonPlayer extends Creature {
             ex.close();
         }
     }
-
 }

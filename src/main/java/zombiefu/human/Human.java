@@ -2,17 +2,16 @@ package zombiefu.human;
 
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
-import java.util.HashMap;
-import zombiefu.actor.Creature;
-import zombiefu.actor.NonPlayer;
+import zombiefu.creature.AttributeSet;
+import zombiefu.creature.Creature;
+import zombiefu.creature.NonPlayer;
 import zombiefu.items.Weapon;
-import zombiefu.player.Attribute;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 
 public abstract class Human extends NonPlayer {
 
-    public Human(ColoredChar face, String name, HashMap<Attribute,Integer> attSet) {
+    public Human(ColoredChar face, String name, AttributeSet attSet) {
         super(face, name, attSet, 0);
     }
     

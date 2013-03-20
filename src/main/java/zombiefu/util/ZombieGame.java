@@ -8,10 +8,8 @@ import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import jade.util.Guard;
-import java.awt.Color;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -25,6 +23,7 @@ import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
 import zombiefu.ZombieFU;
+import zombiefu.creature.AttributeSet;
 
 /**
  *
@@ -70,7 +69,7 @@ public class ZombieGame {
         Discipline discipline = askPlayerForDiscipline();
 
         // Attribute laden.
-        HashMap<Attribute,Integer> atts = new HashMap<Attribute,Integer>();
+        AttributeSet atts = new AttributeSet();
         for(Attribute att: Attribute.values()) {
             Integer setting = settings.playerAttributes.get(att);
             if(setting == null) {

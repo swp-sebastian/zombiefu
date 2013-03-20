@@ -5,8 +5,7 @@
 package zombiefu.ki;
 
 import jade.util.datatype.Coordinate;
-import zombiefu.actor.Monster;
-import zombiefu.actor.NonPlayer;
+import zombiefu.creature.NonPlayer;
 
 /**
  *

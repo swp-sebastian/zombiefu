@@ -1,4 +1,4 @@
-package zombiefu.actor;
+package zombiefu.creature;
 
 import jade.fov.ViewField;
 import jade.util.Guard;
@@ -6,7 +6,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.Collection;
-import java.util.HashMap;
+import zombiefu.actor.NotPassableActor;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.WeaponHasNoMunitionException;
@@ -23,7 +23,7 @@ import zombiefu.util.ZombieTools;
 
 public abstract class Creature extends NotPassableActor {
 
-    protected HashMap<Attribute, Integer> attributSet;
+    protected AttributeSet attributSet;
     protected Discipline discipline;
     protected int dazed;
     protected int healthPoints;
@@ -32,20 +32,11 @@ public abstract class Creature extends NotPassableActor {
     protected int sichtweite;
     protected boolean godMode;
 
-    public Creature(ColoredChar face, String n, HashMap<Attribute, Integer> attSet) {
+    public Creature(ColoredChar face, String n, AttributeSet attSet) {
         super(face);
         dazed = 0;
         name = n;
-        attributSet = attSet;
-        
-        if(attributSet == null)
-            attributSet = new HashMap<>();
-        for (Attribute a : Attribute.values()) {
-            if (!attributSet.containsKey(a) || attributSet.get(a) == null) {
-                attributSet.put(a, 1);
-            }
-        }
-        
+        attributSet = attSet;        
         healthPoints = attributSet.get(Attribute.MAXHP);
     }
 

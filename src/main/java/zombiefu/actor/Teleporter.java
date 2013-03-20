@@ -3,7 +3,6 @@ package zombiefu.actor;
 import zombiefu.player.Player;
 import zombiefu.level.Level;
 import jade.core.Actor;
-import jade.core.World;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import java.awt.Color;

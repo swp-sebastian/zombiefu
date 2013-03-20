@@ -1,21 +1,11 @@
-package zombiefu.actor;
+package zombiefu.creature;
 
 import jade.core.Actor;
-import jade.fov.RayCaster;
 import zombiefu.items.Weapon;
-import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import zombiefu.exception.CannnotMoveToNonPassableActorException;
-import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
-import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.NoPlaceToMoveException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.TargetNotFoundException;
@@ -25,21 +15,20 @@ import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.fight.Attack;
 import zombiefu.items.WeaponType;
 import zombiefu.ki.CircularHabitat;
-import zombiefu.ki.Dijkstra;
-import zombiefu.ki.Habitat;
-import zombiefu.ki.ChaseAlgorithm;
-import zombiefu.player.Attribute;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
+/**
+ * Creature, which attacks the player.
+ */
 public class Monster extends NonPlayer {
 
     private Weapon waffe;
     protected int ectsYield;
     private Set<Actor> dropOnDeath;
 
-    public Monster(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Weapon waffe, int ectsYield, Set<Actor> dropOnDeath, double maxDistance) {
+    public Monster(ColoredChar face, String name, AttributeSet attSet, Weapon waffe, int ectsYield, Set<Actor> dropOnDeath, double maxDistance) {
         super(face, name, attSet, maxDistance);
         this.waffe = waffe;
         this.ectsYield = ectsYield;
@@ -74,14 +63,6 @@ public class Monster extends NonPlayer {
                 return;
             }
         } catch (TargetIsNotInThisWorldException | TargetNotFoundException | WeaponHasNoMunitionException ex) {
-        }
-
-        if (!habitat.atHome()) {
-            try {
-                moveToCoordinate(habitat.home());
-                return;
-            } catch (TargetIsNotInThisWorldException | TargetNotFoundException | WeaponHasNoMunitionException ex) {
-            }
         }
 
         try {

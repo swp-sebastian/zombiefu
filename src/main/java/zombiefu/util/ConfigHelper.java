@@ -5,7 +5,6 @@ import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import java.awt.Color;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,6 +23,7 @@ import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
 import zombiefu.builder.HumanBuilder;
 import zombiefu.builder.ShopBuilder;
+import zombiefu.creature.AttributeSet;
 import zombiefu.exception.ActorConfigNotFoundException;
 import zombiefu.human.Human;
 import zombiefu.items.Food;
@@ -31,7 +31,7 @@ import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
 import zombiefu.level.Level;
 import zombiefu.mapgen.RoomBuilder;
-import zombiefu.actor.Monster;
+import zombiefu.creature.Monster;
 import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 
@@ -143,6 +143,7 @@ public class ConfigHelper {
             shops = new HashMap<>();
         }
         if (!shops.containsKey(s)) {
+            ZombieTools.log("newShopByName(" + s + "): Erzeuge ShopBuilder");
             String[] shop = getStrings(ZombieGame.getResource("shops", s + ".shop"));
             String[] charInfo = shop[0].split(" ");
             HashMap<ItemBuilder, Integer> items = new HashMap<>();
@@ -167,11 +168,12 @@ public class ConfigHelper {
             ActorConfig config = ActorConfig.getConfig("monsters", s);
             String name = config.getName();
             ColoredChar c = config.getChar();
-            HashMap<Attribute, Integer> attSet = new HashMap<>();
-            attSet.put(Attribute.MAXHP, config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : 1);
-            attSet.put(Attribute.ATTACK, config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1);
-            attSet.put(Attribute.DEFENSE, config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1);
-            attSet.put(Attribute.DEXTERITY, config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1);
+            AttributeSet attSet = new AttributeSet(
+                config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : null,
+                config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : null,
+                config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : null,
+                config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : null
+            );
             boolean staticAttributes = config.get("staticAttributes", "false").equals("true");
             Weapon w = newWeaponByName(config.get("weapon"));
             int ects = Integer.decode(config.get("ects"));
@@ -190,13 +192,12 @@ public class ConfigHelper {
             ActorConfig config = ActorConfig.getConfig("humans", s);
             String name = config.getName();
             ColoredChar c = config.getChar();
-
-            HashMap<Attribute, Integer> attSet = new HashMap<>();
-            attSet.put(Attribute.MAXHP, config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : 1);
-            attSet.put(Attribute.ATTACK, config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1);
-            attSet.put(Attribute.DEFENSE, config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1);
-            attSet.put(Attribute.DEXTERITY, config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1);
-
+            AttributeSet attSet = new AttributeSet(
+                config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : 1,
+                config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1,
+                config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1,
+                config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1
+            );
             Item offerItem = config.contains("deal.offerItem") ? new ITMString(config.get("deal.offerItem")).getSingleItem() : null;
             Integer offerMoney = config.contains("deal.offerMoney") ? Integer.decode(config.get("deal.offerMoney")) : null;
             Integer requestMoney = config.contains("deal.requestMoney") ? Integer.decode(config.get("deal.requestMoney")) : null;

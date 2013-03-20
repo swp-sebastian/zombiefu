@@ -5,6 +5,7 @@ import jade.util.datatype.ColoredChar;
 import java.util.HashMap;
 import zombiefu.exception.CannotAffordException;
 import zombiefu.builder.ItemBuilder;
+import zombiefu.creature.AttributeSet;
 import zombiefu.player.Player;
 
 public class Shop extends Human {
@@ -13,7 +14,7 @@ public class Shop extends Human {
     String name;
 
     public Shop(ColoredChar face, String name, HashMap<ItemBuilder, Integer> inventar) {
-        super(face, name, null);
+        super(face, name, new AttributeSet());
         this.items = inventar;
         this.name = name;
     }
