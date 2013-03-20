@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class CircularRayCaster extends ViewField {
+public class CircularRayCaster extends ImprovedRayCaster {
 
     private PathFinder raycaster;
 
@@ -57,7 +57,7 @@ public class CircularRayCaster extends ViewField {
     }
 
     @Override
-    protected Collection<Coordinate> calcViewField(World world, int x, int y, int r) {
+    protected Collection<Coordinate> getBaseField(World world, int x, int y, int r) {
         Collection<Coordinate> fov = new HashSet<>();
         
         Coordinate center = new Coordinate(x, y);
