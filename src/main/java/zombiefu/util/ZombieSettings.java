@@ -115,7 +115,12 @@ public class ZombieSettings {
         def.setProperty("debug", "true");
 
         // Default Playername
-        def.setProperty("player.name", System.getProperty("user.name"));
+        try {
+            def.setProperty("player.name", System.getProperty("user.name"));
+        } catch (SecurityException e) {
+            def.setProperty("player.name", "Anonymous");
+        }
+
         def.setProperty("player.tile.char", "263B");
         def.setProperty("player.tile.color", "7D26CD");
         def.setProperty("player.start.map", "Weltkarte");
