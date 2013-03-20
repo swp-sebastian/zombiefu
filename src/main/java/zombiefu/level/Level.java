@@ -65,7 +65,7 @@ public class Level extends World {
             for (int x = 0; x < width(); x++) {
                 for (int y = 0; y < height(); y++) {
                     if (passableAt(x, y)) {
-                        numberOfPassableFields ++;
+                        numberOfPassableFields++;
                     }
                 }
             }
@@ -95,26 +95,24 @@ public class Level extends World {
 
     private void fillWithEnemies() {
         int n = (int) ((ZombieGame.getPlayer().getSemester() + 9) * 0.1 * ENEMY_BASE_DENSITY * getNumberOfPassableFields() * ZombieTools.getRandomDouble(0.85, 1.15));
+        n -= getActors(Monster.class).size();
+
+        if (n <= 0) {
+            return;
+        }
         
         // Normale Zombies
         int k = n / 2;
         for (int i = 0; i < k; i++) {
-            addActor(ConfigHelper.newMonsterByName("Zombie"));        
-            n--;            
+            addActor(ConfigHelper.newMonsterByName("Zombie"));
+            n--;
         }
-            addActor(ConfigHelper.newMonsterByName("RaketenwerferZombie"));  
         
-        
-        
+        addActor(ConfigHelper.newMonsterByName("RaketenwerferZombie"));
+
     }
 
     public void refill() {
-        for (Monster a : getActors(Monster.class)) {
-            removeActor(a);
-        }
-        for (Item a : getActors(Item.class)) {
-            removeActor(a);
-        }
         fillWithEnemies();
         fillWithItems();
     }

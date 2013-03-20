@@ -21,19 +21,20 @@ import zombiefu.items.MensaCard;
  * @author tomas
  */
 public class ITMString {
-    
+
     private String itmString;
-    
+
     public ITMString(String s) {
         itmString = s;
     }
-    
+
     public Set<Actor> getActorSet() {
         Set<Actor> ret = new HashSet<>();
         if (itmString == null || itmString.isEmpty()) {
             return ret;
         }
         String[] strings = itmString.split(" ");
+        outerloop:
         for (String s : strings) {
             Matcher m = Pattern.compile("^(\\w+)\\((.+)\\)x?([0-9]*)$").matcher(s);
             Guard.verifyState(m.matches());
@@ -69,6 +70,9 @@ public class ITMString {
                         break;
                     case "random":
                         a = RandomItemGenerator.fromString(arguments[0]).getRandomItem();
+                        if (a == null) {
+                            continue outerloop;
+                        }
                         break;
                     case "teleporter":
                         a = new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2])));
@@ -76,14 +80,13 @@ public class ITMString {
                     default:
                         throw new IllegalArgumentException("Invalid ITM String");
                 }
-                if (a != null) {
-                    ret.add(a);
-                }
+                Guard.argumentIsNotNull(a);
+                ret.add(a);
             }
         }
         return ret;
     }
-    
+
     public Item getSingleItem() {
         Set<Actor> actorSet = getActorSet();
         Guard.verifyState(actorSet.size() == 1);
