@@ -22,6 +22,8 @@ import zombiefu.exception.TargetNotFoundException;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.TargetIsNotInThisWorldException;
+import zombiefu.fight.Attack;
+import zombiefu.items.WeaponType;
 import zombiefu.ki.CircularHabitat;
 import zombiefu.ki.Dijkstra;
 import zombiefu.ki.Habitat;
@@ -52,7 +54,22 @@ public class Monster extends NonPlayer {
         }
 
         try {
-            if (positionIsVisible(getPlayerPosition())) {
+            Coordinate pos = getPlayerPosition();
+            if (positionIsVisible(pos)) {
+                if (getActiveWeapon().getTyp().isRanged() && false) {
+                }
+
+                if (getActiveWeapon().getTyp() == WeaponType.UMKREIS && pos().distance(getPlayerPosition()) <= getActiveWeapon().getBlastRadius()) {
+                    System.out.println("hier bin ich");
+                    try {
+                        new Attack(this, null).perform();
+                        return;
+                    } catch (NoEnemyHitException ex) {
+                        return;
+                    }
+                }
+
+                // Gegner nicht aus der Ferne angreifen, also in seine Richtung.
                 moveToCoordinate(getPlayerPosition());
                 return;
             }

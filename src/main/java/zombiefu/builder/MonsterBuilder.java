@@ -39,6 +39,9 @@ public class MonsterBuilder {
             calcAtt = new HashMap<>();
             double plvl = (double) ZombieGame.getPlayer().getSemester();
             double faktor = (plvl + 1.0) / 2.0 * ZombieTools.getRandomDouble(0.8, 1.2);
+            if(faktor < 1) {
+                faktor = 1.0;
+            }
             for (Attribute att : Attribute.values()) {
                 calcAtt.put(att, (int) (attSet.get(att) * faktor));
             }

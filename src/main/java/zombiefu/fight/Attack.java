@@ -220,7 +220,7 @@ public class Attack {
                     break;
                 case UMKREIS:
                     // Dexterity decides, whether the attacker accidently hits himself
-                    impactPoint = attacker.pos().getTranslated(dir);
+                    impactPoint = attacker.pos();
                     createDetonation(impactPoint, weapon.getBlastRadius(), !Dice.global.chance(getSuccessProbability()));
                     break;
                 case GRANATE:
