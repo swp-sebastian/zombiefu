@@ -25,86 +25,32 @@ import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.ki.CircularHabitat;
 import zombiefu.ki.Dijkstra;
 import zombiefu.ki.Habitat;
-import zombiefu.ki.MoveAlgorithm;
+import zombiefu.ki.ChaseAlgorithm;
 import zombiefu.player.Attribute;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
-public class Monster extends Creature {
+public class Monster extends NonPlayer {
 
-    protected MoveAlgorithm movealg;
     private Weapon waffe;
     protected int ectsYield;
     private Set<Actor> dropOnDeath;
-    private Habitat habitat;
-    private double maxDistance;
 
     public Monster(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Weapon waffe, int ectsYield, Set<Actor> dropOnDeath, double maxDistance) {
-        super(face, name, attSet);
+        super(face, name, attSet, maxDistance);
         this.waffe = waffe;
         this.ectsYield = ectsYield;
         this.dropOnDeath = dropOnDeath;
-        this.maxDistance = maxDistance;
-
-        this.movealg = new Dijkstra();
-        this.fov = new RayCaster();
-        this.sichtweite = 10;
-    }
-
-    private void moveRandomly() throws NoPlaceToMoveException {
-        List<Direction> dirs = ZombieTools.getAllowedDirections();
-        Collections.shuffle(dirs);
-        for (Direction d : dirs) {
-            try {
-                tryToMove(d);
-                return;
-            } catch (CannotMoveToIllegalFieldException | WeaponHasNoMunitionException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
-            } catch (NoEnemyHitException ex) {
-                ex.close();
-            }
-        }
-        throw new NoPlaceToMoveException();
-    }
-
-    private Coordinate getPlayerPosition() throws TargetIsNotInThisWorldException {
-        Guard.argumentIsNotNull(world());
-        Player player = ZombieGame.getPlayer();
-
-        if (player.world() != world()) {
-            throw new TargetIsNotInThisWorldException();
-        }
-
-        return player.pos();
-    }
-
-    private boolean positionIsVisible(Coordinate pos) throws TargetIsNotInThisWorldException {
-        return fov.getViewField(world(), pos(), sichtweite).contains(pos);
-    }
-
-    private Direction getDirectionTo(Coordinate coord) throws TargetNotFoundException {
-        return movealg.directionTo(world(), pos(), coord);
-    }
-    private void moveToCoordinate(Coordinate coord) throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
-        moveToDirection(getDirectionTo(coord));
-    }
-
-    private void moveToDirection(Direction dir) throws TargetIsNotInThisWorldException, WeaponHasNoMunitionException {
-        try {
-            tryToMove(dir);
-        } catch (CannotMoveToIllegalFieldException | CannotAttackWithoutMeleeWeaponException | CannnotMoveToNonPassableActorException ex) {
-        } catch (NoEnemyHitException ex) {
-            ex.close();
-        }
     }
 
     @Override
     protected void pleaseAct() {
-        
+
         if (habitat == null) {
             habitat = new CircularHabitat(this, maxDistance);
         }
-        
+
         try {
             if (positionIsVisible(getPlayerPosition())) {
                 moveToCoordinate(getPlayerPosition());

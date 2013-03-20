@@ -2,6 +2,7 @@ package zombiefu.builder;
 
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
+import java.util.HashMap;
 import java.util.Map;
 import zombiefu.human.BuyingHuman;
 import zombiefu.human.GivingHuman;
@@ -10,6 +11,7 @@ import zombiefu.human.SellingHuman;
 import zombiefu.human.TalkingHuman;
 import zombiefu.human.TradingHuman;
 import zombiefu.items.Item;
+import zombiefu.player.Attribute;
 
 public class HumanBuilder {
 
@@ -20,8 +22,9 @@ public class HumanBuilder {
     private Integer offerMoney;
     private String requestItem;
     private Integer requestMoney;
+    private HashMap<Attribute, Integer> attSet;
 
-    public HumanBuilder(ColoredChar face, String name, Map<String, String> phraseSet, Item offerItem, Integer offerMoney, String requestItem, Integer requestMoney) {
+    public HumanBuilder(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Map<String, String> phraseSet, Item offerItem, Integer offerMoney, String requestItem, Integer requestMoney) {
         this.face = face;
         this.name = name;
         this.phraseSet = phraseSet;
@@ -29,6 +32,7 @@ public class HumanBuilder {
         this.offerMoney = offerMoney;
         this.requestItem = requestItem;
         this.requestMoney = requestMoney;
+        this.attSet = attSet;
         Guard.verifyState(offerItem == null || offerMoney == null);
         Guard.verifyState(requestItem == null || requestMoney == null);
         Guard.verifyState(offerMoney == null || requestMoney == null);
@@ -37,16 +41,16 @@ public class HumanBuilder {
     public Human buildHuman() {
         if (offerItem != null) {
             if (requestItem != null) {
-                return new TradingHuman(face, name, offerItem, requestItem, phraseSet);
+                return new TradingHuman(face, name, attSet, offerItem, requestItem, phraseSet);
             } else if (requestMoney != null) {
-                return new SellingHuman(face, name, offerItem, requestMoney, phraseSet);
+                return new SellingHuman(face, name, attSet, offerItem, requestMoney, phraseSet);
             } else {
-                return new GivingHuman(face, name, offerItem, phraseSet);
+                return new GivingHuman(face, name, attSet, offerItem, phraseSet);
             }
         } else if (offerMoney != null && requestItem != null) {
-            return new BuyingHuman(face, name, requestItem, offerMoney, phraseSet);            
+            return new BuyingHuman(face, name, attSet, requestItem, offerMoney, phraseSet);            
         } else {
-            return new TalkingHuman(face, name, phraseSet.get("default"));
+            return new TalkingHuman(face, name, attSet, phraseSet.get("default"));
         }
     }
 }

@@ -5,9 +5,11 @@
 package zombiefu.human;
 
 import jade.util.datatype.ColoredChar;
+import java.util.HashMap;
 import java.util.Map;
 import zombiefu.exception.CannotAffordException;
 import zombiefu.items.Item;
+import zombiefu.player.Attribute;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 
@@ -20,14 +22,10 @@ public class SellingHuman extends DealingHuman {
     private Item offerItem;
     private int requestMoney;
 
-    public SellingHuman(ColoredChar face, String name, Item offerItem, int requestMoney, Map<String,String> phraseSet) {
-        super(face, name, phraseSet);
+    public SellingHuman(ColoredChar face, String name, HashMap<Attribute,Integer> attSet, Item offerItem, int requestMoney, Map<String,String> phraseSet) {
+        super(face, name, attSet, phraseSet);
         this.offerItem = offerItem;
         this.requestMoney = requestMoney;
-    }
-
-    public SellingHuman(ColoredChar face, String name, Item offerItem, int requestMoney) {
-        this(face, name, offerItem, requestMoney, null);
     }
 
     @Override

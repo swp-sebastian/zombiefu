@@ -32,18 +32,23 @@ public abstract class Creature extends NotPassableActor {
     protected int sichtweite;
     protected boolean godMode;
 
-    public Creature(ColoredChar face, String n, HashMap<Attribute, Integer> a) {
+    public Creature(ColoredChar face, String n, HashMap<Attribute, Integer> attSet) {
         super(face);
         dazed = 0;
         name = n;
-        attributSet = a;
-        healthPoints = a.get(Attribute.MAXHP);
+        attributSet = attSet;
+        
+        if(attributSet == null)
+            attributSet = new HashMap<>();
+        for (Attribute a : Attribute.values()) {
+            if (!attributSet.containsKey(a) || attributSet.get(a) == null) {
+                attributSet.put(a, 1);
+            }
+        }
+        
+        healthPoints = attributSet.get(Attribute.MAXHP);
     }
 
-    public Creature(ColoredChar face, String n) {
-        this(face, n, getDefaultAttributeSet());
-    }
-    
     public abstract Weapon getActiveWeapon();
 
     protected abstract Direction getAttackDirection() throws NoDirectionGivenException;
@@ -53,14 +58,6 @@ public abstract class Creature extends NotPassableActor {
     protected abstract void pleaseAct();
 
     public abstract void kill(Creature killer);
-
-    public static HashMap<Attribute, Integer> getDefaultAttributeSet() {
-        HashMap<Attribute, Integer> attSet = new HashMap<>();
-        for (Attribute att : Attribute.values()) {
-            attSet.put(att, 1);
-        }
-        return attSet;
-    }
 
     public Discipline getDiscipline() {
         return discipline;

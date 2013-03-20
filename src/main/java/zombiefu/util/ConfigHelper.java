@@ -104,8 +104,8 @@ public class ConfigHelper {
             Integer damage = Integer.decode(config.get("damage", "1"));
             Integer range = Integer.decode(config.get("range", "1"));
             Double radius = Double.valueOf(config.get("radius", "1.0"));
-            Integer dazeTurns = Integer.decode(config.get("daze.turns","0"));
-            Double dazeProbability = Double.valueOf(config.get("daze.probability","0"));
+            Integer dazeTurns = Integer.decode(config.get("daze.turns", "0"));
+            Double dazeProbability = Double.valueOf(config.get("daze.probability", "0"));
             String expertsStr = config.get("experts");
             Set<Discipline> experts = new HashSet<>();
             if (expertsStr != null) {
@@ -172,7 +172,7 @@ public class ConfigHelper {
             attSet.put(Attribute.ATTACK, config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1);
             attSet.put(Attribute.DEFENSE, config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1);
             attSet.put(Attribute.DEXTERITY, config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1);
-            boolean staticAttributes = config.get("staticAttributes","false").equals("true");
+            boolean staticAttributes = config.get("staticAttributes", "false").equals("true");
             Weapon w = newWeaponByName(config.get("weapon"));
             int ects = Integer.decode(config.get("ects"));
             ITMString itemDrop = new ITMString(config.get("drop"));
@@ -191,12 +191,18 @@ public class ConfigHelper {
             String name = config.getName();
             ColoredChar c = config.getChar();
 
+            HashMap<Attribute, Integer> attSet = new HashMap<>();
+            attSet.put(Attribute.MAXHP, config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : 1);
+            attSet.put(Attribute.ATTACK, config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1);
+            attSet.put(Attribute.DEFENSE, config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1);
+            attSet.put(Attribute.DEXTERITY, config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1);
+
             Item offerItem = config.contains("deal.offerItem") ? new ITMString(config.get("deal.offerItem")).getSingleItem() : null;
             Integer offerMoney = config.contains("deal.offerMoney") ? Integer.decode(config.get("deal.offerMoney")) : null;
             Integer requestMoney = config.contains("deal.requestMoney") ? Integer.decode(config.get("deal.requestMoney")) : null;
             String requestItem = config.get("deal.requestItem");
             Map<String, String> phraseSet = config.getSubConfig("phrase");
-            humans.put(s, new HumanBuilder(c, name, phraseSet, offerItem, offerMoney, requestItem, requestMoney));
+            humans.put(s, new HumanBuilder(c, name, attSet, phraseSet, offerItem, offerMoney, requestItem, requestMoney));
         }
         return humans.get(s).buildHuman();
     }
@@ -263,6 +269,9 @@ public class ConfigHelper {
             return null;
         }
 
+        // Levename
+        String name = config.contains("name") ? config.get("name") : mapName;
+
         // Suche floorChar und bgChar
         ColoredChar floorChar, bgChar;
         if (config.contains("defaulttile.char") && config.contains("defaulttile.color")) {
@@ -302,7 +311,7 @@ public class ConfigHelper {
         // Baue Level
         ZombieTools.log("createLevelFromFile(" + mapName + "): Erzeuge Level");
         RoomBuilder builder = new RoomBuilder(chars, floorChar);
-        Level lev = new Level(builder.width(), builder.height(), builder, mapName);
+        Level lev = new Level(builder.width(), builder.height(), builder, name);
 
         // Lade statische Items auf Map
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lade statische Items");
