@@ -3,4 +3,4 @@
 3 shop(Mensa-Automat)
 4 shop(Waffen)
 5 key(Enri-Fort-Bau)
-6 door(Enri-Fort-Bau) teleporter(Enri-Fort-Bau,10,10)
+6 door(Enri-Fort-Bau) teleporter(enri1,11,41)
