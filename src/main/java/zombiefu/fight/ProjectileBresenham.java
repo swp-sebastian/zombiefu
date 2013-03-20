@@ -19,6 +19,7 @@ import zombiefu.actor.NotPassableActor;
 public class ProjectileBresenham extends PathFinder {
 
     private int maxRange;
+
     public ProjectileBresenham(int range) {
         maxRange = range;
     }
@@ -45,8 +46,11 @@ public class ProjectileBresenham extends PathFinder {
                     break;
                 }
                 Coordinate nc = new Coordinate(x, y);
+                if (!world.passableAt(nc)) {
+                    break;
+                }
                 path.add(nc);
-                if (!world.passableAt(nc) || world.getActorAt(NotPassableActor.class, nc) != null || n > maxRange) {
+                if (world.getActorAt(NotPassableActor.class, nc) != null || n > maxRange) {
                     break;
                 }
             }
@@ -63,8 +67,11 @@ public class ProjectileBresenham extends PathFinder {
                     break;
                 }
                 Coordinate nc = new Coordinate(x, y);
+                if (!world.passableAt(nc)) {
+                    break;
+                }
                 path.add(nc);
-                if (!world.passableAt(nc) || world.getActorAt(NotPassableActor.class, nc) != null || n > maxRange) {
+                if (world.getActorAt(NotPassableActor.class, nc) != null || n > maxRange) {
                     break;
                 }
             }

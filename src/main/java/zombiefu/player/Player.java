@@ -24,7 +24,6 @@ import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.DoesNotPossessThisItemException;
 import zombiefu.exception.MaximumHealthPointException;
 import zombiefu.exception.NoEnemyHitException;
-import zombiefu.fov.CircularRayCaster;
 import zombiefu.fov.SquareRayCaster;
 import zombiefu.fov.ViewEverything;
 import zombiefu.human.Human;
@@ -38,8 +37,7 @@ import zombiefu.util.Action;
 public class Player extends Creature implements Camera {
 
     private final static int ECTS_FOR_NEXT_SEMESTER = 30;
-    private final static ViewField DEFAULT_VIEWFIELD = new CircularRayCaster();
-    
+    private final static ViewField DEFAULT_VIEWFIELD = new SquareRayCaster();
     private int money;
     private int ects;
     private int semester;
@@ -348,7 +346,7 @@ public class Player extends Creature implements Camera {
     protected boolean isEnemy(Creature enemy) {
         return enemy instanceof Monster;
     }
-    
+
     @Override
     public boolean hasUnlimitedMunition() {
         return isGod();
