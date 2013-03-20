@@ -5,12 +5,10 @@
 package zombiefu.human;
 
 import jade.util.datatype.ColoredChar;
-import java.util.HashMap;
 import java.util.Map;
+import zombiefu.creature.AttributeSet;
 import zombiefu.items.Item;
-import zombiefu.player.Attribute;
 import zombiefu.player.Player;
-import zombiefu.util.ZombieGame;
 
 /**
  *
@@ -20,7 +18,7 @@ public class GivingHuman extends DealingHuman {
 
     private Item offerItem;
 
-    public GivingHuman(ColoredChar face, String name, HashMap<Attribute,Integer> attSet, Item offerItem, Map<String,String> phraseSet) {
+    public GivingHuman(ColoredChar face, String name, AttributeSet attSet, Item offerItem, Map<String,String> phraseSet) {
         super(face, name, attSet, phraseSet);
         this.offerItem = offerItem;
     }

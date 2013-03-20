@@ -5,6 +5,7 @@
 package zombiefu.fight;
 
 import jade.core.World;
+import jade.fov.ViewField;
 import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.Coordinate;
@@ -14,15 +15,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import zombiefu.actor.Creature;
+import zombiefu.creature.Creature;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.WeaponHasNoMunitionException;
+import zombiefu.fov.CircularRayCaster;
 import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
-import static zombiefu.items.WeaponType.FERNKAMPF;
-import static zombiefu.items.WeaponType.GRANATE;
-import static zombiefu.items.WeaponType.NAHKAMPF;
-import static zombiefu.items.WeaponType.UMKREIS;
 import zombiefu.player.Attribute;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
@@ -34,6 +32,7 @@ import zombiefu.util.ZombieTools;
 public class Attack {
 
     private static final double EXPERT_BONUS = 1.75; // Faktor
+    private static final ViewField DETONATION_FIELD = new CircularRayCaster();
     private Creature attacker;
     private Weapon weapon;
     private WeaponType wtype;
@@ -71,7 +70,7 @@ public class Attack {
 
     private Coordinate getMissileImpactPoint(Direction dir, int maxDistance) {
         Direction noiseDirection = ZombieTools.getRotatedDirection(dir, 90);
-        int noise = (int) Math.floor(((double) maxDistance) * ZombieTools.getRandomDouble(0, 1, attacker.getAttribute(Attribute.DEXTERITY) - 3) / (Dice.global.chance() ? 4.0 : -4.0));
+        int noise = (int) Math.floor(((double) maxDistance) * ZombieTools.getRandomDouble(0, 1, 3 - attacker.getAttribute(Attribute.DEXTERITY)) / (Dice.global.chance() ? 4.0 : -4.0));
 
         Coordinate neu = attacker.pos().getTranslated(dir.dx() * maxDistance, dir.dy() * maxDistance).getTranslated(noiseDirection.dx() * noise, noiseDirection.dy() * noise);
 
@@ -92,7 +91,7 @@ public class Attack {
         int damage = (int) (((double) weapon.getDamage())
                 * ((double) attacker.getAttribute(Attribute.ATTACK) / (double) cr.getAttribute(Attribute.DEFENSE))
                 * ZombieTools.getRandomDouble(0.7, 1.3) * faktor * (weapon.isExpert(attacker.getDiscipline()) ? EXPERT_BONUS : 1.0));
-        if (damage == 0) {
+        if (damage < 1) {
             damage = 1;
         }
         return damage;
@@ -156,11 +155,10 @@ public class Attack {
         Collection<Creature> targets = new HashSet<>();
 
         int blastMax = (int) Math.ceil(blastRadius);
-
         for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world.width() - 1); x++) {
             for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world.height() - 1); y++) {
                 Coordinate neu = new Coordinate(x, y);
-                if (neu.distance(c) <= blastRadius && (includeCenter || !c.equals(neu))) {
+                if (world.passableAt(c) && neu.distance(c) <= blastRadius && (includeCenter || !c.equals(neu))) {
                     createAnimation(neu);
                     targets.addAll(world.getActorsAt(Creature.class, neu));
                 }
@@ -186,9 +184,11 @@ public class Attack {
                     return 0.5;
                 }
                 distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
+                //Guard.verifyState(distance <= 1);
                 return 1.0 - distance * distance / 2.0;
             case GRANATE:
                 distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
+                //               Guard.verifyState(distance <= 1);
                 return 1.0 - distance * distance / 2.0;
             default:
                 throw new AssertionError(wtype.name());
@@ -200,7 +200,9 @@ public class Attack {
     }
 
     public void perform() throws WeaponHasNoMunitionException, NoEnemyHitException {
-        weapon.useMunition();
+        if (!attacker.hasUnlimitedMunition()) {
+            weapon.useMunition();
+        }
 
         try {
             switch (wtype) {
@@ -220,7 +222,7 @@ public class Attack {
                     break;
                 case UMKREIS:
                     // Dexterity decides, whether the attacker accidently hits himself
-                    impactPoint = attacker.pos().getTranslated(dir);
+                    impactPoint = attacker.pos();
                     createDetonation(impactPoint, weapon.getBlastRadius(), !Dice.global.chance(getSuccessProbability()));
                     break;
                 case GRANATE:

@@ -5,23 +5,16 @@
 package zombiefu.util;
 
 import jade.core.Actor;
-import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.Coordinate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.print.attribute.AttributeSet;
 import zombiefu.actor.Teleporter;
 import zombiefu.items.Item;
 import zombiefu.items.RandomItemGenerator;
 import zombiefu.items.MensaCard;
-import static zombiefu.util.ConfigHelper.getKeyCardByName;
-import static zombiefu.util.ConfigHelper.newFoodByName;
-import static zombiefu.util.ConfigHelper.newHumanByName;
-import static zombiefu.util.ConfigHelper.newMonsterByName;
-import static zombiefu.util.ConfigHelper.newWeaponByName;
 
 /**
  *

@@ -2,7 +2,6 @@ package zombiefu.player;
 
 import jade.core.World;
 import zombiefu.items.Weapon;
-import jade.fov.RayCaster;
 import jade.fov.ViewField;
 import jade.ui.Camera;
 import jade.util.Guard;
@@ -10,11 +9,11 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Logger;
-import zombiefu.actor.Creature;
+import zombiefu.creature.Creature;
 import zombiefu.actor.Door;
-import zombiefu.actor.Monster;
+import zombiefu.creature.Monster;
 import zombiefu.actor.NotPassableActor;
+import zombiefu.creature.AttributeSet;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotAffordException;
 import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
@@ -25,6 +24,7 @@ import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.DoesNotPossessThisItemException;
 import zombiefu.exception.MaximumHealthPointException;
 import zombiefu.exception.NoEnemyHitException;
+import zombiefu.fov.SquareRayCaster;
 import zombiefu.fov.ViewEverything;
 import zombiefu.human.Human;
 import zombiefu.items.ConsumableItem;
@@ -37,7 +37,7 @@ import zombiefu.util.Action;
 public class Player extends Creature implements Camera {
 
     private final static int ECTS_FOR_NEXT_SEMESTER = 30;
-    private final static ViewField DEFAULT_VIEWFIELD = new RayCaster();
+    private final static ViewField DEFAULT_VIEWFIELD = new SquareRayCaster();
     private int money;
     private int ects;
     private int semester;
@@ -45,7 +45,7 @@ public class Player extends Creature implements Camera {
     private HashMap<String, Weapon> weapons;
     private ArrayList<String> weaponsList;
 
-    public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribute, Integer> attr) {
+    public Player(ColoredChar face, String name, Discipline discipline, AttributeSet attr) {
 
         super(face, name, attr);
 
@@ -55,9 +55,9 @@ public class Player extends Creature implements Camera {
         this.semester = 1;
         this.discipline = discipline;
 
-        this.inventar = new HashMap<String, ArrayList<ConsumableItem>>();
-        this.weapons = new HashMap<String, Weapon>();
-        this.weaponsList = new ArrayList<String>();
+        this.inventar = new HashMap<>();
+        this.weapons = new HashMap<>();
+        this.weaponsList = new ArrayList<>();
 
         this.sichtweite = 20;
         this.fov = DEFAULT_VIEWFIELD;
@@ -87,10 +87,10 @@ public class Player extends Creature implements Camera {
             // Diese Keys haben noch keine Property sie sind fürs Debuggen und
             // werden später abgeschaltet. FIX (macht sgs)
             if (key == 'f') {
-                if (fov instanceof RayCaster) {
+                if (fov == DEFAULT_VIEWFIELD) {
                     fov = new ViewEverything();
                 } else {
-                    fov = new RayCaster();
+                    fov = DEFAULT_VIEWFIELD;
                 }
                 ZombieGame.refreshMainFrame();
                 act();
@@ -216,11 +216,11 @@ public class Player extends Creature implements Camera {
             world().removeActor(this);
         }
         lvl.addActor(this);
-        if (lvl == ZombieGame.getGlobalMap()) {
+        if (lvl.isGlobalMap()) {
             fov = new ViewEverything();
         } else {
             fov = DEFAULT_VIEWFIELD;
-            lvl.fillWithEnemies();
+            lvl.refill();
         }
     }
 
@@ -345,5 +345,10 @@ public class Player extends Creature implements Camera {
     @Override
     protected boolean isEnemy(Creature enemy) {
         return enemy instanceof Monster;
+    }
+
+    @Override
+    public boolean hasUnlimitedMunition() {
+        return isGod();
     }
 }
