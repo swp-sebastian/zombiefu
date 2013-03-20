@@ -13,7 +13,7 @@ public class CircularRayCaster extends ViewField {
     private PathFinder raycaster;
 
     public CircularRayCaster() {
-        raycaster = new Bresenham();
+        raycaster = new ImprovedBresenham();
     }
 
     private Collection<Coordinate> getCircle(Coordinate c, int radius) {        

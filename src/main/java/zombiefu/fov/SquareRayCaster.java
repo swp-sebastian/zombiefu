@@ -2,7 +2,6 @@ package zombiefu.fov;
 
 import jade.core.World;
 import jade.fov.ViewField;
-import jade.path.Bresenham;
 import jade.path.PathFinder;
 import jade.util.datatype.Coordinate;
 import java.util.Collection;
@@ -14,7 +13,7 @@ public class SquareRayCaster extends ViewField
 
     public SquareRayCaster()
     {
-        raycaster = new Bresenham();
+        raycaster = new ImprovedBresenham();
     }
 
     @Override

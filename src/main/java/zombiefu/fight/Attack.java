@@ -5,6 +5,7 @@
 package zombiefu.fight;
 
 import jade.core.World;
+import jade.fov.ViewField;
 import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.Coordinate;
@@ -17,6 +18,7 @@ import java.util.Set;
 import zombiefu.creature.Creature;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.WeaponHasNoMunitionException;
+import zombiefu.fov.CircularRayCaster;
 import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
 import zombiefu.player.Attribute;
@@ -30,6 +32,7 @@ import zombiefu.util.ZombieTools;
 public class Attack {
 
     private static final double EXPERT_BONUS = 1.75; // Faktor
+    private static final ViewField DETONATION_FIELD = new CircularRayCaster();
     private Creature attacker;
     private Weapon weapon;
     private WeaponType wtype;
@@ -88,7 +91,7 @@ public class Attack {
         int damage = (int) (((double) weapon.getDamage())
                 * ((double) attacker.getAttribute(Attribute.ATTACK) / (double) cr.getAttribute(Attribute.DEFENSE))
                 * ZombieTools.getRandomDouble(0.7, 1.3) * faktor * (weapon.isExpert(attacker.getDiscipline()) ? EXPERT_BONUS : 1.0));
-        if (damage == 0) {
+        if (damage < 1) {
             damage = 1;
         }
         return damage;
@@ -152,16 +155,25 @@ public class Attack {
         Collection<Creature> targets = new HashSet<>();
 
         int blastMax = (int) Math.ceil(blastRadius);
-
-        for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world.width() - 1); x++) {
-            for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world.height() - 1); y++) {
-                Coordinate neu = new Coordinate(x, y);
-                if (neu.distance(c) <= blastRadius && (includeCenter || !c.equals(neu))) {
-                    createAnimation(neu);
-                    targets.addAll(world.getActorsAt(Creature.class, neu));
-                }
+        Collection<Coordinate> detField = DETONATION_FIELD.getViewField(world, c, blastMax-1);
+        for (Coordinate co : detField) {
+            if (includeCenter || !c.equals(co)) {
+                createAnimation(co);
+                targets.addAll(world.getActorsAt(Creature.class, co));
             }
+
         }
+        /*
+         for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world.width() - 1); x++) {
+         for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world.height() - 1); y++) {
+         Coordinate neu = new Coordinate(x, y);
+         if (neu.distance(c) <= blastRadius && (includeCenter || !c.equals(neu))) {
+         createAnimation(neu);
+         targets.addAll(world.getActorsAt(Creature.class, neu));
+         }
+         }
+         }
+         * */
 
         attackCreatureSet(targets);
     }
@@ -182,9 +194,11 @@ public class Attack {
                     return 0.5;
                 }
                 distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
+                //Guard.verifyState(distance <= 1);
                 return 1.0 - distance * distance / 2.0;
             case GRANATE:
                 distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
+ //               Guard.verifyState(distance <= 1);
                 return 1.0 - distance * distance / 2.0;
             default:
                 throw new AssertionError(wtype.name());
@@ -197,7 +211,7 @@ public class Attack {
 
     public void perform() throws WeaponHasNoMunitionException, NoEnemyHitException {
         if (!attacker.hasUnlimitedMunition()) {
-            weapon.useMunition();   
+            weapon.useMunition();
         }
 
         try {
