@@ -2,6 +2,7 @@ package zombiefu.fov;
 
 import jade.core.World;
 import jade.fov.ViewField;
+import jade.path.Bresenham;
 import jade.path.PathFinder;
 import jade.util.datatype.Coordinate;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class CircularRayCaster extends ViewField {
     private PathFinder raycaster;
 
     public CircularRayCaster() {
-        raycaster = new ImprovedBresenham();
+        raycaster = new Bresenham();
     }
 
     private Collection<Coordinate> getCircle(Coordinate c, int radius) {        
