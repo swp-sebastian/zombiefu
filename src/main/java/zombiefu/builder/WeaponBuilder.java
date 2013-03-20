@@ -44,7 +44,7 @@ public class WeaponBuilder extends ItemBuilder {
         if (munition == -1) {
             w.setUnlimitedMunition(true);
         } else {
-            w.addMunition((int) (munition * ZombieTools.getRandomDouble(1, munition, -3)));
+            w.addMunition((int) Math.ceil(munition * ZombieTools.getRandomDouble(1, munition, -3)));
         }
         return w;
     }
