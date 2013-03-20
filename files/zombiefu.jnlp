@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp codebase="http://swp-sebastian.github.com/zombiefu/" spec="1.0+">
+	<information>
+		<title>The Final Exam</title>
+		<vendor>SWP2013</vendor>
+		<homepage href="http%3A%2F%2Fswp-sebastian.github.com%2Fzombiefu%2F"/>
+		<description>The Final Exam - Die Anwesenheitspflicht schlägt zurück</description>
+		<offline-allowed/>
+	</information>
+	<resources>
+		<j2se version="1.7+"/>
+		<jar href="files%2Fzombiefu.jar" main="true"/>
+	</resources>
+	<application-desc main-class="zombiefu.ZombieFU">
+	</application-desc>
+</jnlp>
