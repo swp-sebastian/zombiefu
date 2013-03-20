@@ -36,14 +36,17 @@ public class ZombieSettings {
     public ZombieSettings(String[] args) {
         props = new Properties(defaults(""));
 
-        String userconfig = System.getProperty("user.home") + "/.zombiefurc";
         try {
-            props.load(new FileInputStream(userconfig));
-            System.out.println("ZombieSettings: User-Konfigurationsdatei " + userconfig + " geladen.");
-        } catch (IOException ex) {
-            System.out.println("ZombieSettings: Keine User-Konfigurationsdatei " + userconfig + " vorhanden. Benutze defaults.");
-        }
+            String userconfig = System.getProperty("user.home") + "/.zombiefurc";
+            try {
+                props.load(new FileInputStream(userconfig));
+                System.out.println("ZombieSettings: User-Konfigurationsdatei " + userconfig + " geladen.");
+            } catch (IOException ex) {
+                System.out.println("ZombieSettings: Keine User-Konfigurationsdatei " + userconfig + " vorhanden. Benutze defaults.");
+            }
+        } catch (SecurityException e) {
 
+        }
         // Spielerinfo
         playerName = props.getProperty("player.name");
         playerChar = ColoredChar.create(ZombieTools.getCharFromString(props.getProperty("player.tile.char")), ZombieTools.getColorFromString(props.getProperty("player.tile.color")));
