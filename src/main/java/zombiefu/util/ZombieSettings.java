@@ -28,7 +28,6 @@ public class ZombieSettings {
     public final ColoredChar playerChar;
     public final String playerStartMap;
     public final Coordinate playerStartCoord;
-    public final String globalMap;
     public final boolean debug;
     public final HashMap<String, Action> keybindings;
     public final HashMap<String, String> paths;
@@ -59,15 +58,8 @@ public class ZombieSettings {
         playerStartMap = props.getProperty("player.start.map");
         playerStartCoord = new Coordinate(Integer.decode(props.getProperty("player.start.x")), Integer.decode(props.getProperty("player.start.y")));
 
-        // Weltkarte
-        globalMap = props.getProperty("globalmap");
-
         // Debug-Modus
-        if (props.getProperty("debug").equalsIgnoreCase("true")) {
-            debug = true;
-        } else {
-            debug = false;
-        }
+        debug = props.getProperty("debug").equalsIgnoreCase("true");
 
         // Die Keybindings einlesen. TODO: Einstampfen in Schleife.
         keybindings = new HashMap<String, Action>();
@@ -129,9 +121,7 @@ public class ZombieSettings {
         def.setProperty("player.start.map", "Weltkarte");
         def.setProperty("player.start.x", "15");
         def.setProperty("player.start.y", "53");
-
-        def.setProperty("globalmap", "Weltkarte");
-
+        
         // Default Keybindings
         def.setProperty("controls.up", "LATIN SMALL LETTER W");
         def.setProperty("controls.down", "LATIN SMALL LETTER S");

@@ -14,15 +14,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import zombiefu.actor.Creature;
+import zombiefu.creature.Creature;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
-import static zombiefu.items.WeaponType.FERNKAMPF;
-import static zombiefu.items.WeaponType.GRANATE;
-import static zombiefu.items.WeaponType.NAHKAMPF;
-import static zombiefu.items.WeaponType.UMKREIS;
 import zombiefu.player.Attribute;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
@@ -200,7 +196,9 @@ public class Attack {
     }
 
     public void perform() throws WeaponHasNoMunitionException, NoEnemyHitException {
-        weapon.useMunition();
+        if (!attacker.hasUnlimitedMunition()) {
+            weapon.useMunition();   
+        }
 
         try {
             switch (wtype) {
@@ -220,7 +218,7 @@ public class Attack {
                     break;
                 case UMKREIS:
                     // Dexterity decides, whether the attacker accidently hits himself
-                    impactPoint = attacker.pos().getTranslated(dir);
+                    impactPoint = attacker.pos();
                     createDetonation(impactPoint, weapon.getBlastRadius(), !Dice.global.chance(getSuccessProbability()));
                     break;
                 case GRANATE:

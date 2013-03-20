@@ -7,11 +7,7 @@ package zombiefu.human;
 import jade.util.datatype.ColoredChar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import zombiefu.exception.CannotAffordException;
-import zombiefu.exception.DoesNotPossessThisItemException;
-import zombiefu.items.MensaCard;
-import zombiefu.player.Attribute;
+import zombiefu.creature.AttributeSet;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 
@@ -25,7 +21,7 @@ public abstract class DealingHuman extends Human {
     protected boolean dealt;
     private Map<String, String> phraseSet;
 
-    public DealingHuman(ColoredChar face, String name, HashMap<Attribute,Integer> attSet, Map<String, String> ps) {
+    public DealingHuman(ColoredChar face, String name, AttributeSet attSet, Map<String, String> ps) {
         super(face, name, attSet);
         this.dealt = false;
         this.phraseSet = ps;

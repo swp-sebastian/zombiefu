@@ -10,7 +10,7 @@ import jade.util.datatype.Direction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import zombiefu.actor.Monster;
+import zombiefu.creature.Monster;
 import zombiefu.exception.TargetNotFoundException;
 import zombiefu.util.ZombieTools;
 

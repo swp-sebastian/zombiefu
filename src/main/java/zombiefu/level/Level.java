@@ -4,9 +4,8 @@ import jade.core.Actor;
 import jade.core.World;
 import jade.gen.Generator;
 import jade.ui.TermPanel;
-import jade.util.Dice;
 import java.util.ArrayList;
-import zombiefu.actor.Monster;
+import zombiefu.creature.Monster;
 import zombiefu.player.Player;
 import zombiefu.actor.Door;
 import zombiefu.items.Item;
@@ -20,18 +19,19 @@ import zombiefu.util.ZombieTools;
 
 public class Level extends World {
 
+    private static final double ENEMY_BASE_DENSITY = 0.015;
     private int numberOfPassableFields;
     private String name;
+    private boolean global;
 
-    public Level(int width, int height, Generator gen, String name) {
+    public Level(int width, int height, Generator gen, String name, boolean global) {
         super(width, height);
         gen.generate(this);
-        fillWithItems();
-        calculateNumberOfPassableFields();
 
         this.name = name;
+        this.global = global;
 
-        drawOrder = new ArrayList<Class<? extends Actor>>();
+        drawOrder = new ArrayList<>();
         drawOrder.add(DamageAnimation.class);
         drawOrder.add(Player.class);
         drawOrder.add(Monster.class);
@@ -47,6 +47,10 @@ public class Level extends World {
         return name;
     }
 
+    public boolean isGlobalMap() {
+        return global;
+    }
+
     public Player getPlayer() throws TargetIsNotInThisWorldException {
         Player pl = super.getActor(Player.class);
         if (pl == null) {
@@ -55,12 +59,18 @@ public class Level extends World {
         return pl;
     }
 
-    private void calculateNumberOfPassableFields() {
-        for (int x = 0; x < width(); x++) {
-            for (int y = 0; y < height(); y++) {
-                numberOfPassableFields += passableAt(x, y) ? 1 : 0;
+    private int getNumberOfPassableFields() {
+        if (numberOfPassableFields == 0) {
+            numberOfPassableFields = 0;
+            for (int x = 0; x < width(); x++) {
+                for (int y = 0; y < height(); y++) {
+                    if (passableAt(x, y)) {
+                        numberOfPassableFields ++;
+                    }
+                }
             }
         }
+        return numberOfPassableFields;
     }
 
     @Override
@@ -80,17 +90,33 @@ public class Level extends World {
         removeExpired();
     }
 
-    public void fillWithEnemies() {
-        int oldEnemies = getActors(Monster.class).size();
-        int semester = ZombieGame.getPlayer().getSemester();
-        int newEnemies = (int) (semester * 0.005 * numberOfPassableFields * ZombieTools.getRandomDouble(0.85,1.15));
-        // 6 normale Zombies kommen hinzu
-        for (int i = oldEnemies; i <= newEnemies; i++) {
-           addActor(ConfigHelper.newMonsterByName("Zombie"));
-        }
+    private void fillWithItems() {
     }
 
-    protected void fillWithItems() {
+    private void fillWithEnemies() {
+        int n = (int) ((ZombieGame.getPlayer().getSemester() + 9) * 0.1 * ENEMY_BASE_DENSITY * getNumberOfPassableFields() * ZombieTools.getRandomDouble(0.85, 1.15));
+        
+        // Normale Zombies
+        int k = n / 2;
+        for (int i = 0; i < k; i++) {
+            addActor(ConfigHelper.newMonsterByName("Zombie"));        
+            n--;            
+        }
+            addActor(ConfigHelper.newMonsterByName("RaketenwerferZombie"));  
+        
+        
+        
+    }
+
+    public void refill() {
+        for (Monster a : getActors(Monster.class)) {
+            removeActor(a);
+        }
+        for (Item a : getActors(Item.class)) {
+            removeActor(a);
+        }
+        fillWithEnemies();
+        fillWithItems();
     }
 
     public void refresh(TermPanel term) {
