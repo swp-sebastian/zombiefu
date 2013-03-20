@@ -34,7 +34,7 @@ import zombiefu.util.ZombieTools;
  */
 public abstract class NonPlayer extends Creature {
 
-    protected ChaseAlgorithm movealg;
+    protected ChaseAlgorithm chasealg;
     protected Habitat habitat;
     protected double maxDistance;
 
@@ -42,7 +42,7 @@ public abstract class NonPlayer extends Creature {
         super(face, name, attSet);
         this.maxDistance = maxDistance;
 
-        this.movealg = new Dijkstra();
+        this.chasealg = new Dijkstra();
         this.fov = new RayCaster();
         this.sichtweite = 10;
     }
@@ -87,7 +87,7 @@ public abstract class NonPlayer extends Creature {
     }
 
     protected Direction getDirectionTo(Coordinate coord) throws TargetNotFoundException {
-        return movealg.directionTo(world(), pos(), coord);
+        return chasealg.directionTo(world(), pos(), coord);
     }
 
     protected void moveToCoordinate(Coordinate coord) throws TargetIsNotInThisWorldException, TargetNotFoundException, WeaponHasNoMunitionException {
