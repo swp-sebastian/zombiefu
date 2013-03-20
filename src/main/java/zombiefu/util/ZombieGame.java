@@ -332,13 +332,8 @@ public class ZombieGame {
         return output;
     }
 
-    public static String getResourceDirectory(String identifier) {
-        return settings.paths.get(identifier);
-    }
-
     public static InputStream getResource(String identifier, String suffix) {
-        String dir = getResourceDirectory(identifier);
-        ZombieTools.log("getResource(String \"" + identifier + "\", String \"" + suffix + "\")");
+        String dir = settings.paths.get(identifier);
         return ZombieFU.class.getResourceAsStream(dir + suffix);
     }
 
