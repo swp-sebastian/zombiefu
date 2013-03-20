@@ -155,24 +155,15 @@ public class Attack {
         Collection<Creature> targets = new HashSet<>();
 
         int blastMax = (int) Math.ceil(blastRadius);
-        Collection<Coordinate> detField = DETONATION_FIELD.getViewField(world, c, blastMax-1);
-        for (Coordinate co : detField) {
-            if (includeCenter || !c.equals(co)) {
-                createAnimation(co);
-                targets.addAll(world.getActorsAt(Creature.class, co));
+        for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world.width() - 1); x++) {
+            for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world.height() - 1); y++) {
+                Coordinate neu = new Coordinate(x, y);
+                if (world.passableAt(c) && neu.distance(c) <= blastRadius && (includeCenter || !c.equals(neu))) {
+                    createAnimation(neu);
+                    targets.addAll(world.getActorsAt(Creature.class, neu));
+                }
             }
         }
-        /*
-         for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world.width() - 1); x++) {
-         for (int y = Math.max(0, c.y() - blastMax); y <= Math.min(c.y() + blastMax, world.height() - 1); y++) {
-         Coordinate neu = new Coordinate(x, y);
-         if (neu.distance(c) <= blastRadius && (includeCenter || !c.equals(neu))) {
-         createAnimation(neu);
-         targets.addAll(world.getActorsAt(Creature.class, neu));
-         }
-         }
-         }
-         * */
 
         attackCreatureSet(targets);
     }
@@ -197,7 +188,7 @@ public class Attack {
                 return 1.0 - distance * distance / 2.0;
             case GRANATE:
                 distance = cr.pos().distance(impactPoint) / weapon.getBlastRadius();
- //               Guard.verifyState(distance <= 1);
+                //               Guard.verifyState(distance <= 1);
                 return 1.0 - distance * distance / 2.0;
             default:
                 throw new AssertionError(wtype.name());

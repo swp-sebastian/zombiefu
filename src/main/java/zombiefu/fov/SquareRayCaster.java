@@ -8,7 +8,7 @@ import jade.util.datatype.Coordinate;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class SquareRayCaster extends ViewField
+public class SquareRayCaster extends ImprovedRayCaster
 {
     private PathFinder raycaster;
 
@@ -18,7 +18,7 @@ public class SquareRayCaster extends ViewField
     }
 
     @Override
-    protected Collection<Coordinate> calcViewField(World world, int x, int y, int r)
+    protected Collection<Coordinate> getBaseField(World world, int x, int y, int r)
     {
         Collection<Coordinate> fov = new HashSet<Coordinate>();
         fov.add(new Coordinate(x, y));
