@@ -8,10 +8,8 @@ import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import jade.util.Guard;
-import java.awt.Color;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -25,6 +23,7 @@ import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
 import zombiefu.ZombieFU;
+import zombiefu.creature.AttributeSet;
 
 /**
  *
@@ -35,7 +34,6 @@ public class ZombieGame {
     private static ZombieSettings settings;
     private static ZombieFrame frame;
     private static Player player;
-    private static Level globalmap;
 
     public static void createGame(String[] args, String name) {
         settings = new ZombieSettings(args);
@@ -69,10 +67,9 @@ public class ZombieGame {
 
     public static void initialize() {
         Discipline discipline = askPlayerForDiscipline();
-        globalmap = ConfigHelper.getLevelByName(settings.globalMap);
 
         // Attribute laden.
-        HashMap<Attribute,Integer> atts = new HashMap<Attribute,Integer>();
+        AttributeSet atts = new AttributeSet();
         for(Attribute att: Attribute.values()) {
             Integer setting = settings.playerAttributes.get(att);
             if(setting == null) {
@@ -335,10 +332,6 @@ public class ZombieGame {
     public static InputStream getResource(String identifier, String suffix) {
         String dir = settings.paths.get(identifier);
         return ZombieFU.class.getResourceAsStream(dir + suffix);
-    }
-
-    public static Level getGlobalMap() {
-        return globalmap;
     }
 
     public static void endGame() {

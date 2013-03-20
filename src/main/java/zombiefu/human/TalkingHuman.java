@@ -5,8 +5,7 @@
 package zombiefu.human;
 
 import jade.util.datatype.ColoredChar;
-import java.util.HashMap;
-import zombiefu.player.Attribute;
+import zombiefu.creature.AttributeSet;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 
@@ -18,7 +17,7 @@ public class TalkingHuman extends Human {
 
     private String phrase;
 
-    public TalkingHuman(ColoredChar face, String name, HashMap<Attribute,Integer> attSet, String phrase) {
+    public TalkingHuman(ColoredChar face, String name, AttributeSet attSet, String phrase) {
         super(face, name, attSet);
         this.phrase = phrase;
     }

@@ -46,7 +46,7 @@ public class RoomBuilder extends MapGenerator {
                     passable = visible = true;
                 } else if (passSet.containsKey(tile.ch()) && visibleSet.containsKey(tile.ch())) {
                     passable = passSet.get(tile.ch());
-                    visible = passSet.get(tile.ch());
+                    visible = visibleSet.get(tile.ch());
                 } else {
                     passable = visible = false;
                 }

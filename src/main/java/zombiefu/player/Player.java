@@ -10,11 +10,11 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Logger;
-import zombiefu.actor.Creature;
+import zombiefu.creature.Creature;
 import zombiefu.actor.Door;
-import zombiefu.actor.Monster;
+import zombiefu.creature.Monster;
 import zombiefu.actor.NotPassableActor;
+import zombiefu.creature.AttributeSet;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotAffordException;
 import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
@@ -45,7 +45,7 @@ public class Player extends Creature implements Camera {
     private HashMap<String, Weapon> weapons;
     private ArrayList<String> weaponsList;
 
-    public Player(ColoredChar face, String name, Discipline discipline, HashMap<Attribute, Integer> attr) {
+    public Player(ColoredChar face, String name, Discipline discipline, AttributeSet attr) {
 
         super(face, name, attr);
 
@@ -216,11 +216,11 @@ public class Player extends Creature implements Camera {
             world().removeActor(this);
         }
         lvl.addActor(this);
-        if (lvl == ZombieGame.getGlobalMap()) {
+        if (lvl.isGlobalMap()) {
             fov = new ViewEverything();
         } else {
             fov = DEFAULT_VIEWFIELD;
-            lvl.fillWithEnemies();
+            lvl.refill();
         }
     }
 
@@ -345,5 +345,10 @@ public class Player extends Creature implements Camera {
     @Override
     protected boolean isEnemy(Creature enemy) {
         return enemy instanceof Monster;
+    }
+    
+    @Override
+    public boolean hasUnlimitedMunition() {
+        return isGod();
     }
 }

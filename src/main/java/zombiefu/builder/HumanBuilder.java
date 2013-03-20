@@ -2,8 +2,8 @@ package zombiefu.builder;
 
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
-import java.util.HashMap;
 import java.util.Map;
+import zombiefu.creature.AttributeSet;
 import zombiefu.human.BuyingHuman;
 import zombiefu.human.GivingHuman;
 import zombiefu.human.Human;
@@ -11,7 +11,6 @@ import zombiefu.human.SellingHuman;
 import zombiefu.human.TalkingHuman;
 import zombiefu.human.TradingHuman;
 import zombiefu.items.Item;
-import zombiefu.player.Attribute;
 
 public class HumanBuilder {
 
@@ -22,9 +21,9 @@ public class HumanBuilder {
     private Integer offerMoney;
     private String requestItem;
     private Integer requestMoney;
-    private HashMap<Attribute, Integer> attSet;
+    private AttributeSet attSet;
 
-    public HumanBuilder(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Map<String, String> phraseSet, Item offerItem, Integer offerMoney, String requestItem, Integer requestMoney) {
+    public HumanBuilder(ColoredChar face, String name, AttributeSet attSet, Map<String, String> phraseSet, Item offerItem, Integer offerMoney, String requestItem, Integer requestMoney) {
         this.face = face;
         this.name = name;
         this.phraseSet = phraseSet;

@@ -1,9 +1,9 @@
 package zombiefu.builder;
 
 import jade.util.datatype.ColoredChar;
-import java.util.HashMap;
+import zombiefu.creature.AttributeSet;
 import zombiefu.items.Weapon;
-import zombiefu.actor.Monster;
+import zombiefu.creature.Monster;
 import zombiefu.player.Attribute;
 import zombiefu.util.ITMString;
 import zombiefu.util.ZombieGame;
@@ -13,14 +13,14 @@ public class MonsterBuilder {
 
     private ColoredChar face;
     private String name;
-    private HashMap<Attribute, Integer> attSet;
+    private AttributeSet attSet;
     private int ects;
     private Weapon weapon;
     private ITMString dropOnDeath;
     private boolean staticAttributes;
     private double habitatRadius;
 
-    public MonsterBuilder(ColoredChar face, String name, HashMap<Attribute, Integer> attSet, Weapon w, int ects, ITMString dropOnDeath, boolean staticAttributes) {
+    public MonsterBuilder(ColoredChar face, String name, AttributeSet attSet, Weapon w, int ects, ITMString dropOnDeath, boolean staticAttributes) {
         this.name = name;
         this.face = face;
         this.attSet = attSet;
@@ -32,13 +32,16 @@ public class MonsterBuilder {
     }
 
     public Monster buildMonster() {
-        HashMap<Attribute, Integer> calcAtt;
+        AttributeSet calcAtt;
         if (staticAttributes) {
             calcAtt = attSet;
         } else {
-            calcAtt = new HashMap<>();
+            calcAtt = new AttributeSet(null);
             double plvl = (double) ZombieGame.getPlayer().getSemester();
             double faktor = (plvl + 1.0) / 2.0 * ZombieTools.getRandomDouble(0.8, 1.2);
+            if(faktor < 1) {
+                faktor = 1.0;
+            }
             for (Attribute att : Attribute.values()) {
                 calcAtt.put(att, (int) (attSet.get(att) * faktor));
             }
