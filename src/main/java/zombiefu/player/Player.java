@@ -20,6 +20,7 @@ import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.CannotBeConsumedException;
+import zombiefu.exception.DidNotActException;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.exception.DoesNotPossessThisItemException;
 import zombiefu.exception.MaximumHealthPointException;
@@ -80,7 +81,7 @@ public class Player extends Creature implements Camera {
     }
 
     @Override
-    public void pleaseAct() {
+    public void pleaseAct() throws DidNotActException {
         try {
             char key = ZombieGame.askPlayerForKey();
 
@@ -93,17 +94,21 @@ public class Player extends Creature implements Camera {
                     fov = DEFAULT_VIEWFIELD;
                 }
                 ZombieGame.refreshMainFrame();
-                act();
+                throw new DidNotActException();
             }
 
             if (key == 27) {
+                char rkey = ZombieGame.askPlayerForKeyWithMessage("Möchtest Du das Spiel wirklich beenden? [y/n]");
+                if (rkey != 'y') {
+                    throw new DidNotActException();
+                }
                 System.exit(0);
             }
 
             if (key == 'g') {
                 godMode = !godMode;
                 ZombieGame.refreshBottomFrame();
-                act();
+                throw new DidNotActException();
             }
 
             Action action = ZombieTools.keyToAction(ZombieGame.getSettings().keybindings, key);
@@ -115,19 +120,17 @@ public class Player extends Creature implements Camera {
                     case PREV_WEAPON:
                         switchWeapon(true);
                         ZombieGame.refreshBottomFrame();
-                        act();
-                        break;
+                        throw new DidNotActException();
 
                     case NEXT_WEAPON:
                         switchWeapon(false);
                         ZombieGame.refreshBottomFrame();
-                        act();
-                        break;
+                        throw new DidNotActException();
 
                     case INVENTORY:
                         String it = ZombieGame.askPlayerForItemInInventar();
                         if (it == null) {
-                            act();
+                            throw new DidNotActException();
                         } else {
                             consumeItem(it);
                         }
@@ -137,14 +140,13 @@ public class Player extends Creature implements Camera {
                         try {
                             attack();
                         } catch (NoDirectionGivenException ex) {
-                            act();
+                            throw new DidNotActException();
                         }
                         break;
 
                     case HELP:
                         ZombieGame.showHelp();
-                        act();
-                        break;
+                        throw new DidNotActException();
 
                     case UP:
                         tryToMove(Direction.NORTH);
@@ -165,16 +167,16 @@ public class Player extends Creature implements Camera {
 
                 }
             } else {
-                act();
+                throw new DidNotActException();
             }
         } catch (CannotMoveToIllegalFieldException ex) {
-            act();
+            throw new DidNotActException();
         } catch (WeaponHasNoMunitionException ex) {
             ZombieGame.newMessage("Du hast keine Munition für " + getActiveWeapon().getName());
-            act();
+            throw new DidNotActException();
         } catch (CannotAttackWithoutMeleeWeaponException ex) {
             ZombieGame.newMessage("Du trägst keine Nahkampfwaffe!");
-            act();
+            throw new DidNotActException();
         } catch (CannnotMoveToNonPassableActorException ex) {
             NotPassableActor actor = ex.getActor();
             if (actor instanceof Human) {
@@ -185,7 +187,7 @@ public class Player extends Creature implements Camera {
                     ZombieGame.newMessage("Die Tür wurde mit göttlicher Macht geöffnet.");
                 } else {
                     ZombieGame.newMessage("Diese Tür ist geschlossen. Du brauchst einen Schlüssel um sie zu öffnen");
-                    act();
+                    throw new DidNotActException();
                 }
             }
         } catch (NoEnemyHitException ex) {
