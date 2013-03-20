@@ -6,6 +6,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import java.util.Properties;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import java.util.List;
 import zombiefu.items.Weapon;
 import zombiefu.player.Attribute;
 import zombiefu.util.Action;
+import zombiefu.ZombieFU;
+import zombiefu.util.ZombieTools;
 
 public class ZombieSettings {
 
@@ -28,10 +31,10 @@ public class ZombieSettings {
     public final String globalMap;
     public final boolean debug;
     public final HashMap<String, Action> keybindings;
-    public final HashMap<String, File> paths;
+    public final HashMap<String, String> paths;
 
-    public ZombieSettings(String[] args, String res) {
-        props = new Properties(defaults(res));
+    public ZombieSettings(String[] args) {
+        props = new Properties(defaults(""));
 
         String userconfig = System.getProperty("user.home") + "/.zombiefurc";
         try {
@@ -77,21 +80,21 @@ public class ZombieSettings {
         keybindings.put(props.getProperty("controls.help"), Action.HELP);
 
         // Die Pfadangaben einlesen.
-        paths = new HashMap<String, File>();
-        paths.put("base", new File(props.getProperty("dir.base")));
-        paths.put("maps", new File(props.getProperty("dir.maps")));
-        paths.put("screens", new File(props.getProperty("dir.screens")));
-        paths.put("shops", new File(props.getProperty("dir.shops")));
-        paths.put("monsters", new File(props.getProperty("dir.monsters")));
-        paths.put("humans", new File(props.getProperty("dir.humans")));
-        paths.put("weapons", new File(props.getProperty("dir.weapons")));
-        paths.put("food", new File(props.getProperty("dir.food")));
+        paths = new HashMap<String, String>();
+        paths.put("base", props.getProperty("dir.base"));
+        paths.put("maps", props.getProperty("dir.maps"));
+        paths.put("screens", props.getProperty("dir.screens"));
+        paths.put("shops", props.getProperty("dir.shops"));
+        paths.put("monsters", props.getProperty("dir.monsters"));
+        paths.put("humans", props.getProperty("dir.humans"));
+        paths.put("weapons", props.getProperty("dir.weapons"));
+        paths.put("food", props.getProperty("dir.food"));
 
         // Überprüfen, ob Pfade lesbar sind.
         Iterator itr = paths.values().iterator();
         while (itr.hasNext()) {
-            File f = (File) itr.next();
-            Guard.verifyState(f.canRead());
+            InputStream in = ZombieFU.class.getResourceAsStream((String) itr.next());
+            Guard.argumentIsNotNull(in);
         }
     }
 
@@ -99,17 +102,17 @@ public class ZombieSettings {
         Properties def = new Properties();
 
         // Default Verzeichnis-Layout
-        def.setProperty("dir.base", res);
-        def.setProperty("dir.maps", res + "/maps");
-        def.setProperty("dir.screens", res + "/screens");
-        def.setProperty("dir.shops", res + "/shops");
-        def.setProperty("dir.monsters", res + "/monsters");
-        def.setProperty("dir.humans", res + "/humans");
-        def.setProperty("dir.weapons", res + "/weapons");
-        def.setProperty("dir.food", res + "/food");
+        def.setProperty("dir.base", "");
+        def.setProperty("dir.maps", "maps/");
+        def.setProperty("dir.screens", "screens/");
+        def.setProperty("dir.shops", "shops/");
+        def.setProperty("dir.monsters", "monsters/");
+        def.setProperty("dir.humans", "humans/");
+        def.setProperty("dir.weapons",  "weapons/");
+        def.setProperty("dir.food", "food/");
 
         // Default Debug Einstellung (aus)
-        def.setProperty("debug", "false");
+        def.setProperty("debug", "true");
 
         // Default Playername
         def.setProperty("player.name", System.getProperty("user.name"));

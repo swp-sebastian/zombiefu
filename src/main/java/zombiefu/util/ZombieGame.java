@@ -9,6 +9,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import jade.util.Guard;
 import java.awt.Color;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import zombiefu.level.Level;
 import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
+import zombiefu.ZombieFU;
 
 /**
  *
@@ -36,7 +38,7 @@ public class ZombieGame {
     private static Level globalmap;
 
     public static void createGame(String[] args, String name) {
-        settings = new ZombieSettings(args, "src/main/resources/zombiefu");
+        settings = new ZombieSettings(args);
         frame = new ZombieFrame(name);
     }
 
@@ -330,8 +332,14 @@ public class ZombieGame {
         return output;
     }
 
-    public static File getResourceDirectory(String identifier) {
+    public static String getResourceDirectory(String identifier) {
         return settings.paths.get(identifier);
+    }
+
+    public static InputStream getResource(String identifier, String suffix) {
+        String dir = getResourceDirectory(identifier);
+        ZombieTools.log("getResource(String \"" + identifier + "\", String \"" + suffix + "\")");
+        return ZombieFU.class.getResourceAsStream(dir + suffix);
     }
 
     public static Level getGlobalMap() {

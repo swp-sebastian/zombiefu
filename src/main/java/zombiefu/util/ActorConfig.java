@@ -7,6 +7,7 @@ package zombiefu.util;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,11 +28,11 @@ public class ActorConfig {
     public ActorConfig(String restype, String name) throws ActorConfigNotFoundException {
         this.name = name;
         this.config = new HashMap<>();
-        File file = new File(ZombieGame.getResourceDirectory(restype), name + ".cfg");
-        String[] cfg = ConfigHelper.getStrings(file);
-        if (!file.exists() || !file.canRead()) {
+        InputStream in = ZombieGame.getResource(restype, name + ".cfg");
+        if (in == null) {
             throw new ActorConfigNotFoundException();
         }
+        String[] cfg = ConfigHelper.getStrings(in);
         for (String st : cfg) {
             if (st.trim().isEmpty()) {
                 continue;
