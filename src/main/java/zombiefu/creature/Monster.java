@@ -62,6 +62,7 @@ public class Monster extends NonPlayer {
                         new Attack(this, pos().directionTo(pos)).perform();
                         return;
                     } catch (NoEnemyHitException ex) {
+                        ex.close();
                         return;
                     }
                 }
@@ -71,6 +72,7 @@ public class Monster extends NonPlayer {
                         new Attack(this, null).perform();
                         return;
                     } catch (NoEnemyHitException ex) {
+                        ex.close();
                         return;
                     }
                 }

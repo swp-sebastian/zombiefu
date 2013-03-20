@@ -12,7 +12,7 @@ import jade.util.datatype.Direction;
  *
  * @author tomas
  */
-public class StupidMover implements ChaseAlgorithm {
+public class StupidChaser implements ChaseAlgorithm {
 
     @Override
     public Direction directionTo(World w, Coordinate start, Coordinate ziel) {

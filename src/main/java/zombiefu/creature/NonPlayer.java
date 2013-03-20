@@ -4,13 +4,11 @@
  */
 package zombiefu.creature;
 
-import jade.fov.RayCaster;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
@@ -20,10 +18,10 @@ import zombiefu.exception.NoPlaceToMoveException;
 import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.exception.TargetNotFoundException;
 import zombiefu.exception.WeaponHasNoMunitionException;
+import zombiefu.fov.CircularRayCaster;
 import zombiefu.ki.ChaseAlgorithm;
 import zombiefu.ki.Dijkstra;
 import zombiefu.ki.Habitat;
-import zombiefu.player.Attribute;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
@@ -43,7 +41,7 @@ public abstract class NonPlayer extends Creature {
         this.maxDistance = maxDistance;
 
         this.chasealg = new Dijkstra();
-        this.fov = new RayCaster();
+        this.fov = new CircularRayCaster();
         this.sichtweite = 10;
     }
 
