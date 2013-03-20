@@ -27,7 +27,7 @@
         <attribute name="Main-Class" value="zombiefu.ZombieFU" />
       </manifest>
     </jar>
-    <symlink link="${target}/zombiefu.jar" resource="${target}/zombiefu-${datetime}.jar"/>
+    <symlink link="${target}/zombiefu.jar" resource="${target}/zombiefu-${datetime}.jar" overwrite="true"/>
   </target>
 
   <target name="clean" description="clean up">
