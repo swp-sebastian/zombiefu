@@ -1,4 +1,5 @@
 1 weapon(Speer)
 2 food(Mate)
 3 weapon(Splittergranate)
-4 teleporter(Weltkarte,33,34)
+4 door(Ausgang) teleporter(Weltkarte,33,34)
+5 teleporter(info2,97,3)
