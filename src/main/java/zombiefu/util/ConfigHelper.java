@@ -32,6 +32,7 @@ import zombiefu.items.WeaponType;
 import zombiefu.level.Level;
 import zombiefu.mapgen.RoomBuilder;
 import zombiefu.creature.Monster;
+import zombiefu.fight.DamageAnimation;
 import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 
@@ -284,11 +285,11 @@ public class ConfigHelper {
 
         // Lese ItemMap ein
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lese Itemmap ein");
-        HashMap<Character, String> itemMap = new HashMap<>();
+        HashMap<Character, ITMString> itemMap = new HashMap<>();
         String[] items = getStrings(ZombieGame.getResource("maps", mapName + ".itm"));
         for (String st : items) {
             String[] it = st.split(" ", 2);
-            itemMap.put(it[0].charAt(0), it[1]);
+            itemMap.put(it[0].charAt(0), new ITMString(it[1]));
         }
 
         // Lese Map ein
@@ -322,11 +323,11 @@ public class ConfigHelper {
                 char c;
                 try {
                     c = level[y].charAt(x);
-                } catch (StringIndexOutOfBoundsException exc) {
+                } catch (StringIndexOutOfBoundsException ex) {
                     c = ' ';
                 }
                 if (itemMap.containsKey(c)) {
-                    Set<Actor> actors = new ITMString(itemMap.get(c)).getActorSet();
+                    Set<Actor> actors = itemMap.get(c).getActorSet();
                     for (Actor a : actors) {
                         lev.addActor(a, x, y);
                     }
