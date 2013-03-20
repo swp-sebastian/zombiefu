@@ -22,16 +22,18 @@ public class Level extends World {
 
     private int numberOfPassableFields;
     private String name;
+    private boolean global;
 
-    public Level(int width, int height, Generator gen, String name) {
+    public Level(int width, int height, Generator gen, String name, boolean global) {
         super(width, height);
         gen.generate(this);
         fillWithItems();
         calculateNumberOfPassableFields();
 
         this.name = name;
+        this.global = global;
 
-        drawOrder = new ArrayList<Class<? extends Actor>>();
+        drawOrder = new ArrayList<>();
         drawOrder.add(DamageAnimation.class);
         drawOrder.add(Player.class);
         drawOrder.add(Monster.class);
@@ -47,6 +49,10 @@ public class Level extends World {
         return name;
     }
 
+    public boolean isGlobalMap() {
+        return global;
+    }
+    
     public Player getPlayer() throws TargetIsNotInThisWorldException {
         Player pl = super.getActor(Player.class);
         if (pl == null) {

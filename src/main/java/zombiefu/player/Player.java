@@ -216,7 +216,7 @@ public class Player extends Creature implements Camera {
             world().removeActor(this);
         }
         lvl.addActor(this);
-        if (lvl == ZombieGame.getGlobalMap()) {
+        if (lvl.isGlobalMap()) {
             fov = new ViewEverything();
         } else {
             fov = DEFAULT_VIEWFIELD;

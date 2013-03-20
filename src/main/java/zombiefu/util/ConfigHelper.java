@@ -271,6 +271,7 @@ public class ConfigHelper {
 
         // Levename
         String name = config.contains("name") ? config.get("name") : mapName;
+        boolean global = config.contains("global") ? !config.get("global").equals("false") : false;
 
         // Suche floorChar und bgChar
         ColoredChar floorChar, bgChar;
@@ -311,7 +312,7 @@ public class ConfigHelper {
         // Baue Level
         ZombieTools.log("createLevelFromFile(" + mapName + "): Erzeuge Level");
         RoomBuilder builder = new RoomBuilder(chars, floorChar);
-        Level lev = new Level(builder.width(), builder.height(), builder, name);
+        Level lev = new Level(builder.width(), builder.height(), builder, name, global);
 
         // Lade statische Items auf Map
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lade statische Items");

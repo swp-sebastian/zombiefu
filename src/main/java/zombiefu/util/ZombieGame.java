@@ -35,7 +35,6 @@ public class ZombieGame {
     private static ZombieSettings settings;
     private static ZombieFrame frame;
     private static Player player;
-    private static Level globalmap;
 
     public static void createGame(String[] args, String name) {
         settings = new ZombieSettings(args);
@@ -69,7 +68,6 @@ public class ZombieGame {
 
     public static void initialize() {
         Discipline discipline = askPlayerForDiscipline();
-        globalmap = ConfigHelper.getLevelByName(settings.globalMap);
 
         // Attribute laden.
         HashMap<Attribute,Integer> atts = new HashMap<Attribute,Integer>();
@@ -335,10 +333,6 @@ public class ZombieGame {
     public static InputStream getResource(String identifier, String suffix) {
         String dir = settings.paths.get(identifier);
         return ZombieFU.class.getResourceAsStream(dir + suffix);
-    }
-
-    public static Level getGlobalMap() {
-        return globalmap;
     }
 
     public static void endGame() {
