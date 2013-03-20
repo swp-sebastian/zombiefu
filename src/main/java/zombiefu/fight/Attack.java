@@ -70,7 +70,7 @@ public class Attack {
 
     private Coordinate getMissileImpactPoint(Direction dir, int maxDistance) {
         Direction noiseDirection = ZombieTools.getRotatedDirection(dir, 90);
-        int noise = (int) Math.floor(((double) maxDistance) * ZombieTools.getRandomDouble(0, 1, attacker.getAttribute(Attribute.DEXTERITY) - 3) / (Dice.global.chance() ? 4.0 : -4.0));
+        int noise = (int) Math.floor(((double) maxDistance) * ZombieTools.getRandomDouble(0, 1, 3 - attacker.getAttribute(Attribute.DEXTERITY)) / (Dice.global.chance() ? 4.0 : -4.0));
 
         Coordinate neu = attacker.pos().getTranslated(dir.dx() * maxDistance, dir.dy() * maxDistance).getTranslated(noiseDirection.dx() * noise, noiseDirection.dy() * noise);
 
@@ -161,7 +161,6 @@ public class Attack {
                 createAnimation(co);
                 targets.addAll(world.getActorsAt(Creature.class, co));
             }
-
         }
         /*
          for (int x = Math.max(0, c.x() - blastMax); x <= Math.min(c.x() + blastMax, world.width() - 1); x++) {
