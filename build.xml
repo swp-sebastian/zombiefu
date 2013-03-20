@@ -6,7 +6,7 @@
   <property name="classes" location="${target}/classes" />
 
   <tstamp>
-    <format property="datetime" pattern="yyyy-MM-dd-HHmm" />
+    <format property="datetime" pattern="yyyy-MM-dd HH:mm:ss" />
   </tstamp>
 
   <target name="init">
@@ -19,15 +19,15 @@
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
-    <jar jarfile="${target}/zombiefu-${datetime}.jar">
+    <jar jarfile="${target}/zombiefu.jar">
       <fileset dir="${classes}" />
       <fileset dir="${res}" />
       <manifest>
         <attribute name="Built-By" value="${user.name}" />
         <attribute name="Main-Class" value="zombiefu.ZombieFU" />
+        <attribute name="Built-Date" value="${datetime}"/>
       </manifest>
     </jar>
-    <symlink link="${target}/zombiefu.jar" resource="${target}/zombiefu-${datetime}.jar" overwrite="true"/>
   </target>
 
   <target name="clean" description="clean up">
