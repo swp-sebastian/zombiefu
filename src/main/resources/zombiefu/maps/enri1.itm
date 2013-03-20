@@ -1,5 +1,5 @@
 1 teleporter(Weltkarte,52,53)
-2 teleporter(enri2,138,43)
+2 teleporter(enri2,10,10)
 s weapon(Stuhl)
 r random(common)
 b weapon(Besen)
