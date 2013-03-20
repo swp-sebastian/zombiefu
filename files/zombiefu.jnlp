@@ -9,7 +9,7 @@
   </information>
   <resources>
     <j2se version="1.7+"/>
-    <jar href="files/zombiefu.jar" main="true"/>
+    <jar href="files/zombiefu-2013-03-20-0342.jar" main="true"/>
   </resources>
   <application-desc main-class="zombiefu.ZombieFU">
   </application-desc>
