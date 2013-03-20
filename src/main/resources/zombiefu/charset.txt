@@ -1,4 +1,5 @@
 . passable visible 32CD32 Gras
+; passable visible 32CD32 Gras
 ❖ passable visible FFFFFF Boden
 ║ notpassable notvisible 8B4513 Wandteil
 ╔ notpassable notvisible 8B4513 Eckwand

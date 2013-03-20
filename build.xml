@@ -5,13 +5,17 @@
   <property name="target" location="target" />
   <property name="classes" location="${target}/classes" />
 
+  <tstamp>
+    <format property="datetime" pattern="yyyy-MM-dd HH:mm:ss" />
+  </tstamp>
+
   <target name="init">
     <mkdir dir="${target}" />
   </target>
 
   <target name="compile" depends="init" description="compile the source">
     <mkdir dir="${classes}" />
-    <javac srcdir="${src}" destdir="${classes}" />
+    <javac srcdir="${src}" destdir="${classes}" includeantruntime="false" />
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
@@ -21,6 +25,7 @@
       <manifest>
         <attribute name="Built-By" value="${user.name}" />
         <attribute name="Main-Class" value="zombiefu.ZombieFU" />
+        <attribute name="Built-Date" value="${datetime}"/>
       </manifest>
     </jar>
   </target>
