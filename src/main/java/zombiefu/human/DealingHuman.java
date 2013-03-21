@@ -21,8 +21,8 @@ public abstract class DealingHuman extends Human {
     protected boolean dealt;
     private Map<String, String> phraseSet;
 
-    public DealingHuman(ColoredChar face, String name, AttributeSet attSet, Map<String, String> ps) {
-        super(face, name, attSet);
+    public DealingHuman(ColoredChar face, String name, AttributeSet attSet, Map<String, String> ps, double maxDistance) {
+        super(face, name, attSet, maxDistance);
         this.dealt = false;
         this.phraseSet = ps;
 

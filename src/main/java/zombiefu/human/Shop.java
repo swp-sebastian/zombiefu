@@ -13,7 +13,7 @@ public class Shop extends Human {
     private ShopInventar inventar;
 
     public Shop(ColoredChar face, String name, ShopInventar inventar) {
-        super(face, name, new AttributeSet());
+        super(face, name, new AttributeSet(), 0);
         this.inventar = inventar;
     }
 
@@ -23,7 +23,7 @@ public class Shop extends Human {
         ZombieGame.setTopFrameContent(name);
         ItemBuilder item = ZombieGame.askPlayerForItemToBuy(inventar);
         try {
-            if (item!=null){
+            if (item != null) {
                 pl.pay(inventar.get(item));
                 pl.obtainItem(item.buildItem());
             }

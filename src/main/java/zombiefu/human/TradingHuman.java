@@ -21,8 +21,8 @@ public class TradingHuman extends DealingHuman {
     private Item offerItem;
     private String requestItem;
 
-    public TradingHuman(ColoredChar face, String name, AttributeSet attSet, Item offerItem, String requestItem, Map<String, String> phraseSet) {
-        super(face, name, attSet, phraseSet);
+    public TradingHuman(ColoredChar face, String name, AttributeSet attSet, Item offerItem, String requestItem, Map<String, String> phraseSet, double maxDistance) {
+        super(face, name, attSet, phraseSet, maxDistance);
         this.offerItem = offerItem;
         this.requestItem = requestItem;
     }
@@ -61,5 +61,4 @@ public class TradingHuman extends DealingHuman {
         }
         return null;
     }
-    
 }

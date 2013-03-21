@@ -13,6 +13,7 @@ import jade.util.datatype.Coordinate;
 public interface Habitat {
     
     public Coordinate home();
-    public boolean atHome();
+    public boolean isAtHome(Coordinate c);
+    public boolean isAtHome();
     
 }

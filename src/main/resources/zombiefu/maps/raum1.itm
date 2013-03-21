@@ -1,6 +1,6 @@
 1 human(Nuklearschenker)
 2 food(Mate) monster(Dozent)x3
-3 weapon(Splittergranate)
+3 weapon(Granate)
 4 weapon(RoundhouseKick)
 5 key(TestDoor)
 6 door(TestDoor) teleporter(raum2,33,2)

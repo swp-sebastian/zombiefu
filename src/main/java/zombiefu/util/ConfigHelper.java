@@ -183,7 +183,8 @@ public class ConfigHelper {
             int ects = Integer.decode(config.get("ects"));
             int chaseDistance = Integer.decode(config.get("chaseDistance", "10"));
             ITMString itemDrop = new ITMString(config.get("drop"));
-            monsters.put(s, new MonsterBuilder(c, name, attSet, w, ects, itemDrop, staticAttributes, chaseDistance));
+            double habitatRadius  =  config.contains("habitatRadius") ? Double.valueOf(config.get("habitatRadius")) : 10;
+            monsters.put(s, new MonsterBuilder(c, name, attSet, w, ects, itemDrop, staticAttributes, chaseDistance, habitatRadius));
         }
         return monsters.get(s).buildMonster();
     }
@@ -206,8 +207,9 @@ public class ConfigHelper {
             Integer offerMoney = config.contains("deal.offerMoney") ? ZombieTools.parseMoneyString(config.get("deal.offerMoney")) : null;
             Integer requestMoney = config.contains("deal.requestMoney") ? ZombieTools.parseMoneyString(config.get("deal.requestMoney")) : null;
             String requestItem = config.get("deal.requestItem");
+            double habitatRadius  =  config.contains("habitatRadius") ? Double.valueOf(config.get("habitatRadius")) : 10;
             Map<String, String> phraseSet = config.getSubConfig("phrase");
-            humans.put(s, new HumanBuilder(c, name, attSet, phraseSet, offerItem, offerMoney, requestItem, requestMoney));
+            humans.put(s, new HumanBuilder(c, name, attSet, phraseSet, offerItem, offerMoney, requestItem, requestMoney, habitatRadius));
         }
         return humans.get(s).buildHuman();
     }

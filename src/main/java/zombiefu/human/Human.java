@@ -2,21 +2,28 @@ package zombiefu.human;
 
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import zombiefu.creature.AttributeSet;
 import zombiefu.creature.Creature;
 import zombiefu.creature.NonPlayer;
+import zombiefu.exception.NoPlaceToMoveException;
 import zombiefu.items.Weapon;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
 
 public abstract class Human extends NonPlayer {
 
-    public Human(ColoredChar face, String name, AttributeSet attSet) {
-        super(face, name, attSet, 0);
+    public Human(ColoredChar face, String name, AttributeSet attSet, double maxDistance) {
+        super(face, name, attSet, maxDistance);
     }
     
     @Override
     public void pleaseAct() {
+        try {
+            moveRandomly();
+        } catch (NoPlaceToMoveException ex) {
+        }
     }
 
     @Override

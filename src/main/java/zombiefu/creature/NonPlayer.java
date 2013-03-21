@@ -13,6 +13,7 @@ import java.util.List;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
+import zombiefu.exception.DidNotActException;
 import zombiefu.exception.NoEnemyHitException;
 import zombiefu.exception.NoPlaceToMoveException;
 import zombiefu.exception.TargetIsNotInThisWorldException;
@@ -20,6 +21,7 @@ import zombiefu.exception.TargetNotFoundException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.fov.CircularRayCaster;
 import zombiefu.ki.ChaseAlgorithm;
+import zombiefu.ki.CircularHabitat;
 import zombiefu.ki.Dijkstra;
 import zombiefu.ki.Habitat;
 import zombiefu.player.Player;
@@ -47,7 +49,11 @@ public abstract class NonPlayer extends Creature {
 
     protected void moveRandomly() throws NoPlaceToMoveException {
 
-        if (!habitat.atHome()) {
+        if (habitat == null) {
+            habitat = new CircularHabitat(this, maxDistance);
+        }
+
+        if (!habitat.isAtHome()) {
             try {
                 moveToCoordinate(habitat.home());
                 return;
@@ -58,6 +64,9 @@ public abstract class NonPlayer extends Creature {
         List<Direction> dirs = ZombieTools.getAllowedDirections();
         Collections.shuffle(dirs);
         for (Direction d : dirs) {
+            if (!habitat.isAtHome(pos().getTranslated(d))) {
+                continue;
+            }
             try {
                 tryToMove(d);
                 return;

@@ -49,11 +49,6 @@ public class Monster extends NonPlayer {
 
     @Override
     protected void pleaseAct() {
-
-        if (habitat == null) {
-            habitat = new CircularHabitat(this, maxDistance);
-        }
-
         try {
             Coordinate pos = getPlayerPosition();
             if (positionIsVisible(pos)) {
