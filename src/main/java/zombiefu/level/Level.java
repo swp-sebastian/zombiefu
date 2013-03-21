@@ -10,8 +10,8 @@ import zombiefu.player.Player;
 import zombiefu.actor.Door;
 import zombiefu.items.Item;
 import zombiefu.actor.Teleporter;
-import zombiefu.builder.RandomEnemyGenerator;
-import zombiefu.builder.RandomItemGenerator;
+import zombiefu.builder.RandomEnemyClass;
+import zombiefu.builder.RandomItemClass;
 import zombiefu.fight.DamageAnimation;
 import zombiefu.exception.TargetIsNotInThisWorldException;
 import zombiefu.human.Human;
@@ -26,14 +26,16 @@ public class Level extends World {
     private static final double ITEM_BASE_DENSITY = 0.008;
     private int numberOfPassableFields;
     private String name;
-    private boolean global;
+    private boolean fullView;
+    private boolean hasEnemies;
 
-    public Level(int width, int height, Generator gen, String name, boolean global) {
+    public Level(int width, int height, Generator gen, String name, boolean fullView, boolean hasEnemies) {
         super(width, height);
         gen.generate(this);
 
         this.name = name;
-        this.global = global;
+        this.fullView = fullView;
+        this.hasEnemies = hasEnemies;
 
         drawOrder = new ArrayList<>();
         drawOrder.add(DamageAnimation.class);
@@ -51,8 +53,12 @@ public class Level extends World {
         return name;
     }
 
-    public boolean isGlobalMap() {
-        return global;
+    public boolean hasFullView() {
+        return fullView;
+    }
+
+    public boolean hasEnemies() {
+        return hasEnemies;
     }
 
     public Player getPlayer() throws TargetIsNotInThisWorldException {
@@ -103,19 +109,27 @@ public class Level extends World {
         }
 
         int commonItems = (int) Math.ceil(n * 0.7);
-        for (int i = 0; i < commonItems; i++) {
-            addActor(RandomItemGenerator.GOOD_ITEM.getRandomItem());
-        }
         n -= commonItems;
-
         int advancedItems = (int) Math.ceil(n * 0.7);
-        for (int i = 0; i < advancedItems; i++) {
-            addActor(RandomItemGenerator.COMMON_ITEM.getRandomItem());
-        }
         n -= advancedItems;
+        int awesomeItems = n;
+        n -= awesomeItems;
+        
+        ZombieTools.log("fillWithItems(): Items to be spawned: " + n);
+        ZombieTools.log("fillWithItems(): COMMON-Items to be spawned: " + commonItems);
+        ZombieTools.log("fillWithItems(): ADVANCE-Items to be spawned: " + advancedItems);
+        ZombieTools.log("fillWithItems(): AWESOME-Items to be spawned: " + awesomeItems);
+        
+        for (int i = 0; i < commonItems; i++) {
+            addActor(RandomItemClass.GOOD.newRandomItem());
+        }
 
-        for (int i = 0; i < n; i++) {
-            addActor(RandomItemGenerator.RARE_ITEM.getRandomItem());
+        for (int i = 0; i < advancedItems; i++) {
+            addActor(RandomItemClass.COMMON.newRandomItem());
+        }
+
+        for (int i = 0; i < awesomeItems; i++) {
+            addActor(RandomItemClass.AWESOME.newRandomItem());
         }
     }
 
@@ -126,21 +140,29 @@ public class Level extends World {
         if (n <= 0) {
             return;
         }
+        
 
-        int commonZombies = (int) Math.ceil(n * 0.8);
-        for (int i = 0; i < commonZombies; i++) {
-            addActor(RandomEnemyGenerator.COMMON.getRandomMonster());
-        }
+        int commonZombies = (int) Math.ceil(n * 0.7);
         n -= commonZombies;
-
-        int advancedZombies = (int) Math.ceil(n * 0.8);
-        for (int i = 0; i < advancedZombies; i++) {
-            addActor(RandomEnemyGenerator.ADVANCED.getRandomMonster());
+        int poorZombies = (int) Math.ceil(n * 0.25);
+        n -= poorZombies;
+        int advancedZombies = n;
+        
+        ZombieTools.log("fillWithEnemies(): Zombies to be spawned: " + n);
+        ZombieTools.log("fillWithEnemies(): COMMON-Zombies to be spawned: " + commonZombies);
+        ZombieTools.log("fillWithEnemies(): POOR-Zombies to be spawned: " + poorZombies);
+        ZombieTools.log("fillWithEnemies(): ADVANCED-Zombies to be spawned: " + advancedZombies);
+        
+        for (int i = 0; i < commonZombies; i++) {
+            addActor(RandomEnemyClass.COMMON.getRandomMonster());
         }
-        n -= advancedZombies;
+        
+        for (int i = 0; i < poorZombies; i++) {
+            addActor(RandomEnemyClass.POOR.getRandomMonster());
+        }
 
         for (int i = 0; i < advancedZombies; i++) {
-            addActor(RandomEnemyGenerator.MASTER.getRandomMonster());
+            addActor(RandomEnemyClass.ADVANCED.getRandomMonster());
         }
     }
 

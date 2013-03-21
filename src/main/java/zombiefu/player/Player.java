@@ -220,10 +220,13 @@ public class Player extends Creature implements Camera {
             world().removeActor(this);
         }
         lvl.addActor(this);
-        if (lvl.isGlobalMap()) {
+        
+        if (lvl.hasFullView()) {
             fov = new ViewEverything();
         } else {
             fov = DEFAULT_VIEWFIELD;
+        }
+        if(lvl.hasEnemies()) {            
             lvl.refill();
         }
     }
