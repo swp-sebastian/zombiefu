@@ -28,6 +28,7 @@ public abstract class Item extends PassableActor {
             player.obtainItem(this);        
     }
     
+    @Override
     public void act() {
         Level world = (Level) world();
         Player player = world.getActor(Player.class);

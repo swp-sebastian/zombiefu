@@ -280,10 +280,10 @@ public class Player extends Creature implements Camera {
     }
 
     private void consumeItem(String itemName) {
-        ZombieGame.newMessage("Du benutzt '" + itemName + "'.");
         ConsumableItem it;
         try {
             it = removeConsumableItemFromInventar(itemName);
+            ZombieGame.newMessage("Du benutzt '" + itemName + "'.");
             try {
                 it.getConsumedBy(this);
                 it.expire();

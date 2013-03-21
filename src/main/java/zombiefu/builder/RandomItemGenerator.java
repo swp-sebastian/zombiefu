@@ -23,7 +23,9 @@ public enum RandomItemGenerator {
     GOOD,
     COMMON,
     JUNK,
-    COMMON_ITEM;
+    RARE_ITEM,
+    COMMON_ITEM,
+    GOOD_ITEM;
 
     public static RandomItemGenerator fromString(String string) {
         for (RandomItemGenerator d : RandomItemGenerator.values()) {
@@ -50,12 +52,18 @@ public enum RandomItemGenerator {
     public Item getRandomItem() {
         Item i = null;
         switch (this) {
+            case RARE_ITEM:
+                return getOneOf("weapon(Raketenwerfer)"); //  weapon(Heckenschere)
+            case GOOD_ITEM:
+                return getOneOf("weapon(Schrotflinte) food(MensaAktion) food(Bier) weapon(Granate) weapon(flusssaeure) weapon(Kettensaege)");
+            case COMMON_ITEM:
+                return getOneOf("weapon(Feuerloescher) weapon(Bunsenbrenner) food(Mate) weapon(Pfanne) food(MensaEssen)");
             case RARE:
                 return getOneOf("weapon(Nuklearrakete)");
             case HIGH:
                 switch (ZombieTools.getRandomIndex(35, 65)) {
                     case 0:
-                        return getOneOf("weapon(Speer)");
+                        return RARE_ITEM.getRandomItem();
                     case 1:
                         return getMensacard(500);
                 }
@@ -63,13 +71,11 @@ public enum RandomItemGenerator {
             case GOOD:
                 switch (ZombieTools.getRandomIndex(35, 65)) {
                     case 0:
-                        return getOneOf("weapon(Speer)");
+                        return GOOD_ITEM.getRandomItem();
                     case 1:
                         return getMensacard(150);
                 }
                 break;
-            case COMMON_ITEM:
-                return getOneOf("weapon(Feuerloescher) food(Mate)"); 
             case COMMON:
                 switch (ZombieTools.getRandomIndex(1, 1, 4)) {
                     case 0:
