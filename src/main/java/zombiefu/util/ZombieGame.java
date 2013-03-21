@@ -208,12 +208,12 @@ public class ZombieGame {
     }
 
     // When order doesn't matter use a Set
-    public static <K> K genericSelect(Map<K, String> map, String... prompt) {
-        return genericSelect(Collections.list(Collections.enumeration(map.entrySet())), prompt);
+    public static <K> K genericSelect(Map<K, String> map, boolean exitable, String... prompt) {
+        return genericSelect(Collections.list(Collections.enumeration(map.entrySet())), exitable, prompt);
     }
 
     // A Esponda-esque method
-    public static <K> K genericSelect(List<Entry<K, String>> xs, String... prompt) {
+    public static <K> K genericSelect(List<Entry<K, String>> xs, boolean exitable, String... prompt) {
         int endOfScreen = frame.rows - 1;
         TermPanel f = frame.mainTerm();
         int position = 0;
@@ -237,11 +237,18 @@ public class ZombieGame {
         do {
             f.clearBuffer();
 
-            int drawOffset = 0;
+            int drawOffset = 1;
+            if (exitable) {
+                String msg = "Verlassen mit q";
+                f.bufferString(frame.columns - msg.length(), drawOffset, msg);
+            }
+
             for (String line : prompt) {
-                f.bufferString(2,drawOffset, line);
+                f.bufferString(2, drawOffset, line);
                 drawOffset += 1;
             }
+
+
             // One line of padding between prompt and options.
             drawOffset += 1;
 
@@ -263,6 +270,7 @@ public class ZombieGame {
                 }
             }
 
+
             frame.mainTerm().refreshScreen();
             action = ZombieTools.keyToAction(ZombieGame.getSettings().keybindings, ZombieGame.askPlayerForKey());
 
@@ -276,6 +284,13 @@ public class ZombieGame {
 
                 case DOWN:
                     position++;
+                    break;
+
+                case PREV_WEAPON:
+                    if (exitable) {
+                        refreshMainFrame();
+                        return null;
+                    }
                     break;
                 }
             }
@@ -327,10 +342,7 @@ public class ZombieGame {
             return null;
         }
 
-        ItemBuilder output = null;
-        
         ArrayList<ItemBuilder> itemSet = inventar.asList();
-
         Collections.sort(itemSet, new Comparator<ItemBuilder>() {
             @Override
             public int compare(ItemBuilder t, ItemBuilder t1) {
@@ -338,22 +350,13 @@ public class ZombieGame {
             }
         });
 
-        frame.mainTerm().clearBuffer();
-        frame.mainTerm().bufferString(0, 0, "Artikel:");
-        for (int i = 0; i < itemSet.size(); i++) {
-            frame.mainTerm().bufferString(
-                    0,
-                    2 + i,
-                    "[" + ((char) (97 + i)) + "] " + itemSet.get(i).face() + " - "
-                    + itemSet.get(i).getName() + " (Preis: " + ZombieTools.getMoneyString(inventar.get(itemSet.get(i))) + ")");
+        ArrayList<Entry<ItemBuilder, String>> items = new ArrayList<Entry<ItemBuilder, String>>();
+
+        for (ItemBuilder it : itemSet) {
+            items.add(new AbstractMap.SimpleEntry(it, it.getName() + " (Preis: " +  ZombieTools.getMoneyString(inventar.get(it)) + ")"));
         }
-        frame.mainTerm().refreshScreen();
-        int key = ((int) ZombieGame.askPlayerForKey()) - 97;
-        if (key >= 0 && key <= 25 && key < itemSet.size()) {
-            output = itemSet.get(key);
-        }
-        refreshMainFrame();
-        return output;
+
+        return genericSelect(items, true, "Artikel: ");
     }
 
     public static Discipline askPlayerForDiscipline() {
@@ -370,7 +373,7 @@ public class ZombieGame {
         disciplines.put(Discipline.SPORTS, "Sportwissenschaften");
         disciplines.put(Discipline.MATHEMATICS, "Mathematik");
 
-        Discipline output = genericSelect(disciplines, "Wähle deinen Studiengang!");
+        Discipline output = genericSelect(disciplines, false, "Wähle deinen Studiengang!");
         Guard.argumentIsNotNull(output);
         return output;
     }
@@ -384,7 +387,7 @@ public class ZombieGame {
         attributes.add(new AbstractMap.SimpleEntry(Attribute.DEFENSE, "Verteidigung (um 1)"));
         attributes.add(new AbstractMap.SimpleEntry(Attribute.DEXTERITY, "Geschick (um 1)"));
 
-        Attribute output = genericSelect(attributes,
+        Attribute output = genericSelect(attributes, false,
                                          "     Herzlichen Glückwunsch, du hast es",
                                          "       ins nächste Semester geschafft!",
                                          "",
