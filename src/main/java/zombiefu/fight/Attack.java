@@ -98,7 +98,6 @@ public class Attack {
 
     private void hurtCreature(Creature cr) {
         int damage = calulateDamage(cr);
-        ZombieGame.newMessage(attacker.getName() + " hat " + cr.getName() + " " + damage + " Schadenspunkte hinzugefügt.");
         cr.hurt(damage, attacker);
     }
 

@@ -150,8 +150,8 @@ public class ZombieGame {
                 + " / " + player.getActiveWeapon().getDamage() + ")"
                 + " | HP: " + player.getHealthPoints() + "/"
                 + player.getAttribute(Attribute.MAXHP) + " | A: "
-                + player.getAttribute(Attribute.ATTACK) + " | D: "
-                + player.getAttribute(Attribute.DEFENSE) + " | I: "
+                + player.getAttribute(Attribute.ATTACK) + " | V: "
+                + player.getAttribute(Attribute.DEFENSE) + " | G: "
                 + player.getAttribute(Attribute.DEXTERITY);
         String secondLine = "Ort: " + ((Level) player.world()).getName();
         if (ZombieGame.settings.debug) {

@@ -164,6 +164,7 @@ public abstract class Creature extends NotPassableActor {
             kill(hurter);
         } else {
             healthPoints -= i;
+            ZombieGame.newMessage(hurter.getName() + " hat " + getName() + " " + i + " Schadenspunkte hinzugefügt. Verbleibend: " + healthPoints + "/" + getAttribute(Attribute.MAXHP));
         }
     }
 }
