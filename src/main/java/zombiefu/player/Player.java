@@ -60,7 +60,7 @@ public class Player extends Creature implements Camera {
         this.weapons = new HashMap<>();
         this.weaponsList = new ArrayList<>();
 
-        this.sichtweite = 20;
+        this.chaseRadius = 20;
         this.fov = DEFAULT_VIEWFIELD;
     }
 

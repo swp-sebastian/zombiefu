@@ -183,7 +183,7 @@ public class ConfigHelper {
             int ects = Integer.decode(config.get("ects"));
             int chaseDistance = Integer.decode(config.get("chaseDistance", "10"));
             ITMString itemDrop = new ITMString(config.get("drop"));
-            double habitatRadius  =  config.contains("habitatRadius") ? Double.valueOf(config.get("habitatRadius")) : 10;
+            double habitatRadius = config.contains("habitatRadius") ? Double.valueOf(config.get("habitatRadius")) : 10;
             monsters.put(s, new MonsterBuilder(c, name, attSet, w, ects, itemDrop, staticAttributes, chaseDistance, habitatRadius));
         }
         return monsters.get(s).buildMonster();

@@ -38,13 +38,13 @@ public abstract class NonPlayer extends Creature {
     protected Habitat habitat;
     protected double maxDistance;
 
-    public NonPlayer(ColoredChar face, String name, AttributeSet attSet, double maxDistance) {
+    public NonPlayer(ColoredChar face, String name, AttributeSet attSet, double maxDistance, int chaseRadius) {
         super(face, name, attSet);
         this.maxDistance = maxDistance;
 
         this.chasealg = new Dijkstra();
         this.fov = new CircularRayCaster();
-        this.sichtweite = 10;
+        this.chaseRadius = chaseRadius;
     }
 
     protected void moveRandomly() throws NoPlaceToMoveException {
@@ -90,7 +90,8 @@ public abstract class NonPlayer extends Creature {
     }
 
     protected boolean positionIsVisible(Coordinate pos) throws TargetIsNotInThisWorldException {
-        return fov.getViewField(world(), pos(), sichtweite).contains(pos);
+            System.out.println(getName() + " - " + chaseRadius);
+        return fov.getViewField(world(), pos(), chaseRadius).contains(pos);
     }
 
     protected Direction getDirectionTo(Coordinate coord) throws TargetNotFoundException {

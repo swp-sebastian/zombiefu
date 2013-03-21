@@ -32,7 +32,7 @@ public abstract class Creature extends NotPassableActor {
     protected int healthPoints;
     protected String name;
     protected ViewField fov;
-    protected int sichtweite;
+    protected int chaseRadius;
     protected boolean godMode;
 
     public Creature(ColoredChar face, String n, AttributeSet attSet) {
@@ -84,7 +84,7 @@ public abstract class Creature extends NotPassableActor {
     }
 
     public Collection<Coordinate> getViewField() {
-        return fov.getViewField(world(), pos(), sichtweite);
+        return fov.getViewField(world(), pos(), chaseRadius);
     }
 
     @Override

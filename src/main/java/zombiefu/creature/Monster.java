@@ -31,11 +31,10 @@ public class Monster extends NonPlayer {
     private Set<Actor> dropOnDeath;
 
     public Monster(ColoredChar face, String name, AttributeSet attSet, Weapon waffe, int ectsYield, Set<Actor> dropOnDeath, double maxDistance, int chaseDistance) {
-        super(face, name, attSet, maxDistance);
+        super(face, name, attSet, maxDistance, chaseDistance);
         this.waffe = waffe;
         this.ectsYield = ectsYield;
         this.dropOnDeath = dropOnDeath;
-        this.sichtweite = chaseDistance;
     }
 
     private boolean canHitTarget(Coordinate c) {
@@ -82,7 +81,6 @@ public class Monster extends NonPlayer {
         try {
             moveRandomly();
         } catch (NoPlaceToMoveException ex) {
-            ZombieTools.log(getName() + ": Cannot move - doing nothing");
         }
     }
 
@@ -124,5 +122,4 @@ public class Monster extends NonPlayer {
     public boolean hasUnlimitedMunition() {
         return true;
     }
-
 }
