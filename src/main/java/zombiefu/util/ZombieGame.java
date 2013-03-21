@@ -248,6 +248,13 @@ public class ZombieGame {
         
         ArrayList<ItemBuilder> itemSet = inventar.asList();
 
+        Collections.sort(itemSet, new Comparator<ItemBuilder>() {
+            @Override
+            public int compare(ItemBuilder t, ItemBuilder t1) {
+                return t.getName().compareTo(t1.getName());
+            }
+        });
+
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferString(0, 0, "Artikel:");
         for (int i = 0; i < itemSet.size(); i++) {
