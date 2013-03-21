@@ -11,7 +11,7 @@ import java.util.HashMap;
  * @author tomas
  */
 public enum Discipline {
-    //HP, a, v, geschick, geld, Bonusitems (Faust + eine Mate hat jeder)
+    //HP, a, v, geschick, geld*100, Bonusitems (Faust + eine Mate hat jeder sowieso)
     POLITICAL_SCIENCE(100, 5, 6, 7, 10, "weapon(Totquatschen)"),
     COMPUTER_SCIENCE(100, 5, 6, 7, 10, "weapon(Laptop) food(Mate)x4"),
     MEDICINE(130, 4, 6, 6, 10, "weapon(Narkose) food(Anabolika)x1"),

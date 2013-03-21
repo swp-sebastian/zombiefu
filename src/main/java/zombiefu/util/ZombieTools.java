@@ -86,6 +86,14 @@ public class ZombieTools {
         }
     }
 
+    public static String getMoneyString(int m) {
+        return String.format("%.2f",m) + "€";
+    }
+    
+    public static int parseMoneyString(String s) {
+        return 0;
+    }    
+    
     // getAction :: char -> Action
     // Konvertiert key press in konfigurierte Action
     public static Action keyToAction(HashMap<String, Action> keybindings, char c) {

@@ -11,12 +11,10 @@ import zombiefu.player.Player;
 public class Shop extends Human {
 
     private ShopInventar inventar;
-    String name;
 
     public Shop(ColoredChar face, String name, ShopInventar inventar) {
         super(face, name, new AttributeSet());
         this.inventar = inventar;
-        this.name = name;
     }
 
     @Override

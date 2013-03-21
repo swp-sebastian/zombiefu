@@ -198,8 +198,8 @@ public class ConfigHelper {
                     config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1,
                     config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1);
             Item offerItem = config.contains("deal.offerItem") ? new ITMString(config.get("deal.offerItem")).getSingleItem() : null;
-            Double offerMoney = config.contains("deal.offerMoney") ? Double.valueOf(config.get("deal.offerMoney")) : null;
-            Double requestMoney = config.contains("deal.requestMoney") ? Double.valueOf(config.get("deal.requestMoney")) : null;
+            Integer offerMoney = config.contains("deal.offerMoney") ? ZombieTools.parseMoneyString(config.get("deal.offerMoney")) : null;
+            Integer requestMoney = config.contains("deal.requestMoney") ? ZombieTools.parseMoneyString(config.get("deal.requestMoney")) : null;
             String requestItem = config.get("deal.requestItem");
             Map<String, String> phraseSet = config.getSubConfig("phrase");
             humans.put(s, new HumanBuilder(c, name, attSet, phraseSet, offerItem, offerMoney, requestItem, requestMoney));

@@ -15,9 +15,9 @@ import zombiefu.util.ZombieGame;
  */
 public class MensaCard extends Item {
 
-    private double guthaben;
+    private int guthaben;
 
-    public MensaCard(double g) {
+    public MensaCard(int g) {
         super(ColoredChar.create('€', new Color(255, 215, 0)));
         guthaben = g;
     }

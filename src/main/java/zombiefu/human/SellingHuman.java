@@ -11,6 +11,7 @@ import zombiefu.exception.CannotAffordException;
 import zombiefu.items.Item;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
+import zombiefu.util.ZombieTools;
 
 /**
  *
@@ -19,9 +20,9 @@ import zombiefu.util.ZombieGame;
 public class SellingHuman extends DealingHuman {
 
     private Item offerItem;
-    private double requestMoney;
+    private int requestMoney;
 
-    public SellingHuman(ColoredChar face, String name, AttributeSet attSet, Item offerItem, double requestMoney, Map<String,String> phraseSet) {
+    public SellingHuman(ColoredChar face, String name, AttributeSet attSet, Item offerItem, int requestMoney, Map<String,String> phraseSet) {
         super(face, name, attSet, phraseSet);
         this.offerItem = offerItem;
         this.requestMoney = requestMoney;
@@ -29,7 +30,7 @@ public class SellingHuman extends DealingHuman {
 
     @Override
     public boolean dealWith(Player pl) {
-        char key = ZombieGame.askPlayerForKeyWithMessage("Möchtest Du mein " + offerItem.getName() + " für " + requestMoney + "€ kaufen? [y/n]");
+        char key = ZombieGame.askPlayerForKeyWithMessage("Möchtest Du mein " + offerItem.getName() + " für " + ZombieTools.getMoneyString(requestMoney) + " kaufen? [y/n]");
         if (key != 'y') {
             return false;
         }

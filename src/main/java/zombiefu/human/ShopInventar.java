@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import zombiefu.builder.ItemBuilder;
 import zombiefu.util.ConfigHelper;
+import zombiefu.util.ZombieTools;
 
 /**
  *
@@ -19,10 +20,10 @@ import zombiefu.util.ConfigHelper;
  */
 public class ShopInventar {
 
-    HashMap<ItemBuilder, Double> inventar;
+    HashMap<ItemBuilder, Integer> inventar;
     ArrayList<ItemBuilder> list;
 
-    public ShopInventar(HashMap<ItemBuilder, Double> inventar) {
+    public ShopInventar(HashMap<ItemBuilder, Integer> inventar) {
         this.inventar = inventar;
     }
 
@@ -32,7 +33,7 @@ public class ShopInventar {
             String[] it = s.split(" ");
             ItemBuilder itb = ConfigHelper.getItemBuilderByName(it[0]);
             Guard.argumentIsNotNull(itb);
-            this.inventar.put(itb, Double.valueOf(it[1]));
+            this.inventar.put(itb, ZombieTools.parseMoneyString(it[1]));
         }
     }
 
@@ -52,7 +53,7 @@ public class ShopInventar {
         return list;
     }
 
-    public double get(ItemBuilder item) {
+    public int get(ItemBuilder item) {
         return inventar.get(item);
     }
 

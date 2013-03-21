@@ -255,7 +255,7 @@ public class ZombieGame {
                     0,
                     2 + i,
                     "[" + ((char) (97 + i)) + "] " + itemSet.get(i).face() + " - "
-                    + itemSet.get(i).getName() + " (Preis: " + inventar.get(itemSet.get(i)) + ")");
+                    + itemSet.get(i).getName() + " (Preis: " + ZombieTools.getMoneyString(inventar.get(itemSet.get(i))) + ")");
         }
         frame.mainTerm().refreshScreen();
         int key = ((int) ZombieGame.askPlayerForKey()) - 97;
