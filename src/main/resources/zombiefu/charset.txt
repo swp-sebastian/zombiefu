@@ -1,4 +1,5 @@
 . passable visible 32CD32 Gras
+, notpassable visible 32CD32 Gras
 ; passable visible 32CD32 Gras
 ❖ passable visible FFFFFF Boden
 ║ notpassable notvisible 8B4513 Wandteil
@@ -27,4 +28,4 @@
 ꗞ passable visible FFFFF0 Klo
 ✉ notpassable visible FFFFF0 Post
 ☐ notpassable visible FF7F24 Tisch
-+ notpassable visible FFFFFF Welt
++ notpassable visible 8B4513 Welt

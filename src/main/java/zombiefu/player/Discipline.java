@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public enum Discipline {
     //HP, a, v, geschick, geld*100, Bonusitems (Faust + ein Wasser hat jeder sowieso)
-    POLITICAL_SCIENCE(100, 5, 6, 7, 500, "weapon(Totquatschen)"), // Was anderes
+    POLITICAL_SCIENCE(100, 5, 6, 7, 500, "weapon(Morgenstern)"), // Was anderes
     COMPUTER_SCIENCE(100, 5, 6, 7, 500, "weapon(Laptop) food(Mate)x4"),
     MEDICINE(130, 4, 6, 6, 1000, "weapon(Narkose) food(Anabolika)x1"),
     PHILOSOPHY(110, 6, 6, 6, 20, "weapon(Totquatschen)"),
