@@ -15,6 +15,7 @@ import java.awt.Color;
 public class ZombieFrame extends JFrame {
 
     private TermPanel mainTerm, topTerm, bottomTerm;
+    public final int columns, rows;
 
     // Ordnet die TermPanels manuell ohne LayoutManager untereinander an.
     // Besser nicht anfassen, fragil!
@@ -65,6 +66,9 @@ public class ZombieFrame extends JFrame {
 
     public ZombieFrame(String title, int columns, int rows, int tilesize) {
         super(title);
+
+        this.columns = columns;
+        this.rows = rows;
 
         // Schwarzer Hintergrund
         this.getContentPane().setBackground(Color.BLACK);

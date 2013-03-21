@@ -8,12 +8,17 @@ import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import jade.util.Guard;
+import jade.ui.TermPanel;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.HashMap;
+import java.util.AbstractMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.player.Player;
@@ -26,7 +31,7 @@ import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
 import zombiefu.ZombieFU;
 import zombiefu.creature.AttributeSet;
-
+import zombiefu.util.Action;
 /**
  *
  * @author tomas
@@ -202,6 +207,85 @@ public class ZombieGame {
         return d;
     }
 
+    // When order doesn't matter use a Set
+    public static <K> K genericSelect(Map<K, String> map, String... prompt) {
+        return genericSelect(Collections.list(Collections.enumeration(map.entrySet())), prompt);
+    }
+
+    // A Esponda-esque method
+    public static <K> K genericSelect(List<Entry<K, String>> xs, String... prompt) {
+        int endOfScreen = frame.rows - 1;
+        TermPanel f = frame.mainTerm();
+        int position = 0;
+        int page = 0;
+        Action action = null;
+
+        // Soviel Platz haben wir für Zeilen mit Abstand eine Zeile zwischen options
+        int pageSize = (frame.rows - prompt.length - 1) / 2;
+
+        // List von Listen fürs Paging
+        ArrayList<List <Entry <K, String>>> paged = new ArrayList();
+
+        for (int i = 0; i < xs.size(); i += pageSize) {
+            if ((i+pageSize) < xs.size()) {
+                paged.add(i / pageSize, xs.subList(i, i + pageSize));
+            } else {
+                paged.add(i / pageSize, xs.subList(i, xs.size()));
+            }
+        }
+
+        do {
+            f.clearBuffer();
+
+            int drawOffset = 0;
+            for (String line : prompt) {
+                f.bufferString(2,drawOffset, line);
+                drawOffset += 1;
+            }
+            // One line of padding between prompt and options.
+            drawOffset += 1;
+
+            // Check position sanity.
+            if (position < 0) { position = 0; }
+            if (position == xs.size()) { position = xs.size() - 1; }
+
+            // Calculate current page
+            page = position / pageSize;
+
+            ZombieTools.log("Position: " + position + " Page: " + page);
+
+            // Draw options
+            for (int i = 0; i < paged.get(page).size() ; i++) {
+                if (position == (i + (page*pageSize))) {
+                    f.bufferString(2, drawOffset + 2*i, "[x] " + paged.get(page).get(i).getValue());
+                } else {
+                    f.bufferString(2, drawOffset + 2*i, "[ ] " + paged.get(page).get(i).getValue());
+                }
+            }
+
+            frame.mainTerm().refreshScreen();
+            action = ZombieTools.keyToAction(ZombieGame.getSettings().keybindings, ZombieGame.askPlayerForKey());
+
+            if (action != null) {
+
+                switch (action) {
+
+                case UP:
+                    position--;
+                    break;
+
+                case DOWN:
+                    position++;
+                    break;
+                }
+            }
+
+        } while (action != Action.ATTACK);
+
+        refreshMainFrame();
+        return paged.get(page).get(position - (page*pageSize)).getKey();
+    }
+
     public static String askPlayerForItemInInventar() {
         String output = null;
         HashMap<String, ArrayList<ConsumableItem>> inventar = getPlayer().getInventar();
@@ -276,68 +360,41 @@ public class ZombieGame {
     }
 
     public static Discipline askPlayerForDiscipline() {
-        char alpha = showStaticImage("discipline");
-        Discipline output;
+        HashMap<Discipline, String> disciplines = new HashMap<Discipline,String>();
 
-        switch (alpha) {
-            case 'a':
-                output = Discipline.POLITICAL_SCIENCE;
-                break;
-            case 'b':
-                output = Discipline.COMPUTER_SCIENCE;
-                break;
-            case 'c':
-                output = Discipline.MEDICINE;
-                break;
-            case 'd':
-                output = Discipline.PHILOSOPHY;
-                break;
-            case 'e':
-                output = Discipline.PHYSICS;
-                break;
-            case 'f':
-                output = Discipline.BUSINESS;
-                break;
-            case 'g':
-                output = Discipline.CHEMISTRY;
-                break;
-            case 'h':
-                output = Discipline.SPORTS;
-                break;
-            case 'i':
-                output = Discipline.MATHEMATICS;
-                break;
-            default:
-                output = askPlayerForDiscipline();
-        }
-        // Quick fix. TODO: sebastian denkt sich was aus.
+        // Order does not matter here, so we can use a Map. See next method.
+        disciplines.put(Discipline.POLITICAL_SCIENCE, "Politikwissenschaft");
+        disciplines.put(Discipline.COMPUTER_SCIENCE, "Informatik");
+        disciplines.put(Discipline.MEDICINE, "Medizin");
+        disciplines.put(Discipline.PHILOSOPHY, "Philosophie");
+        disciplines.put(Discipline.PHYSICS, "Physik");
+        disciplines.put(Discipline.BUSINESS, "BWL");
+        disciplines.put(Discipline.CHEMISTRY, "Chemie");
+        disciplines.put(Discipline.SPORTS, "Sportwissenschaften");
+        disciplines.put(Discipline.MATHEMATICS, "Mathematik");
+
+        Discipline output = genericSelect(disciplines, "Wähle deinen Studiengang!");
         Guard.argumentIsNotNull(output);
         return output;
     }
 
     public static Attribute askPlayerForAttrbuteToRaise() {
-        char alpha = showStaticImage("askForAttribute");
-        Attribute output;
+        ArrayList<Entry<Attribute, String>> attributes = new ArrayList<Entry<Attribute, String>>();
 
-        switch (alpha) {
-            case 'a':
-                output = Attribute.MAXHP;
-                break;
-            case 'b':
-                output = Attribute.ATTACK;
-                break;
-            case 'c':
-                output = Attribute.DEFENSE;
-                break;
-            case 'd':
-                output = Attribute.DEXTERITY;
-                break;
-            default:
-                output = askPlayerForAttrbuteToRaise();
-        }
-        // Quick fix. TODO: sebastian denkt sich was aus.
+        // Because order matters here we use a List which keeps its order. See above.
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.MAXHP, "maximale Lebenspunkte (um 10)"));
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.ATTACK, "Angriff (um 1)"));
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.DEFENSE, "Verteidigung (um 1)"));
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.DEXTERITY, "Geschick (um 1)"));
+
+        Attribute output = genericSelect(attributes,
+                                         "     Herzlichen Glückwunsch, du hast es",
+                                         "       ins nächste Semester geschafft!",
+                                         "",
+                                         "    Welches Attribut möchtest du erhöhen?",
+                                         "");
+
         Guard.argumentIsNotNull(output);
-        System.out.println(output);
         return output;
     }
 
