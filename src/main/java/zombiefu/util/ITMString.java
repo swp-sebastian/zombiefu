@@ -71,7 +71,7 @@ public class ITMString {
                         a = ConfigHelper.newMonsterByName(arguments[0]);
                         break;
                     case "random":
-                        a = ConfigHelper.newRandomItem(RandomItemClass.fromString(arguments[0]));
+                        a = RandomItemClass.fromString(arguments[0]).newDropItem();
                         if (a == null) {
                             continue outerloop;
                         }

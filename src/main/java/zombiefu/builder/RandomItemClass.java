@@ -43,5 +43,48 @@ public enum RandomItemClass {
         return ConfigHelper.newRandomItem(this);
     }
 
-   
+    public Item newDropItem() {
+        Item i = null;
+        switch (this) {
+            case RARE:
+                return newRandomItem();
+            case AWESOME:
+                switch (ZombieTools.getRandomIndex(50, 50)) {
+                    case 0:
+                        return newRandomItem();
+                    case 1:
+                        return getMensacard(500);
+                }
+                break;
+            case GOOD:
+                switch (ZombieTools.getRandomIndex(35, 65)) {
+                    case 0:
+                        return newRandomItem();
+                    case 1:
+                        return getMensacard(150);
+                }
+                break;
+            case COMMON:
+                switch (ZombieTools.getRandomIndex(1, 1, 4)) {
+                    case 0:
+                        return null;
+                    case 1:
+                        return newRandomItem();
+                    case 2:
+                        return getMensacard(50);
+                }
+                break;
+            case JUNK:
+                switch (ZombieTools.getRandomIndex(1, 1, 4)) {
+                    case 0:
+                        return getMensacard(25);
+                    case 1:
+                        return newRandomItem();
+                    case 2:
+                        return null;
+                }
+                break;
+        }
+        throw new AssertionError(this.name());
+    }
 }
