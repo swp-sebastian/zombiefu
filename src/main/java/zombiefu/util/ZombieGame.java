@@ -272,9 +272,6 @@ public class ZombieGame {
 
         } while (action != Action.ATTACK);
 
-
-        System.out.println(paged.toString());
-
         refreshMainFrame();
         return paged.get(page).get(position - (page*pageSize)).getKey();
     }
@@ -363,28 +360,21 @@ public class ZombieGame {
     }
 
     public static Attribute askPlayerForAttrbuteToRaise() {
-        char alpha = showStaticImage("askForAttribute");
-        Attribute output;
+        HashMap<Attribute, String> attributes = new HashMap<Attribute, String>();
 
-        switch (alpha) {
-            case 'a':
-                output = Attribute.MAXHP;
-                break;
-            case 'b':
-                output = Attribute.ATTACK;
-                break;
-            case 'c':
-                output = Attribute.DEFENSE;
-                break;
-            case 'd':
-                output = Attribute.DEXTERITY;
-                break;
-            default:
-                output = askPlayerForAttrbuteToRaise();
-        }
-        // Quick fix. TODO: sebastian denkt sich was aus.
+        attributes.put(Attribute.MAXHP, "maximale Lebenspunkte (um 10)");
+        attributes.put(Attribute.ATTACK, "Angriff (um 1)");
+        attributes.put(Attribute.DEFENSE, "Verteidigung (um 1)");
+        attributes.put(Attribute.DEXTERITY, "Geschick (um 1)");
+
+        Attribute output = genericSelect(attributes,
+                                         "     Herzlichen Glückwunsch, du hast es",
+                                         "       ins nächste Semester geschafft!",
+                                         "",
+                                         "    Welches Attribut möchtest du erhöhen?",
+                                         "");
+
         Guard.argumentIsNotNull(output);
-        System.out.println(output);
         return output;
     }
 
