@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.HashMap;
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import zombiefu.exception.NoDirectionGivenException;
@@ -201,8 +203,13 @@ public class ZombieGame {
         return d;
     }
 
+    // When order doesn't matter use a Set
+    public static <K> K genericSelect(Map<K, String> map, String... prompt) {
+        return genericSelect(Collections.list(Collections.enumeration(map.entrySet())), prompt);
+    }
+
     // A Esponda-esque method
-    public static <K> K genericSelect(HashMap<K, String> list, String... prompt) {
+    public static <K> K genericSelect(List<Entry<K, String>> xs, String... prompt) {
         int endOfScreen = frame.rows - 1;
         TermPanel f = frame.mainTerm();
         int position = 0;
@@ -212,8 +219,7 @@ public class ZombieGame {
         // Soviel Platz haben wir für Zeilen mit Abstand eine Zeile zwischen options
         int pageSize = (frame.rows - prompt.length - 1) / 2;
 
-        // Ultra crazy list wrangling
-        List<Entry <K, String>> xs = Collections.list(Collections.enumeration(list.entrySet()));
+        // List von Listen fürs Paging
         ArrayList<List <Entry <K, String>>> paged = new ArrayList();
 
         for (int i = 0; i < xs.size(); i += pageSize) {
@@ -360,12 +366,12 @@ public class ZombieGame {
     }
 
     public static Attribute askPlayerForAttrbuteToRaise() {
-        HashMap<Attribute, String> attributes = new HashMap<Attribute, String>();
+        ArrayList<Entry<Attribute, String>> attributes = new ArrayList<Entry<Attribute, String>>();
 
-        attributes.put(Attribute.MAXHP, "maximale Lebenspunkte (um 10)");
-        attributes.put(Attribute.ATTACK, "Angriff (um 1)");
-        attributes.put(Attribute.DEFENSE, "Verteidigung (um 1)");
-        attributes.put(Attribute.DEXTERITY, "Geschick (um 1)");
+        attributes.add(new AbstractMap.SimpleEntry<Attribute,String>(Attribute.MAXHP, "maximale Lebenspunkte (um 10)"));
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.ATTACK, "Angriff (um 1)"));
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.DEFENSE, "Verteidigung (um 1)"));
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.DEXTERITY, "Geschick (um 1)"));
 
         Attribute output = genericSelect(attributes,
                                          "     Herzlichen Glückwunsch, du hast es",
