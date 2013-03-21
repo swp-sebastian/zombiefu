@@ -117,7 +117,7 @@ public class ConfigHelper {
             int dazeTurns = Integer.decode(config.get("daze.turns", "0"));
             double dazeProbability = Double.valueOf(config.get("daze.probability", "0"));
             String expertsStr = config.get("experts");
-            boolean staticMunition = config.get("staticMunition", "false").equals("true");
+            boolean staticMunition = !config.get("staticMunition", "true").equals("false");
             Set<Discipline> experts = new HashSet<>();
             if (expertsStr != null) {
                 for (String exp : expertsStr.split(" ")) {

@@ -50,6 +50,6 @@ public class WeaponBuilder extends ItemBuilder {
         } else {
             w.addMunition((int) Math.ceil(munition * ZombieTools.getRandomDouble(1, munition, -3)));
         }
-        return w;
-    }
+        return w;        
+    } 
 }
