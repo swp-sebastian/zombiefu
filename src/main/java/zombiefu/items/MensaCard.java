@@ -8,6 +8,7 @@ import jade.util.datatype.ColoredChar;
 import java.awt.Color;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
+import zombiefu.util.ZombieTools;
 
 /**
  *
@@ -24,12 +25,8 @@ public class MensaCard extends Item {
 
     @Override
     protected void pickedUpByPlayer(Player player) {
-        ZombieGame.newMessage("Du hast eine MensaCard mit " + guthaben + "€ aufgehoben.");
+        ZombieGame.newMessage("Du hast eine MensaCard mit " + ZombieTools.getMoneyString(guthaben) + " aufgehoben.");
         player.addMoney(guthaben);
         expire();
-    }
-    
-    public int getValue() {
-        return guthaben;
     }
 }

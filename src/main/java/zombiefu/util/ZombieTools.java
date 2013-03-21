@@ -1,11 +1,14 @@
 package zombiefu.util;
 
 import jade.util.Dice;
+import jade.util.Guard;
 import jade.util.datatype.Direction;
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ZombieTools {
 
@@ -57,10 +60,11 @@ public class ZombieTools {
         }
         int random = Dice.global.nextInt(sum);
         int sc = 0;
-        for(int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             sc += args[i];
-            if(random < sc)
-                return i;            
+            if (random < sc) {
+                return i;
+            }
         }
         throw new ArithmeticException();
     }
@@ -84,6 +88,20 @@ public class ZombieTools {
         } else {
             return (char) Integer.parseInt(s, 16);
         }
+    }
+
+    public static String getMoneyString(int m, boolean euro) {
+        return (m / 100) + (m % 100 == 0 ? "" : ("." + String.format("%02d", m % 100))) + (euro ? "€" : "");
+    }
+
+    public static String getMoneyString(int m) {
+        return getMoneyString(m, true);
+    }
+
+    public static int parseMoneyString(String s) {
+        Matcher matcher = Pattern.compile("^(\\d*)\\.?(\\d\\d)?€?$").matcher(s);
+        Guard.verifyState(matcher.matches());
+        return (matcher.group(1).isEmpty() ? 0 : (Integer.decode(matcher.group(1)) * 100)) + ((matcher.group(2) == null) ? 0 : Integer.decode(matcher.group(2)));
     }
 
     // getAction :: char -> Action

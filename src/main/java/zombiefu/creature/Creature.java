@@ -6,11 +6,14 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import zombiefu.actor.NotPassableActor;
 import zombiefu.exception.CannnotMoveToNonPassableActorException;
 import zombiefu.exception.CannotMoveToIllegalFieldException;
 import zombiefu.exception.WeaponHasNoMunitionException;
 import zombiefu.exception.CannotAttackWithoutMeleeWeaponException;
+import zombiefu.exception.DidNotActException;
 import zombiefu.items.Weapon;
 import zombiefu.items.WeaponType;
 import zombiefu.exception.NoDirectionGivenException;
@@ -36,7 +39,7 @@ public abstract class Creature extends NotPassableActor {
         super(face);
         dazed = 0;
         name = n;
-        attributSet = attSet;        
+        attributSet = attSet;
         healthPoints = attributSet.get(Attribute.MAXHP);
     }
 
@@ -46,10 +49,10 @@ public abstract class Creature extends NotPassableActor {
 
     protected abstract boolean isEnemy(Creature enemy);
 
-    protected abstract void pleaseAct();
+    protected abstract void pleaseAct() throws DidNotActException;
 
     public abstract void kill(Creature killer);
-    
+
     public abstract boolean hasUnlimitedMunition();
 
     public Discipline getDiscipline() {
@@ -108,7 +111,13 @@ public abstract class Creature extends NotPassableActor {
         if (dazed > 0) {
             dazed--;
         } else {
-            pleaseAct();
+            while (true) {
+                try {
+                    pleaseAct();
+                    return;
+                } catch (DidNotActException ex) {
+                }
+            }
         }
     }
 

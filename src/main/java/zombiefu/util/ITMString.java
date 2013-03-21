@@ -57,7 +57,7 @@ public class ITMString {
                         a = ConfigHelper.getKeyCardByName(arguments[0]);
                         break;
                     case "mensacard":
-                        a = new MensaCard(Integer.decode(arguments[0]));
+                        a = new MensaCard(ZombieTools.parseMoneyString(arguments[0]));
                         break;
                     case "shop":
                         a = ConfigHelper.newShopByName(arguments[0]);

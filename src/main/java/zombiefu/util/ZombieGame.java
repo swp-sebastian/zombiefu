@@ -8,10 +8,17 @@ import jade.core.Actor;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Direction;
 import jade.util.Guard;
+import jade.ui.TermPanel;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.HashMap;
+import java.util.AbstractMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import zombiefu.exception.NoDirectionGivenException;
 import zombiefu.player.Player;
@@ -24,7 +31,7 @@ import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
 import zombiefu.ZombieFU;
 import zombiefu.creature.AttributeSet;
-
+import zombiefu.human.ShopInventar;
 /**
  *
  * @author tomas
@@ -70,9 +77,9 @@ public class ZombieGame {
 
         // Attribute laden.
         AttributeSet atts = new AttributeSet();
-        for(Attribute att: Attribute.values()) {
+        for (Attribute att : Attribute.values()) {
             Integer setting = settings.playerAttributes.get(att);
-            if(setting == null) {
+            if (setting == null) {
                 atts.put(att, discipline.getBaseAttribute(att));
             } else {
                 atts.put(att, setting);
@@ -83,7 +90,9 @@ public class ZombieGame {
         player = new Player(settings.playerChar, settings.playerName, discipline, atts);
 
         // StartItems erzeugen
-        Set<Actor> items = new ITMString(settings.playerInventar == null ? discipline.getItems(): settings.playerInventar).getActorSet();
+        player.obtainItem(ConfigHelper.newWeaponByName("Faust"));
+        player.obtainItem(ConfigHelper.newFoodByName("Mate"));
+        Set<Actor> items = new ITMString(settings.playerInventar == null ? discipline.getItems() : settings.playerInventar).getActorSet();
         for (Actor a : items) {
             Guard.verifyState(a instanceof Item);
             player.obtainItem((Item) a);
@@ -139,18 +148,19 @@ public class ZombieGame {
                 + player.getActiveWeapon().getMunitionToString()
                 + " / " + player.getActiveWeapon().getDamage() + ") "
                 + " | HP: " + player.getHealthPoints() + "/"
-                + player.getAttribute(Attribute.MAXHP)+ " | A: "
-                + player.getAttribute(Attribute.ATTACK)+ " | D: "
+                + player.getAttribute(Attribute.MAXHP) + " | A: "
+                + player.getAttribute(Attribute.ATTACK) + " | D: "
                 + player.getAttribute(Attribute.DEFENSE) + " | I: "
                 + player.getAttribute(Attribute.DEXTERITY);
         String secondLine = "Ort: " + ((Level) player.world()).getName() + "(" + player.pos().x() + "|" + player.pos().y() + ")"
-                + " | € " + player.getMoney() + " | ECTS "
+                + " | € " + ZombieTools.getMoneyString(player.getMoney(),false) + " | ECTS "
                 + player.getECTS() + " | Sem " + player.getSemester() + " | GodMode: "
                 + (player.isGod() ? "an" : "aus");
-        if(player.isDazed())
+        if (player.isDazed()) {
             secondLine += " | BETÄUBT!";
-        frame.bottomTerm().bufferString(0,0,firstLine);
-        frame.bottomTerm().bufferString(0,1,secondLine);
+        }
+        frame.bottomTerm().bufferString(0, 0, firstLine);
+        frame.bottomTerm().bufferString(0, 1, secondLine);
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
     }
@@ -197,6 +207,100 @@ public class ZombieGame {
         return d;
     }
 
+    // When order doesn't matter use a Set
+    public static <K> K genericSelect(Map<K, String> map, boolean exitable, String... prompt) {
+        return genericSelect(Collections.list(Collections.enumeration(map.entrySet())), exitable, prompt);
+    }
+
+    // A Esponda-esque method
+    public static <K> K genericSelect(List<Entry<K, String>> xs, boolean exitable, String... prompt) {
+        int endOfScreen = frame.rows - 1;
+        TermPanel f = frame.mainTerm();
+        int position = 0;
+        int page = 0;
+        Action action = null;
+
+        // Soviel Platz haben wir für Zeilen mit Abstand eine Zeile zwischen options
+        int pageSize = (frame.rows - prompt.length - 1) / 2;
+
+        // List von Listen fürs Paging
+        ArrayList<List <Entry <K, String>>> paged = new ArrayList();
+
+        for (int i = 0; i < xs.size(); i += pageSize) {
+            if ((i+pageSize) < xs.size()) {
+                paged.add(i / pageSize, xs.subList(i, i + pageSize));
+            } else {
+                paged.add(i / pageSize, xs.subList(i, xs.size()));
+            }
+        }
+
+        do {
+            f.clearBuffer();
+
+            int drawOffset = 1;
+            if (exitable) {
+                String msg = "Verlassen mit q";
+                f.bufferString(frame.columns - msg.length(), drawOffset, msg);
+            }
+
+            for (String line : prompt) {
+                f.bufferString(2, drawOffset, line);
+                drawOffset += 1;
+            }
+
+
+            // One line of padding between prompt and options.
+            drawOffset += 1;
+
+            // Check position sanity.
+            if (position < 0) { position = 0; }
+            if (position == xs.size()) { position = xs.size() - 1; }
+
+            // Calculate current page
+            page = position / pageSize;
+
+            ZombieTools.log("Position: " + position + " Page: " + page);
+
+            // Draw options
+            for (int i = 0; i < paged.get(page).size() ; i++) {
+                if (position == (i + (page*pageSize))) {
+                    f.bufferString(2, drawOffset + 2*i, "[x] " + paged.get(page).get(i).getValue());
+                } else {
+                    f.bufferString(2, drawOffset + 2*i, "[ ] " + paged.get(page).get(i).getValue());
+                }
+            }
+
+
+            frame.mainTerm().refreshScreen();
+            action = ZombieTools.keyToAction(ZombieGame.getSettings().keybindings, ZombieGame.askPlayerForKey());
+
+            if (action != null) {
+
+                switch (action) {
+
+                case UP:
+                    position--;
+                    break;
+
+                case DOWN:
+                    position++;
+                    break;
+
+                case PREV_WEAPON:
+                    if (exitable) {
+                        refreshMainFrame();
+                        return null;
+                    }
+                    break;
+                }
+            }
+
+        } while (action != Action.ATTACK);
+
+        refreshMainFrame();
+        return paged.get(page).get(position - (page*pageSize)).getKey();
+    }
+
     public static String askPlayerForItemInInventar() {
         String output = null;
         HashMap<String, ArrayList<ConsumableItem>> inventar = getPlayer().getInventar();
@@ -231,101 +335,66 @@ public class ZombieGame {
         return output;
     }
 
-    public static ItemBuilder askPlayerForItemToBuy(HashMap<ItemBuilder, Integer> itemMap) {
+    public static ItemBuilder askPlayerForItemToBuy(ShopInventar inventar) {
 
-        if (itemMap.isEmpty()) {
+        if (inventar.isEmpty()) {
             ZombieGame.newMessage("Dieser Shop hat keine Artikel.");
             return null;
         }
 
-        ItemBuilder output = null;
+        ArrayList<ItemBuilder> itemSet = inventar.asList();
+        Collections.sort(itemSet, new Comparator<ItemBuilder>() {
+            @Override
+            public int compare(ItemBuilder t, ItemBuilder t1) {
+                return t.getName().compareTo(t1.getName());
+            }
+        });
 
-        ArrayList<ItemBuilder> itemSet = new ArrayList<ItemBuilder>();
-        for (ItemBuilder it : itemMap.keySet()) {
-            itemSet.add(it);
+        ArrayList<Entry<ItemBuilder, String>> items = new ArrayList<Entry<ItemBuilder, String>>();
+
+        for (ItemBuilder it : itemSet) {
+            items.add(new AbstractMap.SimpleEntry(it, it.getName() + " (Preis: " +  ZombieTools.getMoneyString(inventar.get(it)) + ")"));
         }
 
-        frame.mainTerm().clearBuffer();
-        frame.mainTerm().bufferString(0, 0, "Artikel:");
-        for (int i = 0; i < itemSet.size(); i++) {
-            frame.mainTerm().bufferString(
-                    0,
-                    2 + i,
-                    "[" + ((char) (97 + i)) + "] " + itemSet.get(i).face() + " - "
-                    + itemSet.get(i).getName() + " (Preis: " + itemMap.get(itemSet.get(i)) + ")");
-        }
-        frame.mainTerm().refreshScreen();
-        int key = ((int) ZombieGame.askPlayerForKey()) - 97;
-        if (key >= 0 && key <= 25 && key < itemMap.size()) {
-            output = itemSet.get(key);
-        }
-        refreshMainFrame();
-        return output;
+        return genericSelect(items, true, "Artikel: ");
     }
 
     public static Discipline askPlayerForDiscipline() {
-        char alpha = showStaticImage("discipline");
-        Discipline output;
+        HashMap<Discipline, String> disciplines = new HashMap<Discipline,String>();
 
-        switch (alpha) {
-            case 'a':
-                output = Discipline.POLITICAL_SCIENCE;
-                break;
-            case 'b':
-                output = Discipline.COMPUTER_SCIENCE;
-                break;
-            case 'c':
-                output = Discipline.MEDICINE;
-                break;
-            case 'd':
-                output = Discipline.PHILOSOPHY;
-                break;
-            case 'e':
-                output = Discipline.PHYSICS;
-                break;
-            case 'f':
-                output = Discipline.BUSINESS;
-                break;
-            case 'g':
-                output = Discipline.CHEMISTRY;
-                break;
-            case 'h':
-                output = Discipline.SPORTS;
-                break;
-            case 'i':
-                output = Discipline.MATHEMATICS;
-                break;
-            default:
-                output = askPlayerForDiscipline();
-        }
-        // Quick fix. TODO: sebastian denkt sich was aus.
+        // Order does not matter here, so we can use a Map. See next method.
+        disciplines.put(Discipline.POLITICAL_SCIENCE, "Politikwissenschaft");
+        disciplines.put(Discipline.COMPUTER_SCIENCE, "Informatik");
+        disciplines.put(Discipline.MEDICINE, "Medizin");
+        disciplines.put(Discipline.PHILOSOPHY, "Philosophie");
+        disciplines.put(Discipline.PHYSICS, "Physik");
+        disciplines.put(Discipline.BUSINESS, "BWL");
+        disciplines.put(Discipline.CHEMISTRY, "Chemie");
+        disciplines.put(Discipline.SPORTS, "Sportwissenschaften");
+        disciplines.put(Discipline.MATHEMATICS, "Mathematik");
+
+        Discipline output = genericSelect(disciplines, false, "Wähle deinen Studiengang!");
         Guard.argumentIsNotNull(output);
         return output;
     }
 
     public static Attribute askPlayerForAttrbuteToRaise() {
-        char alpha = showStaticImage("askForAttribute");
-        Attribute output;
+        ArrayList<Entry<Attribute, String>> attributes = new ArrayList<Entry<Attribute, String>>();
 
-        switch (alpha) {
-            case 'a':
-                output = Attribute.MAXHP;
-                break;
-            case 'b':
-                output = Attribute.ATTACK;
-                break;
-            case 'c':
-                output = Attribute.DEFENSE;
-                break;
-            case 'd':
-                output = Attribute.DEXTERITY;
-                break;
-            default:
-                output = askPlayerForAttrbuteToRaise();
-        }
-        // Quick fix. TODO: sebastian denkt sich was aus.
+        // Because order matters here we use a List which keeps its order. See above.
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.MAXHP, "maximale Lebenspunkte (um 10)"));
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.ATTACK, "Angriff (um 1)"));
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.DEFENSE, "Verteidigung (um 1)"));
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.DEXTERITY, "Geschick (um 1)"));
+
+        Attribute output = genericSelect(attributes, false,
+                                         "     Herzlichen Glückwunsch, du hast es",
+                                         "       ins nächste Semester geschafft!",
+                                         "",
+                                         "    Welches Attribut möchtest du erhöhen?",
+                                         "");
+
         Guard.argumentIsNotNull(output);
-        System.out.println(output);
         return output;
     }
 

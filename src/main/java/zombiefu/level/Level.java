@@ -108,7 +108,7 @@ public class Level extends World {
             n--;
         }
         
-        addActor(ConfigHelper.newMonsterByName("RaketenwerferZombie"));
+        addActor(ConfigHelper.newMonsterByName("KanonenZombie"));
 
     }
 
