@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package zombiefu.items;
+package zombiefu.builder;
 
 import jade.util.Dice;
 import java.util.Arrays;
-import zombiefu.player.Discipline;
+import zombiefu.items.Item;
+import zombiefu.items.MensaCard;
 import zombiefu.util.ITMString;
 import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
@@ -21,7 +22,8 @@ public enum RandomItemGenerator {
     HIGH,
     GOOD,
     COMMON,
-    JUNK;
+    JUNK,
+    COMMON_ITEM;
 
     public static RandomItemGenerator fromString(String string) {
         for (RandomItemGenerator d : RandomItemGenerator.values()) {
@@ -29,7 +31,7 @@ public enum RandomItemGenerator {
                 return d;
             }
         }
-        throw new IllegalArgumentException("Ungültige ItemRank-Name: " + string);
+        throw new IllegalArgumentException("Ungültiger RandomItemGenerator-Name: " + string);
     }
 
     public MensaCard getMensacard(int baseValue) {
@@ -55,7 +57,7 @@ public enum RandomItemGenerator {
                     case 0:
                         return getOneOf("weapon(Speer)");
                     case 1:
-                        return getMensacard(10);
+                        return getMensacard(500);
                 }
                 break;
             case GOOD:
@@ -63,23 +65,25 @@ public enum RandomItemGenerator {
                     case 0:
                         return getOneOf("weapon(Speer)");
                     case 1:
-                        return getMensacard(3);
+                        return getMensacard(150);
                 }
                 break;
+            case COMMON_ITEM:
+                return getOneOf("weapon(Feuerloescher) food(Mate)"); 
             case COMMON:
                 switch (ZombieTools.getRandomIndex(1, 1, 4)) {
                     case 0:
                         return null;
                     case 1:
-                        return getOneOf("weapon(Feuerloescher) food(Mate)");
+                        return COMMON_ITEM.getRandomItem();
                     case 2:
-                        return getMensacard(1);
+                        return getMensacard(50);
                 }
                 break;
             case JUNK:
                 switch (ZombieTools.getRandomIndex(1, 1, 4)) {
                     case 0:
-                        return getMensacard(1);
+                        return getMensacard(25);
                     case 1:
                         return getOneOf("food(Wasser)");
                     case 2:

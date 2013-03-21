@@ -87,14 +87,22 @@ public class Player extends Creature implements Camera {
 
             // Diese Keys haben noch keine Property sie sind fürs Debuggen und
             // werden später abgeschaltet. FIX (macht sgs)
-            if (key == 'f') {
-                if (fov == DEFAULT_VIEWFIELD) {
-                    fov = new ViewEverything();
-                } else {
-                    fov = DEFAULT_VIEWFIELD;
+            if (ZombieGame.getSettings().debug) {
+                if (key == 'f') {
+                    if (fov == DEFAULT_VIEWFIELD) {
+                        fov = new ViewEverything();
+                    } else {
+                        fov = DEFAULT_VIEWFIELD;
+                    }
+                    ZombieGame.refreshMainFrame();
+                    throw new DidNotActException();
                 }
-                ZombieGame.refreshMainFrame();
-                throw new DidNotActException();
+
+                if (key == 'g') {
+                    godMode = !godMode;
+                    ZombieGame.refreshBottomFrame();
+                    throw new DidNotActException();
+                }
             }
 
             if (key == 27) {
@@ -103,12 +111,6 @@ public class Player extends Creature implements Camera {
                     throw new DidNotActException();
                 }
                 System.exit(0);
-            }
-
-            if (key == 'g') {
-                godMode = !godMode;
-                ZombieGame.refreshBottomFrame();
-                throw new DidNotActException();
             }
 
             Action action = ZombieTools.keyToAction(ZombieGame.getSettings().keybindings, key);

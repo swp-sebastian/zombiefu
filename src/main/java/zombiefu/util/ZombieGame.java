@@ -32,6 +32,7 @@ import zombiefu.ui.ZombieFrame;
 import zombiefu.ZombieFU;
 import zombiefu.creature.AttributeSet;
 import zombiefu.human.ShopInventar;
+
 /**
  *
  * @author tomas
@@ -146,16 +147,21 @@ public class ZombieGame {
         frame.bottomTerm().clearBuffer();
         String firstLine = "Waffe: " + player.getActiveWeapon().getName() + " ("
                 + player.getActiveWeapon().getMunitionToString()
-                + " / " + player.getActiveWeapon().getDamage() + ") "
+                + " / " + player.getActiveWeapon().getDamage() + ")"
                 + " | HP: " + player.getHealthPoints() + "/"
                 + player.getAttribute(Attribute.MAXHP) + " | A: "
                 + player.getAttribute(Attribute.ATTACK) + " | D: "
                 + player.getAttribute(Attribute.DEFENSE) + " | I: "
                 + player.getAttribute(Attribute.DEXTERITY);
-        String secondLine = "Ort: " + ((Level) player.world()).getName() + "(" + player.pos().x() + "|" + player.pos().y() + ")"
-                + " | € " + ZombieTools.getMoneyString(player.getMoney(),false) + " | ECTS "
-                + player.getECTS() + " | Sem " + player.getSemester() + " | GodMode: "
-                + (player.isGod() ? "an" : "aus");
+        String secondLine = "Ort: " + ((Level) player.world()).getName();
+        if (ZombieGame.settings.debug) {
+            secondLine += " (" + player.pos().x() + "|" + player.pos().y() + ")";
+        }
+        secondLine += "| € " + ZombieTools.getMoneyString(player.getMoney(), false) + " | ECTS "
+                + player.getECTS() + " | Sem " + player.getSemester();
+        if (ZombieGame.settings.debug) {
+            secondLine += " | GodMode: " + (player.isGod() ? "an" : "aus");
+        }
         if (player.isDazed()) {
             secondLine += " | BETÄUBT!";
         }
@@ -224,10 +230,10 @@ public class ZombieGame {
         int pageSize = (frame.rows - prompt.length - 1) / 2;
 
         // List von Listen fürs Paging
-        ArrayList<List <Entry <K, String>>> paged = new ArrayList();
+        ArrayList<List<Entry<K, String>>> paged = new ArrayList();
 
         for (int i = 0; i < xs.size(); i += pageSize) {
-            if ((i+pageSize) < xs.size()) {
+            if ((i + pageSize) < xs.size()) {
                 paged.add(i / pageSize, xs.subList(i, i + pageSize));
             } else {
                 paged.add(i / pageSize, xs.subList(i, xs.size()));
@@ -253,8 +259,12 @@ public class ZombieGame {
             drawOffset += 1;
 
             // Check position sanity.
-            if (position < 0) { position = 0; }
-            if (position == xs.size()) { position = xs.size() - 1; }
+            if (position < 0) {
+                position = 0;
+            }
+            if (position == xs.size()) {
+                position = xs.size() - 1;
+            }
 
             // Calculate current page
             page = position / pageSize;
@@ -262,11 +272,11 @@ public class ZombieGame {
             ZombieTools.log("Position: " + position + " Page: " + page);
 
             // Draw options
-            for (int i = 0; i < paged.get(page).size() ; i++) {
-                if (position == (i + (page*pageSize))) {
-                    f.bufferString(2, drawOffset + 2*i, "[x] " + paged.get(page).get(i).getValue());
+            for (int i = 0; i < paged.get(page).size(); i++) {
+                if (position == (i + (page * pageSize))) {
+                    f.bufferString(2, drawOffset + 2 * i, "[x] " + paged.get(page).get(i).getValue());
                 } else {
-                    f.bufferString(2, drawOffset + 2*i, "[ ] " + paged.get(page).get(i).getValue());
+                    f.bufferString(2, drawOffset + 2 * i, "[ ] " + paged.get(page).get(i).getValue());
                 }
             }
 
@@ -278,27 +288,27 @@ public class ZombieGame {
 
                 switch (action) {
 
-                case UP:
-                    position--;
-                    break;
+                    case UP:
+                        position--;
+                        break;
 
-                case DOWN:
-                    position++;
-                    break;
+                    case DOWN:
+                        position++;
+                        break;
 
-                case PREV_WEAPON:
-                    if (exitable) {
-                        refreshMainFrame();
-                        return null;
-                    }
-                    break;
+                    case PREV_WEAPON:
+                        if (exitable) {
+                            refreshMainFrame();
+                            return null;
+                        }
+                        break;
                 }
             }
 
         } while (action != Action.ATTACK);
 
         refreshMainFrame();
-        return paged.get(page).get(position - (page*pageSize)).getKey();
+        return paged.get(page).get(position - (page * pageSize)).getKey();
     }
 
     public static String askPlayerForItemInInventar() {
@@ -353,14 +363,14 @@ public class ZombieGame {
         ArrayList<Entry<ItemBuilder, String>> items = new ArrayList<Entry<ItemBuilder, String>>();
 
         for (ItemBuilder it : itemSet) {
-            items.add(new AbstractMap.SimpleEntry(it, it.getName() + " (Preis: " +  ZombieTools.getMoneyString(inventar.get(it)) + ")"));
+            items.add(new AbstractMap.SimpleEntry(it, it.getName() + " (Preis: " + ZombieTools.getMoneyString(inventar.get(it)) + ")"));
         }
 
         return genericSelect(items, true, "Artikel: ");
     }
 
     public static Discipline askPlayerForDiscipline() {
-        HashMap<Discipline, String> disciplines = new HashMap<Discipline,String>();
+        HashMap<Discipline, String> disciplines = new HashMap<Discipline, String>();
 
         // Order does not matter here, so we can use a Map. See next method.
         disciplines.put(Discipline.POLITICAL_SCIENCE, "Politikwissenschaft");
@@ -388,11 +398,11 @@ public class ZombieGame {
         attributes.add(new AbstractMap.SimpleEntry(Attribute.DEXTERITY, "Geschick (um 1)"));
 
         Attribute output = genericSelect(attributes, false,
-                                         "     Herzlichen Glückwunsch, du hast es",
-                                         "       ins nächste Semester geschafft!",
-                                         "",
-                                         "    Welches Attribut möchtest du erhöhen?",
-                                         "");
+                "     Herzlichen Glückwunsch, du hast es",
+                "       ins nächste Semester geschafft!",
+                "",
+                "    Welches Attribut möchtest du erhöhen?",
+                "");
 
         Guard.argumentIsNotNull(output);
         return output;
