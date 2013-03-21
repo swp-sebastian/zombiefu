@@ -15,7 +15,7 @@ import zombiefu.util.ZombieGame;
 public abstract class Human extends NonPlayer {
 
     public Human(ColoredChar face, String name, AttributeSet attSet, double maxDistance) {
-        super(face, name, attSet, maxDistance);
+        super(face, name, attSet, maxDistance, 10);
     }
     
     @Override

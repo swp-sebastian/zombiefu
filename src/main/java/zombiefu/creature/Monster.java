@@ -31,11 +31,10 @@ public class Monster extends NonPlayer {
     private Set<Actor> dropOnDeath;
 
     public Monster(ColoredChar face, String name, AttributeSet attSet, Weapon waffe, int ectsYield, Set<Actor> dropOnDeath, double maxDistance, int chaseDistance) {
-        super(face, name, attSet, maxDistance);
+        super(face, name, attSet, maxDistance, chaseDistance);
         this.waffe = waffe;
         this.ectsYield = ectsYield;
         this.dropOnDeath = dropOnDeath;
-        this.sichtweite = chaseDistance;
     }
 
     private boolean canHitTarget(Coordinate c) {
@@ -44,7 +43,7 @@ public class Monster extends NonPlayer {
             return false;
         }
         List<Coordinate> path = new ProjectileBresenham(getActiveWeapon().getRange()).getPartialPath(world(), pos(), c);
-        return path.isEmpty() ? false: path.get(path.size() - 1).equals(c);
+        return path.isEmpty() ? false : path.get(path.size() - 1).equals(c);
     }
 
     @Override
@@ -53,7 +52,6 @@ public class Monster extends NonPlayer {
             Coordinate pos = getPlayerPosition();
             if (positionIsVisible(pos)) {
                 if (getActiveWeapon().getTyp().isRanged() && canHitTarget(pos)) {
-                    System.out.println("hier bin ich");
                     try {
                         new Attack(this, pos().directionTo(pos)).perform();
                         return;
@@ -83,7 +81,6 @@ public class Monster extends NonPlayer {
         try {
             moveRandomly();
         } catch (NoPlaceToMoveException ex) {
-            ZombieTools.log(getName() + ": Cannot move - doing nothing");
         }
     }
 

@@ -32,7 +32,7 @@ public abstract class Creature extends NotPassableActor {
     protected int healthPoints;
     protected String name;
     protected ViewField fov;
-    protected int sichtweite;
+    protected int chaseRadius;
     protected boolean godMode;
 
     public Creature(ColoredChar face, String n, AttributeSet attSet) {
@@ -50,6 +50,8 @@ public abstract class Creature extends NotPassableActor {
     protected abstract boolean isEnemy(Creature enemy);
 
     protected abstract void pleaseAct() throws DidNotActException;
+
+    protected abstract void pleaseActDazed();
 
     public abstract void kill(Creature killer);
 
@@ -82,7 +84,7 @@ public abstract class Creature extends NotPassableActor {
     }
 
     public Collection<Coordinate> getViewField() {
-        return fov.getViewField(world(), pos(), sichtweite);
+        return fov.getViewField(world(), pos(), chaseRadius);
     }
 
     @Override
@@ -110,6 +112,7 @@ public abstract class Creature extends NotPassableActor {
     public void act() {
         if (dazed > 0) {
             dazed--;
+            pleaseActDazed();
         } else {
             while (true) {
                 try {
