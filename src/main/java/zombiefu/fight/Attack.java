@@ -32,7 +32,6 @@ import zombiefu.util.ZombieTools;
 public class Attack {
 
     private static final double EXPERT_BONUS = 1.75; // Faktor
-    private static final ViewField DETONATION_FIELD = new CircularRayCaster();
     private Creature attacker;
     private Weapon weapon;
     private WeaponType wtype;

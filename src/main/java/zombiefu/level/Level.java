@@ -108,14 +108,15 @@ public class Level extends World {
             return;
         }
 
-        int commonItems = (int) Math.ceil(n * 0.7);
+        ZombieTools.log("fillWithItems(): Items to be spawned: " + n);
+        
+        int commonItems = (int) Math.ceil(n * 0.8);
         n -= commonItems;
-        int advancedItems = (int) Math.ceil(n * 0.7);
+        int advancedItems = (int) Math.ceil(n * 0.8);
         n -= advancedItems;
         int awesomeItems = n;
         n -= awesomeItems;
         
-        ZombieTools.log("fillWithItems(): Items to be spawned: " + n);
         ZombieTools.log("fillWithItems(): COMMON-Items to be spawned: " + commonItems);
         ZombieTools.log("fillWithItems(): ADVANCE-Items to be spawned: " + advancedItems);
         ZombieTools.log("fillWithItems(): AWESOME-Items to be spawned: " + awesomeItems);
@@ -141,6 +142,7 @@ public class Level extends World {
             return;
         }
         
+        ZombieTools.log("fillWithEnemies(): Zombies to be spawned: " + n);        
 
         int commonZombies = (int) Math.ceil(n * 0.7);
         n -= commonZombies;
@@ -148,7 +150,6 @@ public class Level extends World {
         n -= poorZombies;
         int advancedZombies = n;
         
-        ZombieTools.log("fillWithEnemies(): Zombies to be spawned: " + n);
         ZombieTools.log("fillWithEnemies(): COMMON-Zombies to be spawned: " + commonZombies);
         ZombieTools.log("fillWithEnemies(): POOR-Zombies to be spawned: " + poorZombies);
         ZombieTools.log("fillWithEnemies(): ADVANCED-Zombies to be spawned: " + advancedZombies);
