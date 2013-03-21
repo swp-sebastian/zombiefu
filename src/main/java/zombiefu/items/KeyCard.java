@@ -12,7 +12,7 @@ public class KeyCard extends ConsumableItem {
     private final Door door;
 
     public KeyCard(Door door) {
-        super(ColoredChar.create('D', Color.RED), "KeyCard (" + door.getName() + ")");
+        super(ColoredChar.create('⚷', Color.decode("0xAAAA33")), "KeyCard (" + door.getName() + ")");
         this.door = door;
     }
 

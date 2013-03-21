@@ -302,7 +302,7 @@ public class Player extends Creature implements Camera {
         this.money += m;
     }
 
-    public void pay(int m) throws CannotAffordException {
+    public void pay(double m) throws CannotAffordException {
         if (m > money) {
             throw new CannotAffordException();
         } else {

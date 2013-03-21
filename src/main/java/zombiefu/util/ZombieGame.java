@@ -31,7 +31,7 @@ import zombiefu.player.Discipline;
 import zombiefu.ui.ZombieFrame;
 import zombiefu.ZombieFU;
 import zombiefu.creature.AttributeSet;
-import zombiefu.util.Action;
+import zombiefu.human.ShopInventar;
 /**
  *
  * @author tomas
@@ -153,7 +153,7 @@ public class ZombieGame {
                 + player.getAttribute(Attribute.DEFENSE) + " | I: "
                 + player.getAttribute(Attribute.DEXTERITY);
         String secondLine = "Ort: " + ((Level) player.world()).getName() + "(" + player.pos().x() + "|" + player.pos().y() + ")"
-                + " | € " + player.getMoney() + " | ECTS "
+                + " | € " + ZombieTools.getMoneyString(player.getMoney(),false) + " | ECTS "
                 + player.getECTS() + " | Sem " + player.getSemester() + " | GodMode: "
                 + (player.isGod() ? "an" : "aus");
         if (player.isDazed()) {
@@ -320,19 +320,16 @@ public class ZombieGame {
         return output;
     }
 
-    public static ItemBuilder askPlayerForItemToBuy(HashMap<ItemBuilder, Integer> itemMap) {
+    public static ItemBuilder askPlayerForItemToBuy(ShopInventar inventar) {
 
-        if (itemMap.isEmpty()) {
+        if (inventar.isEmpty()) {
             ZombieGame.newMessage("Dieser Shop hat keine Artikel.");
             return null;
         }
 
         ItemBuilder output = null;
-
-        ArrayList<ItemBuilder> itemSet = new ArrayList<>();
-        for (ItemBuilder it : itemMap.keySet()) {
-            itemSet.add(it);
-        }
+        
+        ArrayList<ItemBuilder> itemSet = inventar.asList();
 
         Collections.sort(itemSet, new Comparator<ItemBuilder>() {
             @Override
@@ -348,11 +345,11 @@ public class ZombieGame {
                     0,
                     2 + i,
                     "[" + ((char) (97 + i)) + "] " + itemSet.get(i).face() + " - "
-                    + itemSet.get(i).getName() + " (Preis: " + itemMap.get(itemSet.get(i)) + ")");
+                    + itemSet.get(i).getName() + " (Preis: " + ZombieTools.getMoneyString(inventar.get(itemSet.get(i))) + ")");
         }
         frame.mainTerm().refreshScreen();
         int key = ((int) ZombieGame.askPlayerForKey()) - 97;
-        if (key >= 0 && key <= 25 && key < itemMap.size()) {
+        if (key >= 0 && key <= 25 && key < itemSet.size()) {
             output = itemSet.get(key);
         }
         refreshMainFrame();

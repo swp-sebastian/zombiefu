@@ -7,6 +7,7 @@ package zombiefu.builder;
 import jade.util.datatype.ColoredChar;
 import java.util.HashMap;
 import zombiefu.human.Shop;
+import zombiefu.human.ShopInventar;
 
 /**
  *
@@ -16,9 +17,9 @@ public class ShopBuilder {
 
     private ColoredChar face;
     private String name;
-    private HashMap<ItemBuilder, Integer> items;
+    private ShopInventar items;
 
-    public ShopBuilder(ColoredChar face, String name, HashMap<ItemBuilder, Integer> items) {
+    public ShopBuilder(ColoredChar face, String name, ShopInventar items) {
         this.face = face;
         this.name = name;
         this.items = items;

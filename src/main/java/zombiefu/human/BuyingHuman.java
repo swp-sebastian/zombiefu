@@ -10,6 +10,7 @@ import zombiefu.creature.AttributeSet;
 import zombiefu.exception.DoesNotPossessThisItemException;
 import zombiefu.player.Player;
 import zombiefu.util.ZombieGame;
+import zombiefu.util.ZombieTools;
 
 /**
  *
@@ -28,7 +29,7 @@ public class BuyingHuman extends DealingHuman {
 
     @Override
     public boolean dealWith(Player pl) {
-        char key = ZombieGame.askPlayerForKeyWithMessage("Darf ich Dir ein/e " + requestItem + " für " + offerMoney + "€ abkaufen? [y/n]");
+        char key = ZombieGame.askPlayerForKeyWithMessage("Darf ich Dir ein/e " + requestItem + " für " + ZombieTools.getMoneyString(offerMoney) + " abkaufen? [y/n]");
         if (key != 'y') {
             return false;
         }
