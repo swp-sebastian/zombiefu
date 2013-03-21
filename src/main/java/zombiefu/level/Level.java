@@ -22,7 +22,7 @@ import zombiefu.util.ZombieTools;
 
 public class Level extends World {
 
-    private static final double ENEMY_BASE_DENSITY = 0.015;
+    private static final double ENEMY_BASE_DENSITY = 0.008;
     private static final double ITEM_BASE_DENSITY = 0.008;
     private int numberOfPassableFields;
     private String name;
