@@ -22,8 +22,8 @@ public class SellingHuman extends DealingHuman {
     private Item offerItem;
     private int requestMoney;
 
-    public SellingHuman(ColoredChar face, String name, AttributeSet attSet, Item offerItem, int requestMoney, Map<String,String> phraseSet) {
-        super(face, name, attSet, phraseSet);
+    public SellingHuman(ColoredChar face, String name, AttributeSet attSet, Item offerItem, int requestMoney, Map<String,String> phraseSet, double maxDistance) {
+        super(face, name, attSet, phraseSet, maxDistance);
         this.offerItem = offerItem;
         this.requestMoney = requestMoney;
     }

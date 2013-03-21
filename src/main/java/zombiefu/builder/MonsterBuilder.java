@@ -21,7 +21,7 @@ public class MonsterBuilder {
     private double habitatRadius;
     private int chaseDistance;
 
-    public MonsterBuilder(ColoredChar face, String name, AttributeSet attSet, Weapon w, int ects, ITMString dropOnDeath, boolean staticAttributes, int chaseDistance) {
+    public MonsterBuilder(ColoredChar face, String name, AttributeSet attSet, Weapon w, int ects, ITMString dropOnDeath, boolean staticAttributes, int chaseDistance, double habitatRadius) {
         this.name = name;
         this.face = face;
         this.attSet = attSet;
@@ -30,7 +30,7 @@ public class MonsterBuilder {
         this.ects = ects;
         this.staticAttributes = staticAttributes;
         this.chaseDistance = chaseDistance;
-        this.habitatRadius = 6.0; // TODO
+        this.habitatRadius = habitatRadius;
     }
 
     public Monster buildMonster() {

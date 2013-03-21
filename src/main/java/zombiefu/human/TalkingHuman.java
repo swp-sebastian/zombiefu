@@ -17,8 +17,8 @@ public class TalkingHuman extends Human {
 
     private String phrase;
 
-    public TalkingHuman(ColoredChar face, String name, AttributeSet attSet, String phrase) {
-        super(face, name, attSet);
+    public TalkingHuman(ColoredChar face, String name, AttributeSet attSet, String phrase, double maxDistance) {
+        super(face, name, attSet, maxDistance);
         this.phrase = phrase;
     }
 

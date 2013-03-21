@@ -18,8 +18,8 @@ public class GivingHuman extends DealingHuman {
 
     private Item offerItem;
 
-    public GivingHuman(ColoredChar face, String name, AttributeSet attSet, Item offerItem, Map<String,String> phraseSet) {
-        super(face, name, attSet, phraseSet);
+    public GivingHuman(ColoredChar face, String name, AttributeSet attSet, Item offerItem, Map<String,String> phraseSet, double maxDistance) {
+        super(face, name, attSet, phraseSet, maxDistance);
         this.offerItem = offerItem;
     }
 

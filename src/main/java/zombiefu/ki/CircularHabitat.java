@@ -24,8 +24,12 @@ public class CircularHabitat implements Habitat {
     }
 
     @Override
-    public boolean atHome() {
-        return monster.pos().distance(center) <= maxDistance;
+    public boolean isAtHome(Coordinate c) {
+        return c.distance(center) <= maxDistance;
+    }
+    @Override
+    public boolean isAtHome() {
+        return isAtHome(monster.pos());
     }
 
     @Override

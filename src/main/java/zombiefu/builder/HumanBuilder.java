@@ -22,8 +22,9 @@ public class HumanBuilder {
     private String requestItem;
     private Integer requestMoney;
     private AttributeSet attSet;
+    private double maxDistance;
 
-    public HumanBuilder(ColoredChar face, String name, AttributeSet attSet, Map<String, String> phraseSet, Item offerItem, Integer offerMoney, String requestItem, Integer requestMoney) {
+    public HumanBuilder(ColoredChar face, String name, AttributeSet attSet, Map<String, String> phraseSet, Item offerItem, Integer offerMoney, String requestItem, Integer requestMoney, double maxDistance) {
         this.face = face;
         this.name = name;
         this.phraseSet = phraseSet;
@@ -32,6 +33,7 @@ public class HumanBuilder {
         this.requestItem = requestItem;
         this.requestMoney = requestMoney;
         this.attSet = attSet;
+        this.maxDistance = maxDistance;
         Guard.verifyState(offerItem == null || offerMoney == null);
         Guard.verifyState(requestItem == null || requestMoney == null);
         Guard.verifyState(offerMoney == null || requestMoney == null);
@@ -40,16 +42,16 @@ public class HumanBuilder {
     public Human buildHuman() {
         if (offerItem != null) {
             if (requestItem != null) {
-                return new TradingHuman(face, name, attSet, offerItem, requestItem, phraseSet);
+                return new TradingHuman(face, name, attSet, offerItem, requestItem, phraseSet, maxDistance);
             } else if (requestMoney != null) {
-                return new SellingHuman(face, name, attSet, offerItem, requestMoney, phraseSet);
+                return new SellingHuman(face, name, attSet, offerItem, requestMoney, phraseSet, maxDistance);
             } else {
-                return new GivingHuman(face, name, attSet, offerItem, phraseSet);
+                return new GivingHuman(face, name, attSet, offerItem, phraseSet, maxDistance);
             }
         } else if (offerMoney != null && requestItem != null) {
-            return new BuyingHuman(face, name, attSet, requestItem, offerMoney, phraseSet);            
+            return new BuyingHuman(face, name, attSet, requestItem, offerMoney, phraseSet, maxDistance);            
         } else {
-            return new TalkingHuman(face, name, attSet, phraseSet.get("default"));
+            return new TalkingHuman(face, name, attSet, phraseSet.get("default"), maxDistance);
         }
     }
 }
