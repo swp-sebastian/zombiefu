@@ -350,6 +350,8 @@ public class ZombieGame {
 
     public static Discipline askPlayerForDiscipline() {
         HashMap<Discipline, String> disciplines = new HashMap<Discipline,String>();
+
+        // Order does not matter here, so we can use a Map. See next method.
         disciplines.put(Discipline.POLITICAL_SCIENCE, "Politikwissenschaft");
         disciplines.put(Discipline.COMPUTER_SCIENCE, "Informatik");
         disciplines.put(Discipline.MEDICINE, "Medizin");
@@ -368,7 +370,8 @@ public class ZombieGame {
     public static Attribute askPlayerForAttrbuteToRaise() {
         ArrayList<Entry<Attribute, String>> attributes = new ArrayList<Entry<Attribute, String>>();
 
-        attributes.add(new AbstractMap.SimpleEntry<Attribute,String>(Attribute.MAXHP, "maximale Lebenspunkte (um 10)"));
+        // Because order matters here we use a List which keeps its order. See above.
+        attributes.add(new AbstractMap.SimpleEntry(Attribute.MAXHP, "maximale Lebenspunkte (um 10)"));
         attributes.add(new AbstractMap.SimpleEntry(Attribute.ATTACK, "Angriff (um 1)"));
         attributes.add(new AbstractMap.SimpleEntry(Attribute.DEFENSE, "Verteidigung (um 1)"));
         attributes.add(new AbstractMap.SimpleEntry(Attribute.DEXTERITY, "Geschick (um 1)"));
