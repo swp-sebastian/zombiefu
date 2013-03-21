@@ -157,7 +157,7 @@ public class ZombieGame {
         if (ZombieGame.settings.debug) {
             secondLine += " (" + player.pos().x() + "|" + player.pos().y() + ")";
         }
-        secondLine += "| € " + ZombieTools.getMoneyString(player.getMoney(), false) + " | ECTS "
+        secondLine += " | € " + ZombieTools.getMoneyString(player.getMoney(), false) + " | ECTS "
                 + player.getECTS() + " | Sem " + player.getSemester();
         if (ZombieGame.settings.debug) {
             secondLine += " | GodMode: " + (player.isGod() ? "an" : "aus");

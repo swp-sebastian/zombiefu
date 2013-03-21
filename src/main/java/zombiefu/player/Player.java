@@ -87,7 +87,7 @@ public class Player extends Creature implements Camera {
 
             // Diese Keys haben noch keine Property sie sind fürs Debuggen und
             // werden später abgeschaltet. FIX (macht sgs)
-            if (ZombieGame.getSettings().debug) {
+            //if (ZombieGame.getSettings().debug) {
                 if (key == 'f') {
                     if (fov == DEFAULT_VIEWFIELD) {
                         fov = new ViewEverything();
@@ -103,7 +103,15 @@ public class Player extends Creature implements Camera {
                     ZombieGame.refreshBottomFrame();
                     throw new DidNotActException();
                 }
-            }
+
+                if (key == 'm') {
+                    for(Monster m: world().getActors(Monster.class)) {
+                        world().removeActor(m);
+                    }
+                    ZombieGame.refreshMainFrame();
+                    throw new DidNotActException();
+                }
+            //}
 
             if (key == 27) {
                 char rkey = ZombieGame.askPlayerForKeyWithMessage("Möchtest Du das Spiel wirklich beenden? [y/n]");
