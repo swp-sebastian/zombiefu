@@ -11,16 +11,16 @@ import java.util.HashMap;
  * @author tomas
  */
 public enum Discipline {
-    //HP, a, v, geschick, geld*100, Bonusitems (Faust + eine Mate hat jeder sowieso)
-    POLITICAL_SCIENCE(100, 5, 6, 7, 500, "weapon(Totquatschen)"),
+    //HP, a, v, geschick, geld*100, Bonusitems (Faust + ein Wasser hat jeder sowieso)
+    POLITICAL_SCIENCE(100, 5, 6, 7, 500, "weapon(Totquatschen)"), // Was anderes
     COMPUTER_SCIENCE(100, 5, 6, 7, 500, "weapon(Laptop) food(Mate)x4"),
     MEDICINE(130, 4, 6, 6, 1000, "weapon(Narkose) food(Anabolika)x1"),
-    PHILOSOPHY(110, 6, 6, 6, 20, "weapon(Totquatschen)"), // Was anderes
+    PHILOSOPHY(110, 6, 6, 6, 20, "weapon(Totquatschen)"),
     PHYSICS(100, 7, 7, 5, 500, "weapon(Induktionskanone)"),
     BUSINESS(100, 3, 3, 3, 8000, "weapon(Besen) food(MensaAktion)"),
     CHEMISTRY(100, 8, 6, 5, 500, "weapon(Saeurebombe)"),
     SPORTS(110, 9, 5, 4, 500, "weapon(RoundhouseKick) food(Anabolika)x2"),
-    MATHEMATICS(120, 6, 4, 7, 500, ""); // Fehlt
+    MATHEMATICS(120, 6, 4, 7, 500, "food(Kaffee)x5"); // Fehlt
     
     private HashMap<Attribute, Integer> baseAttributes;
     private String baseItems;
