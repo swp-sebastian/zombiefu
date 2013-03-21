@@ -92,7 +92,7 @@ public class ZombieGame {
 
         // StartItems erzeugen
         player.obtainItem(ConfigHelper.newWeaponByName("Faust"));
-        player.obtainItem(ConfigHelper.newFoodByName("Mate"));
+        player.obtainItem(ConfigHelper.newFoodByName("Wasser"));
         Set<Actor> items = new ITMString(settings.playerInventar == null ? discipline.getItems() : settings.playerInventar).getActorSet();
         for (Actor a : items) {
             Guard.verifyState(a instanceof Item);

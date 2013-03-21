@@ -32,9 +32,9 @@ public enum RandomEnemyGenerator {
         }
         throw new IllegalArgumentException("Ungültiger RandomEnemyGenerator-Name: " + string);
     }
-    
+
     public Monster getOneOf(String s) {
-        ITMString dec = new ITMString(Dice.global.choose(Arrays.asList(s.split(" "))));
+        ITMString dec = new ITMString("monster(" + Dice.global.choose(Arrays.asList(s.split(" "))) + ")");
         return dec.getSingleMonster();
     }
 
@@ -42,11 +42,15 @@ public enum RandomEnemyGenerator {
         Item i = null;
         switch (this) {
             case MASTER:
-                return ConfigHelper.newMonsterByName("Zombie");
+                return getOneOf("Dozent");
             case ADVANCED:
-                return ConfigHelper.newMonsterByName("Zombie");
+                return getOneOf("KanonenZombie ChemikerZombie");
             case COMMON:
-                return ConfigHelper.newMonsterByName("Zombie");
+                if (Dice.global.chance(80)) {
+                    return getOneOf("Zombie");
+                } else {
+                    return getOneOf("VerwirrterZombie");
+                }
             default:
                 throw new AssertionError(this.name());
         }

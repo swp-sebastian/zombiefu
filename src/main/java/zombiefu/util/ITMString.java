@@ -80,7 +80,7 @@ public class ITMString {
                         a = new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2])));
                         break;
                     default:
-                        throw new IllegalArgumentException("Invalid ITM String");
+                        throw new IllegalArgumentException("Invalid ITM String: " + itmString);
                 }
                 Guard.argumentIsNotNull(a);
                 ret.add(a);
