@@ -18,12 +18,12 @@ public class HumanBuilder {
     private String name;
     private Map<String, String> phraseSet;
     private Item offerItem;
-    private Integer offerMoney;
+    private Double offerMoney;
     private String requestItem;
-    private Integer requestMoney;
+    private Double requestMoney;
     private AttributeSet attSet;
 
-    public HumanBuilder(ColoredChar face, String name, AttributeSet attSet, Map<String, String> phraseSet, Item offerItem, Integer offerMoney, String requestItem, Integer requestMoney) {
+    public HumanBuilder(ColoredChar face, String name, AttributeSet attSet, Map<String, String> phraseSet, Item offerItem, Double offerMoney, String requestItem, Double requestMoney) {
         this.face = face;
         this.name = name;
         this.phraseSet = phraseSet;

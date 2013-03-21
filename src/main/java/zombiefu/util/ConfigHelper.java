@@ -8,9 +8,12 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import zombiefu.actor.Door;
@@ -33,6 +36,7 @@ import zombiefu.level.Level;
 import zombiefu.mapgen.RoomBuilder;
 import zombiefu.creature.Monster;
 import zombiefu.fight.DamageAnimation;
+import zombiefu.human.ShopInventar;
 import zombiefu.player.Attribute;
 import zombiefu.player.Discipline;
 
@@ -63,7 +67,7 @@ public class ConfigHelper {
         }
     }
 
-    private static ItemBuilder getItemBuilderByName(String s) {
+    public static ItemBuilder getItemBuilderByName(String s) {
         try {
             return getWeaponBuilderByName(s);
         } catch (ActorConfigNotFoundException ex) {
@@ -146,16 +150,10 @@ public class ConfigHelper {
         }
         if (!shops.containsKey(s)) {
             ZombieTools.log("newShopByName(" + s + "): Erzeuge ShopBuilder");
-            String[] shop = getStrings(ZombieGame.getResource("shops", s + ".shop"));
-            String[] charInfo = shop[0].split(" ");
-            HashMap<ItemBuilder, Integer> items = new HashMap<>();
-            for (int i = 1; i < shop.length; i++) {
-                String[] it = shop[i].split(" ");
-                ItemBuilder itb = getItemBuilderByName(it[0]);
-                Guard.argumentIsNotNull(itb);
-                items.put(itb, Integer.valueOf(it[1]));
-            }
-            shops.put(s, new ShopBuilder(ColoredChar.create(charInfo[0].charAt(0), Color.decode("0x" + charInfo[1])), s, items));
+            List<String> list = new ArrayList<>(Arrays.asList(getStrings(ZombieGame.getResource("shops", s + ".shop"))));
+            String[] charInfo = list.remove(0).split(" ");
+            ShopInventar inv = new ShopInventar(list);
+            shops.put(s, new ShopBuilder(ColoredChar.create(charInfo[0].charAt(0), Color.decode("0x" + charInfo[1])), s, inv));
 
         }
         return shops.get(s).buildShop();
@@ -200,8 +198,8 @@ public class ConfigHelper {
                     config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1,
                     config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1);
             Item offerItem = config.contains("deal.offerItem") ? new ITMString(config.get("deal.offerItem")).getSingleItem() : null;
-            Integer offerMoney = config.contains("deal.offerMoney") ? Integer.decode(config.get("deal.offerMoney")) : null;
-            Integer requestMoney = config.contains("deal.requestMoney") ? Integer.decode(config.get("deal.requestMoney")) : null;
+            Double offerMoney = config.contains("deal.offerMoney") ? Double.valueOf(config.get("deal.offerMoney")) : null;
+            Double requestMoney = config.contains("deal.requestMoney") ? Double.valueOf(config.get("deal.requestMoney")) : null;
             String requestItem = config.get("deal.requestItem");
             Map<String, String> phraseSet = config.getSubConfig("phrase");
             humans.put(s, new HumanBuilder(c, name, attSet, phraseSet, offerItem, offerMoney, requestItem, requestMoney));

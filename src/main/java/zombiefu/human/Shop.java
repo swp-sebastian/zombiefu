@@ -10,12 +10,12 @@ import zombiefu.player.Player;
 
 public class Shop extends Human {
 
-    private HashMap<ItemBuilder, Integer> items;
+    private ShopInventar inventar;
     String name;
 
-    public Shop(ColoredChar face, String name, HashMap<ItemBuilder, Integer> inventar) {
+    public Shop(ColoredChar face, String name, ShopInventar inventar) {
         super(face, name, new AttributeSet());
-        this.items = inventar;
+        this.inventar = inventar;
         this.name = name;
     }
 
@@ -23,10 +23,10 @@ public class Shop extends Human {
     public void talkToPlayer(Player pl) {
         ZombieGame.newMessage("Herzlich Willkommen. Hier ist unser Angebot:");
         ZombieGame.setTopFrameContent(name);
-        ItemBuilder item = ZombieGame.askPlayerForItemToBuy(items);
+        ItemBuilder item = ZombieGame.askPlayerForItemToBuy(inventar);
         try {
             if (item!=null){
-                pl.pay(items.get(item));
+                pl.pay(inventar.get(item));
                 pl.obtainItem(item.buildItem());
             }
             ZombieGame.newMessage("Bitte beehren sie uns bald wieder.");

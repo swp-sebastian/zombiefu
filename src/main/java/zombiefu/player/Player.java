@@ -39,7 +39,7 @@ public class Player extends Creature implements Camera {
 
     private final static int ECTS_FOR_NEXT_SEMESTER = 30;
     private final static ViewField DEFAULT_VIEWFIELD = new SquareRayCaster();
-    private int money;
+    private double money;
     private int ects;
     private int semester;
     private HashMap<String, ArrayList<ConsumableItem>> inventar;
@@ -72,7 +72,7 @@ public class Player extends Creature implements Camera {
         return ects;
     }
 
-    public int getMoney() {
+    public double getMoney() {
         return money;
     }
 
@@ -298,11 +298,11 @@ public class Player extends Creature implements Camera {
         ZombieGame.endGame();
     }
 
-    public void addMoney(int m) {
+    public void addMoney(double m) {
         this.money += m;
     }
 
-    public void pay(int m) throws CannotAffordException {
+    public void pay(double m) throws CannotAffordException {
         if (m > money) {
             throw new CannotAffordException();
         } else {

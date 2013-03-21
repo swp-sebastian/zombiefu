@@ -18,9 +18,9 @@ import zombiefu.util.ZombieGame;
 public class BuyingHuman extends DealingHuman {
 
     private String requestItem;
-    private int offerMoney;
+    private double offerMoney;
 
-    public BuyingHuman(ColoredChar face, String name, AttributeSet attSet, String requestItem, int offerMoney, Map<String, String> phraseSet) {
+    public BuyingHuman(ColoredChar face, String name, AttributeSet attSet, String requestItem, double offerMoney, Map<String, String> phraseSet) {
         super(face, name, attSet, phraseSet);
         this.requestItem = requestItem;
         this.offerMoney = offerMoney;
