@@ -1,6 +1,5 @@
 package zombiefu.util;
 
-import com.sun.org.apache.xpath.internal.axes.HasPositionalPredChecker;
 import jade.core.Actor;
 import jade.util.Dice;
 import jade.util.Guard;
