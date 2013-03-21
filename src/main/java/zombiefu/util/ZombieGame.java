@@ -149,7 +149,7 @@ public class ZombieGame {
                 + player.getAttribute(Attribute.DEFENSE) + " | I: "
                 + player.getAttribute(Attribute.DEXTERITY);
         String secondLine = "Ort: " + ((Level) player.world()).getName() + "(" + player.pos().x() + "|" + player.pos().y() + ")"
-                + " | € " + player.getMoney() + " | ECTS "
+                + " | € " + ZombieTools.getMoneyString(player.getMoney(),false) + " | ECTS "
                 + player.getECTS() + " | Sem " + player.getSemester() + " | GodMode: "
                 + (player.isGod() ? "an" : "aus");
         if (player.isDazed()) {

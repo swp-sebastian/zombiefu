@@ -72,7 +72,7 @@ public class Player extends Creature implements Camera {
         return ects;
     }
 
-    public double getMoney() {
+    public int getMoney() {
         return money;
     }
 
