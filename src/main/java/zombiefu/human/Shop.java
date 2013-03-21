@@ -21,7 +21,8 @@ public class Shop extends Human {
 
     @Override
     public void talkToPlayer(Player pl) {
-        ZombieGame.newMessage("Willkommen im Mensa-Shop. Hier unser Angebot:");
+        ZombieGame.newMessage("Herzlich Willkommen. Hier ist unser Angebot:");
+        ZombieGame.setTopFrameContent(name);
         ItemBuilder item = ZombieGame.askPlayerForItemToBuy(items);
         try {
             if (item!=null){

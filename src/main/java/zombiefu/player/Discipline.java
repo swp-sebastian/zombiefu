@@ -11,16 +11,16 @@ import java.util.HashMap;
  * @author tomas
  */
 public enum Discipline {
-//HP, a, v, geschick, geld, waffe
-    POLITICAL_SCIENCE(100, 5, 5, 5, 0, "weapon(Totquatschen)"),
-    COMPUTER_SCIENCE(100, 5, 7, 5, 0, "weapon(Laptop)"),
-    MEDICINE(120, 5, 5, 6, 0, "weapon(Faust)"),
-    PHILOSOPHY(100, 5, 5, 5, 0, "weapon(Suizid)"),
-    PHYSICS(100, 5, 5, 5, 0, "weapon(Faust)"),
-    BUSINESS(100, 3, 3, 3, 100, "weapon(Besen)"),
-    CHEMISTRY(100, 5, 5, 5, 0, "weapon(Faust)"),
-    SPORTS(100, 7, 5, 5, 0, "weapon(Faust)"),
-    MATHEMATICS(100, 5, 5, 5, 0, "weapon(Differenzierer)");
+    //HP, a, v, geschick, geld, Bonusitems (Faust + eine Mate hat jeder)
+    POLITICAL_SCIENCE(100, 5, 6, 7, 10, "weapon(Totquatschen)"),
+    COMPUTER_SCIENCE(100, 5, 6, 7, 10, "weapon(Laptop) food(Mate)x4"),
+    MEDICINE(130, 4, 6, 6, 10, "weapon(Narkose) food(Anabolika)x1"),
+    PHILOSOPHY(110, 6, 6, 6, 0, "weapon(Totquatschen)"), // Was anderes
+    PHYSICS(100, 7, 7, 5, 10, "weapon(Induktionskanone)"),
+    BUSINESS(100, 3, 3, 3, 200, "weapon(Besen) food(MensaAktion)"),
+    CHEMISTRY(100, 8, 6, 5, 10, "weapon(Saeurebombe)"),
+    SPORTS(110, 9, 5, 4, 10, "weapon(RoundhouseKick) food(Anabolika)x2"),
+    MATHEMATICS(120, 6, 4, 7, 10, ""); // Fehlt
     
     private HashMap<Attribute, Integer> baseAttributes;
     private String baseItems;

@@ -8,6 +8,7 @@ import jade.util.Dice;
 import java.util.Arrays;
 import zombiefu.player.Discipline;
 import zombiefu.util.ITMString;
+import zombiefu.util.ZombieGame;
 import zombiefu.util.ZombieTools;
 
 /**
@@ -32,7 +33,11 @@ public enum RandomItemGenerator {
     }
 
     public MensaCard getMensacard(int baseValue) {
-        return new MensaCard(baseValue);
+        int value = (int) (baseValue * (ZombieGame.getPlayer().getSemester() + 1) * ZombieTools.getRandomDouble(0.5, 2.0) / 2);
+        if (value < 1) {
+            value = 1;
+        }
+        return new MensaCard(value);
     }
 
     public Item getOneOf(String s) {

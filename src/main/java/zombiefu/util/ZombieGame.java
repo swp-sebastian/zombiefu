@@ -11,6 +11,8 @@ import jade.util.Guard;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 import zombiefu.exception.NoDirectionGivenException;
@@ -70,9 +72,9 @@ public class ZombieGame {
 
         // Attribute laden.
         AttributeSet atts = new AttributeSet();
-        for(Attribute att: Attribute.values()) {
+        for (Attribute att : Attribute.values()) {
             Integer setting = settings.playerAttributes.get(att);
-            if(setting == null) {
+            if (setting == null) {
                 atts.put(att, discipline.getBaseAttribute(att));
             } else {
                 atts.put(att, setting);
@@ -83,7 +85,9 @@ public class ZombieGame {
         player = new Player(settings.playerChar, settings.playerName, discipline, atts);
 
         // StartItems erzeugen
-        Set<Actor> items = new ITMString(settings.playerInventar == null ? discipline.getItems(): settings.playerInventar).getActorSet();
+        player.obtainItem(ConfigHelper.newWeaponByName("Faust"));
+        player.obtainItem(ConfigHelper.newFoodByName("Mate"));
+        Set<Actor> items = new ITMString(settings.playerInventar == null ? discipline.getItems() : settings.playerInventar).getActorSet();
         for (Actor a : items) {
             Guard.verifyState(a instanceof Item);
             player.obtainItem((Item) a);
@@ -139,18 +143,19 @@ public class ZombieGame {
                 + player.getActiveWeapon().getMunitionToString()
                 + " / " + player.getActiveWeapon().getDamage() + ") "
                 + " | HP: " + player.getHealthPoints() + "/"
-                + player.getAttribute(Attribute.MAXHP)+ " | A: "
-                + player.getAttribute(Attribute.ATTACK)+ " | D: "
+                + player.getAttribute(Attribute.MAXHP) + " | A: "
+                + player.getAttribute(Attribute.ATTACK) + " | D: "
                 + player.getAttribute(Attribute.DEFENSE) + " | I: "
                 + player.getAttribute(Attribute.DEXTERITY);
         String secondLine = "Ort: " + ((Level) player.world()).getName() + "(" + player.pos().x() + "|" + player.pos().y() + ")"
                 + " | € " + player.getMoney() + " | ECTS "
                 + player.getECTS() + " | Sem " + player.getSemester() + " | GodMode: "
                 + (player.isGod() ? "an" : "aus");
-        if(player.isDazed())
+        if (player.isDazed()) {
             secondLine += " | BETÄUBT!";
-        frame.bottomTerm().bufferString(0,0,firstLine);
-        frame.bottomTerm().bufferString(0,1,secondLine);
+        }
+        frame.bottomTerm().bufferString(0, 0, firstLine);
+        frame.bottomTerm().bufferString(0, 1, secondLine);
         frame.bottomTerm().bufferCameras();
         frame.bottomTerm().refreshScreen();
     }
@@ -240,10 +245,17 @@ public class ZombieGame {
 
         ItemBuilder output = null;
 
-        ArrayList<ItemBuilder> itemSet = new ArrayList<ItemBuilder>();
+        ArrayList<ItemBuilder> itemSet = new ArrayList<>();
         for (ItemBuilder it : itemMap.keySet()) {
             itemSet.add(it);
         }
+
+        Collections.sort(itemSet, new Comparator<ItemBuilder>() {
+            @Override
+            public int compare(ItemBuilder t, ItemBuilder t1) {
+                return t.getName().compareTo(t1.getName());
+            }
+        });
 
         frame.mainTerm().clearBuffer();
         frame.mainTerm().bufferString(0, 0, "Artikel:");

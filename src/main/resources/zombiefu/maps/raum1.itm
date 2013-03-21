@@ -5,6 +5,6 @@
 5 key(TestDoor)
 6 door(TestDoor) teleporter(raum2,33,2)
 7 shop(Mensa-Automat)
-8 shop(Waffen)
+8 shop(Waffenautomat)
 9 shop(Mensa-Automat)
 a teleporter(info1,95,78)
