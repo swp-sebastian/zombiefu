@@ -30,11 +30,12 @@ public class Monster extends NonPlayer {
     protected int ectsYield;
     private Set<Actor> dropOnDeath;
 
-    public Monster(ColoredChar face, String name, AttributeSet attSet, Weapon waffe, int ectsYield, Set<Actor> dropOnDeath, double maxDistance) {
+    public Monster(ColoredChar face, String name, AttributeSet attSet, Weapon waffe, int ectsYield, Set<Actor> dropOnDeath, double maxDistance, int chaseDistance) {
         super(face, name, attSet, maxDistance);
         this.waffe = waffe;
         this.ectsYield = ectsYield;
         this.dropOnDeath = dropOnDeath;
+        this.sichtweite = chaseDistance;
     }
 
     private boolean canHitTarget(Coordinate c) {

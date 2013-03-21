@@ -101,20 +101,21 @@ public class ConfigHelper {
             ColoredChar c = config.getChar();
             WeaponType type = WeaponType.getTypeFromString(config.get("type", "Nahkampf"));
             String munitionStr = config.get("munition", "-1");
-            Integer munition = munitionStr.equals("unbegrenzt") ? -1 : Integer.decode(munitionStr);
-            Integer damage = Integer.decode(config.get("damage", "1"));
-            Integer range = Integer.decode(config.get("range", "1"));
-            Double radius = Double.valueOf(config.get("radius", "1.0"));
-            Integer dazeTurns = Integer.decode(config.get("daze.turns", "0"));
-            Double dazeProbability = Double.valueOf(config.get("daze.probability", "0"));
+            int munition = munitionStr.equals("unbegrenzt") ? -1 : Integer.decode(munitionStr);
+            int damage = Integer.decode(config.get("damage", "1"));
+            int range = Integer.decode(config.get("range", "1"));
+            double radius = Double.valueOf(config.get("radius", "1.0"));
+            int dazeTurns = Integer.decode(config.get("daze.turns", "0"));
+            double dazeProbability = Double.valueOf(config.get("daze.probability", "0"));
             String expertsStr = config.get("experts");
+            boolean staticMunition = config.get("staticMunition", "false").equals("true");
             Set<Discipline> experts = new HashSet<>();
             if (expertsStr != null) {
                 for (String exp : expertsStr.split(" ")) {
                     experts.add(Discipline.getTypeFromString(exp));
                 }
             }
-            weapons.put(s, new WeaponBuilder(c, name, damage, type, experts, munition, radius, range, dazeTurns, dazeProbability));
+            weapons.put(s, new WeaponBuilder(c, name, damage, type, experts, munition, staticMunition, radius, range, dazeTurns, dazeProbability));
         }
         return weapons.get(s);
     }
@@ -170,16 +171,16 @@ public class ConfigHelper {
             String name = config.getName();
             ColoredChar c = config.getChar();
             AttributeSet attSet = new AttributeSet(
-                config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : null,
-                config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : null,
-                config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : null,
-                config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : null
-            );
+                    config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : null,
+                    config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : null,
+                    config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : null,
+                    config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : null);
             boolean staticAttributes = config.get("staticAttributes", "false").equals("true");
             Weapon w = newWeaponByName(config.get("weapon"));
             int ects = Integer.decode(config.get("ects"));
+            int chaseDistance = Integer.decode(config.get("chaseDistance", "10"));
             ITMString itemDrop = new ITMString(config.get("drop"));
-            monsters.put(s, new MonsterBuilder(c, name, attSet, w, ects, itemDrop, staticAttributes));
+            monsters.put(s, new MonsterBuilder(c, name, attSet, w, ects, itemDrop, staticAttributes, chaseDistance));
         }
         return monsters.get(s).buildMonster();
     }
@@ -194,11 +195,10 @@ public class ConfigHelper {
             String name = config.getName();
             ColoredChar c = config.getChar();
             AttributeSet attSet = new AttributeSet(
-                config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : 1,
-                config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1,
-                config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1,
-                config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1
-            );
+                    config.contains("baseAttr.hp") ? Integer.decode(config.get("baseAttr.hp")) : 1,
+                    config.contains("baseAttr.att") ? Integer.decode(config.get("baseAttr.att")) : 1,
+                    config.contains("baseAttr.def") ? Integer.decode(config.get("baseAttr.def")) : 1,
+                    config.contains("baseAttr.dex") ? Integer.decode(config.get("baseAttr.dex")) : 1);
             Item offerItem = config.contains("deal.offerItem") ? new ITMString(config.get("deal.offerItem")).getSingleItem() : null;
             Integer offerMoney = config.contains("deal.offerMoney") ? Integer.decode(config.get("deal.offerMoney")) : null;
             Integer requestMoney = config.contains("deal.requestMoney") ? Integer.decode(config.get("deal.requestMoney")) : null;

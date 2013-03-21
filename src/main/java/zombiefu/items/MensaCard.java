@@ -28,8 +28,4 @@ public class MensaCard extends Item {
         player.addMoney(guthaben);
         expire();
     }
-    
-    public int getValue() {
-        return guthaben;
-    }
 }

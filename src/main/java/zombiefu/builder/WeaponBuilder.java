@@ -24,13 +24,15 @@ public class WeaponBuilder extends ItemBuilder {
     private int dazeTurns;
     private double dazeProbability;
     private Set<Discipline> experts;
+    private boolean staticMunition;
 
-    public WeaponBuilder(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, int munition, double radius, int range, int dazeTurns, double dazeProbability) {
+    public WeaponBuilder(ColoredChar c, String n, int d, WeaponType w, Set<Discipline> experts, int munition, boolean staticMunition, double radius, int range, int dazeTurns, double dazeProbability) {
         this.face = c;
         this.name = n;
         this.damage = d;
         this.wtyp = w;
         this.munition = munition;
+        this.staticMunition = staticMunition;
         this.blastRadius = radius;
         this.range = range;
         this.experts = experts;
@@ -43,6 +45,8 @@ public class WeaponBuilder extends ItemBuilder {
         Weapon w = new Weapon(face, name, damage, wtyp, experts, blastRadius, range, dazeTurns, dazeProbability);
         if (munition == -1) {
             w.setUnlimitedMunition(true);
+        } else if(staticMunition) {
+            w.addMunition(munition);
         } else {
             w.addMunition((int) Math.ceil(munition * ZombieTools.getRandomDouble(1, munition, -3)));
         }
