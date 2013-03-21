@@ -1,2 +1,9 @@
 # Set default behaviour, in case users don't have core.autocrlf set.
-* text eol=lf
+* text auto
+
+*.java text eol=lf
+*.map text eol=lf
+*.cfg text eol=lf
+*.itm text eol=lf
+*.txt text eol=lf
+*.shop text eol=lf
