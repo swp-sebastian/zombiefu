@@ -220,13 +220,13 @@ public class Player extends Creature implements Camera {
             world().removeActor(this);
         }
         lvl.addActor(this);
-        
+
         if (lvl.hasFullView()) {
             fov = new ViewEverything();
         } else {
             fov = DEFAULT_VIEWFIELD;
         }
-        if(lvl.hasEnemies()) {            
+        if (lvl.hasEnemies()) {
             lvl.refill();
         }
     }
@@ -357,5 +357,10 @@ public class Player extends Creature implements Camera {
     @Override
     public boolean hasUnlimitedMunition() {
         return isGod();
+    }
+
+    @Override
+    protected void pleaseActDazed() {
+        ZombieGame.askPlayerForKey();
     }
 }

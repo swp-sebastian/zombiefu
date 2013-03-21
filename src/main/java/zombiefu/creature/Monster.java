@@ -44,7 +44,7 @@ public class Monster extends NonPlayer {
             return false;
         }
         List<Coordinate> path = new ProjectileBresenham(getActiveWeapon().getRange()).getPartialPath(world(), pos(), c);
-        return path.isEmpty() ? false: path.get(path.size() - 1).equals(c);
+        return path.isEmpty() ? false : path.get(path.size() - 1).equals(c);
     }
 
     @Override
@@ -53,7 +53,6 @@ public class Monster extends NonPlayer {
             Coordinate pos = getPlayerPosition();
             if (positionIsVisible(pos)) {
                 if (getActiveWeapon().getTyp().isRanged() && canHitTarget(pos)) {
-                    System.out.println("hier bin ich");
                     try {
                         new Attack(this, pos().directionTo(pos)).perform();
                         return;
@@ -125,4 +124,5 @@ public class Monster extends NonPlayer {
     public boolean hasUnlimitedMunition() {
         return true;
     }
+
 }

@@ -109,4 +109,8 @@ public abstract class NonPlayer extends Creature {
             ex.close();
         }
     }
+
+    @Override
+    public void pleaseActDazed() {
+    }
 }
