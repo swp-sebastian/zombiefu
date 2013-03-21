@@ -42,7 +42,7 @@ public class ActorConfig {
         }
     }
 
-    public static ActorConfig getConfig(String restype, String name) {
+    public static ActorConfig newConfig(String restype, String name) {
         try {
             return new ActorConfig(restype, name);
         } catch (ActorConfigNotFoundException ex) {
@@ -87,6 +87,10 @@ public class ActorConfig {
         }
     }
 
+    public HashMap<String, String> getConfig() {
+        return config;
+    }
+    
     public HashMap<String, String> getSubConfig(String s) {
         HashMap<String, String> subConfig = new HashMap<>();
         Pattern pattern = Pattern.compile("^" + s + "\\.(\\w+)$");

@@ -84,6 +84,7 @@ public class ZombieSettings {
         paths.put("humans", props.getProperty("dir.humans"));
         paths.put("weapons", props.getProperty("dir.weapons"));
         paths.put("food", props.getProperty("dir.food"));
+        paths.put("builders", props.getProperty("dir.builders"));
 
         // Überprüfen, ob Pfade lesbar sind.
         Iterator itr = paths.values().iterator();
@@ -105,6 +106,7 @@ public class ZombieSettings {
         def.setProperty("dir.humans", "humans/");
         def.setProperty("dir.weapons",  "weapons/");
         def.setProperty("dir.food", "food/");
+        def.setProperty("dir.builders", "builders/");
 
         // Default Debug Einstellung (aus)
         def.setProperty("debug", "true");

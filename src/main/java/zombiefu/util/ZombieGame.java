@@ -92,7 +92,7 @@ public class ZombieGame {
 
         // StartItems erzeugen
         player.obtainItem(ConfigHelper.newWeaponByName("Faust"));
-        player.obtainItem(ConfigHelper.newFoodByName("Mate"));
+        player.obtainItem(ConfigHelper.newFoodByName("Wasser"));
         Set<Actor> items = new ITMString(settings.playerInventar == null ? discipline.getItems() : settings.playerInventar).getActorSet();
         for (Actor a : items) {
             Guard.verifyState(a instanceof Item);
@@ -220,6 +220,11 @@ public class ZombieGame {
 
     // A Esponda-esque method
     public static <K> K genericSelect(List<Entry<K, String>> xs, boolean exitable, String... prompt) {
+        if (xs.size() == 0) {
+            Guard.verifyState(exitable);
+            return null;
+        }
+
         int endOfScreen = frame.rows - 1;
         TermPanel f = frame.mainTerm();
         int position = 0;
@@ -312,37 +317,27 @@ public class ZombieGame {
     }
 
     public static String askPlayerForItemInInventar() {
-        String output = null;
-        HashMap<String, ArrayList<ConsumableItem>> inventar = getPlayer().getInventar();
-        ArrayList<String[]> inventarList = new ArrayList<String[]>();
+        Map<String, ArrayList<ConsumableItem>> inventar = getPlayer().getInventar();
+
+        ArrayList<Entry<String, String>> items = new ArrayList<Entry<String, String>>();
         for (String s : inventar.keySet()) {
+            String pluralized;
             int i = inventar.get(s).size();
+            if (i == 0) continue;
             if (i == 1) {
-                inventarList.add(new String[]{s, inventar.get(s).get(0).face() + " " + s});
-            } else if (i > 1) {
-                inventarList.add(new String[]{s, inventar.get(s).get(0).face() + " " + s + " (" + i + "x)"});
+                pluralized = inventar.get(s).get(0).face() + " " + s;
+            } else {
+                pluralized = inventar.get(s).get(0).face() + " " + s + " (" + i + "x)";
             }
+            items.add(new AbstractMap.SimpleEntry(s, pluralized));
         }
-        if (inventarList.isEmpty()) {
+
+        if (inventar.isEmpty() || (items.size() == 0)) {
             ZombieGame.newMessage("Inventar ist leer.");
             return null;
         }
-        frame.mainTerm().clearBuffer();
-        frame.mainTerm().bufferString(0, 0, "Inventarliste:");
-        for (int i = 0; i < inventarList.size(); i++) {
-            String[] s = inventarList.get(i);
-            frame.mainTerm().bufferString(
-                    0,
-                    2 + i,
-                    "[" + ((char) (97 + i)) + "] " + s[1]);
-        }
-        frame.mainTerm().refreshScreen();
-        int key = ((int) ZombieGame.askPlayerForKey()) - 97;
-        if (key >= 0 && key <= 25 && key < inventar.size()) {
-            output = inventarList.get(key)[0];
-        }
-        refreshMainFrame();
-        return output;
+
+        return genericSelect(items, true, "Item auswählen:");
     }
 
     public static ItemBuilder askPlayerForItemToBuy(ShopInventar inventar) {

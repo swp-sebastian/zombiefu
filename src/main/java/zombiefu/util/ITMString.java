@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import zombiefu.actor.Teleporter;
 import zombiefu.items.Item;
-import zombiefu.builder.RandomItemGenerator;
+import zombiefu.builder.RandomItemClass;
 import zombiefu.creature.Monster;
 import zombiefu.items.MensaCard;
 import zombiefu.items.Weapon;
@@ -71,7 +71,7 @@ public class ITMString {
                         a = ConfigHelper.newMonsterByName(arguments[0]);
                         break;
                     case "random":
-                        a = RandomItemGenerator.fromString(arguments[0]).getRandomItem();
+                        a = ConfigHelper.newRandomItem(RandomItemClass.fromString(arguments[0]));
                         if (a == null) {
                             continue outerloop;
                         }
@@ -80,7 +80,7 @@ public class ITMString {
                         a = new Teleporter(arguments[0], new Coordinate(Integer.decode(arguments[1]), Integer.decode(arguments[2])));
                         break;
                     default:
-                        throw new IllegalArgumentException("Invalid ITM String");
+                        throw new IllegalArgumentException("Invalid ITM String: " + itmString);
                 }
                 Guard.argumentIsNotNull(a);
                 ret.add(a);

@@ -220,10 +220,13 @@ public class Player extends Creature implements Camera {
             world().removeActor(this);
         }
         lvl.addActor(this);
-        if (lvl.isGlobalMap()) {
+        
+        if (lvl.hasFullView()) {
             fov = new ViewEverything();
         } else {
             fov = DEFAULT_VIEWFIELD;
+        }
+        if(lvl.hasEnemies()) {            
             lvl.refill();
         }
     }
@@ -280,10 +283,10 @@ public class Player extends Creature implements Camera {
     }
 
     private void consumeItem(String itemName) {
-        ZombieGame.newMessage("Du benutzt '" + itemName + "'.");
         ConsumableItem it;
         try {
             it = removeConsumableItemFromInventar(itemName);
+            ZombieGame.newMessage("Du benutzt '" + itemName + "'.");
             try {
                 it.getConsumedBy(this);
                 it.expire();
