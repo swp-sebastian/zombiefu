@@ -1,6 +1,8 @@
 package zombiefu.util;
 
+import com.sun.org.apache.xpath.internal.axes.HasPositionalPredChecker;
 import jade.core.Actor;
+import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import java.awt.Color;
@@ -25,6 +27,8 @@ import zombiefu.builder.WeaponBuilder;
 import zombiefu.items.Item;
 import zombiefu.items.KeyCard;
 import zombiefu.builder.HumanBuilder;
+import zombiefu.builder.RandomEnemyClass;
+import zombiefu.builder.RandomItemClass;
 import zombiefu.builder.ShopBuilder;
 import zombiefu.creature.AttributeSet;
 import zombiefu.exception.ActorConfigNotFoundException;
@@ -53,6 +57,8 @@ public class ConfigHelper {
     private static HashMap<Character, Color> charSet;
     private static HashMap<Character, Boolean> passSet;
     private static HashMap<Character, Boolean> visibleSet;
+    private static HashMap<String, String> randomItems;
+    private static HashMap<String, String> randomMonster;
 
     private static void initCharSet() {
         charSet = new HashMap<>();
@@ -165,7 +171,7 @@ public class ConfigHelper {
         }
         if (!monsters.containsKey(s)) {
             ZombieTools.log("newMonsterByName(" + s + "): Erzeuge MonsterBuilder");
-            ActorConfig config = ActorConfig.getConfig("monsters", s);
+            ActorConfig config = ActorConfig.newConfig("monsters", s);
             String name = config.getName();
             ColoredChar c = config.getChar();
             AttributeSet attSet = new AttributeSet(
@@ -189,7 +195,7 @@ public class ConfigHelper {
         }
         if (!humans.containsKey(s)) {
             ZombieTools.log("newHumanByName(" + s + "): Erzeuge HumanBuilder");
-            ActorConfig config = ActorConfig.getConfig("humans", s);
+            ActorConfig config = ActorConfig.newConfig("humans", s);
             String name = config.getName();
             ColoredChar c = config.getChar();
             AttributeSet attSet = new AttributeSet(
@@ -251,6 +257,24 @@ public class ConfigHelper {
         return visibleSet;
     }
 
+    public static Item newRandomItem(RandomItemClass a) {
+        if (randomItems == null) {
+            randomItems = new HashMap<>();
+            randomItems = ActorConfig.newConfig("builders", "items").getConfig();
+        }
+        String[] items = randomItems.get(a.toString().toLowerCase()).split(" ");
+        return new ITMString(Dice.global.choose(Arrays.asList(items))).getSingleItem();
+    }
+
+    public static Monster newRandomMonster(RandomEnemyClass a) {
+        if (randomMonster == null) {
+            randomMonster = new HashMap<>();
+            randomMonster = ActorConfig.newConfig("builders", "monsters").getConfig();
+        }
+        String[] items = randomMonster.get(a.toString().toLowerCase()).split(" ");
+        return new ITMString(Dice.global.choose(Arrays.asList(items))).getSingleMonster();
+    }
+
     public static boolean isValidChar(char c) {
         return getCharSet().containsKey(c);
     }
@@ -271,7 +295,8 @@ public class ConfigHelper {
 
         // Levename
         String name = config.contains("name") ? config.get("name") : mapName;
-        boolean global = config.contains("global") ? !config.get("global").equals("false") : false;
+        boolean fullView = config.contains("fullView") ? !config.get("fullView").equals("false") : false;
+        boolean hasEnemies = config.contains("hasEnemies") ? !config.get("hasEnemies").equals("false") : true;
 
         // Suche floorChar und bgChar
         ColoredChar floorChar, bgChar;
@@ -312,7 +337,7 @@ public class ConfigHelper {
         // Baue Level
         ZombieTools.log("createLevelFromFile(" + mapName + "): Erzeuge Level");
         RoomBuilder builder = new RoomBuilder(chars, floorChar);
-        Level lev = new Level(builder.width(), builder.height(), builder, name, global);
+        Level lev = new Level(builder.width(), builder.height(), builder, name, fullView, hasEnemies);
 
         // Lade statische Items auf Map
         ZombieTools.log("createLevelFromFile(" + mapName + "): Lade statische Items");
