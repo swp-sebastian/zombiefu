@@ -90,7 +90,6 @@ public abstract class NonPlayer extends Creature {
     }
 
     protected boolean positionIsVisible(Coordinate pos) throws TargetIsNotInThisWorldException {
-            System.out.println(getName() + " - " + chaseRadius);
         return fov.getViewField(world(), pos(), chaseRadius).contains(pos);
     }
 
