@@ -365,18 +365,18 @@ public class ZombieGame {
     }
 
     public static Discipline askPlayerForDiscipline() {
-        HashMap<Discipline, String> disciplines = new HashMap<Discipline, String>();
+        ArrayList<Entry<Discipline, String>> disciplines = new ArrayList<>();
 
-        // Order does not matter here, so we can use a Map. See next method.
-        disciplines.put(Discipline.POLITICAL_SCIENCE, "Politikwissenschaft");
-        disciplines.put(Discipline.COMPUTER_SCIENCE, "Informatik");
-        disciplines.put(Discipline.MEDICINE, "Medizin");
-        disciplines.put(Discipline.PHILOSOPHY, "Philosophie");
-        disciplines.put(Discipline.PHYSICS, "Physik");
-        disciplines.put(Discipline.BUSINESS, "BWL");
-        disciplines.put(Discipline.CHEMISTRY, "Chemie");
-        disciplines.put(Discipline.SPORTS, "Sportwissenschaften");
-        disciplines.put(Discipline.MATHEMATICS, "Mathematik");
+        // Because order matters here we use a List which keeps its order.
+        disciplines.add(new AbstractMap.SimpleEntry(Discipline.BUSINESS, "BWL"));
+        disciplines.add(new AbstractMap.SimpleEntry(Discipline.CHEMISTRY, "Chemie"));
+        disciplines.add(new AbstractMap.SimpleEntry(Discipline.COMPUTER_SCIENCE, "Informatik"));
+        disciplines.add(new AbstractMap.SimpleEntry(Discipline.MATHEMATICS, "Mathematik"));
+        disciplines.add(new AbstractMap.SimpleEntry(Discipline.MEDICINE, "Medizin"));
+        disciplines.add(new AbstractMap.SimpleEntry(Discipline.PHILOSOPHY, "Philosophie"));
+        disciplines.add(new AbstractMap.SimpleEntry(Discipline.POLITICAL_SCIENCE, "Politikwissenschaft"));
+        disciplines.add(new AbstractMap.SimpleEntry(Discipline.PHYSICS, "Physik"));
+        disciplines.add(new AbstractMap.SimpleEntry(Discipline.SPORTS, "Sportwissenschaften"));
 
         Discipline output = genericSelect(disciplines, false, "Wähle deinen Studiengang!");
         Guard.argumentIsNotNull(output);
@@ -386,7 +386,7 @@ public class ZombieGame {
     public static Attribute askPlayerForAttrbuteToRaise() {
         ArrayList<Entry<Attribute, String>> attributes = new ArrayList<Entry<Attribute, String>>();
 
-        // Because order matters here we use a List which keeps its order. See above.
+        // Because order matters here we use a List which keeps its order.
         attributes.add(new AbstractMap.SimpleEntry(Attribute.MAXHP, "maximale Lebenspunkte (um 10)"));
         attributes.add(new AbstractMap.SimpleEntry(Attribute.ATTACK, "Angriff (um 1)"));
         attributes.add(new AbstractMap.SimpleEntry(Attribute.DEFENSE, "Verteidigung (um 1)"));
