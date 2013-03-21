@@ -13,8 +13,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import zombiefu.actor.Teleporter;
 import zombiefu.items.Item;
-import zombiefu.items.RandomItemGenerator;
+import zombiefu.builder.RandomItemGenerator;
+import zombiefu.creature.Monster;
 import zombiefu.items.MensaCard;
+import zombiefu.items.Weapon;
 
 /**
  *
@@ -87,11 +89,21 @@ public class ITMString {
         return ret;
     }
 
-    public Item getSingleItem() {
+    public Actor getSingleActor() {
         Set<Actor> actorSet = getActorSet();
         Guard.verifyState(actorSet.size() == 1);
-        Actor actor = actorSet.iterator().next();
-        Guard.verifyState(actor instanceof Item);
-        return (Item) actor;
+        return actorSet.iterator().next();
+    }
+    
+    public Item getSingleItem() {
+        Actor a = getSingleActor();
+        Guard.verifyState(a instanceof Item);
+        return (Item) a;
+    }
+    
+    public Monster getSingleMonster() {
+        Actor a = getSingleActor();
+        Guard.verifyState(a instanceof Monster);
+        return (Monster) a;
     }
 }
