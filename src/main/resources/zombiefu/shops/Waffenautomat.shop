@@ -1,12 +1,12 @@
 // Erste Zeile ist für ColoredChar:
 ⌂ FF00FF
 // Restliche Zeilen sind Inventar, also Name und Preis eines ConsumableItem
-Nuklearrakete 500
-Baseballschlager 50
-Bunsenbrenner 25
-flusssaeure 40
-Granate 25
-Kettensaege 15
-Raketenwerfer 60
-Schrotflinte 25
-Speer 10
+Nuklearrakete 150.00
+Baseballschlager 15.00
+Bunsenbrenner 7.50
+flusssaeure 12.00
+Granate 7.50
+Kettensaege 4.50
+Raketenwerfer 18.00
+Schrotflinte 7.50
+Speer 3.00

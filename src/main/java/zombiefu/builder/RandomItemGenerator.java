@@ -57,7 +57,7 @@ public enum RandomItemGenerator {
                     case 0:
                         return getOneOf("weapon(Speer)");
                     case 1:
-                        return getMensacard(10);
+                        return getMensacard(500);
                 }
                 break;
             case GOOD:
@@ -65,7 +65,7 @@ public enum RandomItemGenerator {
                     case 0:
                         return getOneOf("weapon(Speer)");
                     case 1:
-                        return getMensacard(3);
+                        return getMensacard(150);
                 }
                 break;
             case COMMON_ITEM:
@@ -77,13 +77,13 @@ public enum RandomItemGenerator {
                     case 1:
                         return COMMON_ITEM.getRandomItem();
                     case 2:
-                        return getMensacard(1);
+                        return getMensacard(50);
                 }
                 break;
             case JUNK:
                 switch (ZombieTools.getRandomIndex(1, 1, 4)) {
                     case 0:
-                        return getMensacard(1);
+                        return getMensacard(25);
                     case 1:
                         return getOneOf("food(Wasser)");
                     case 2:

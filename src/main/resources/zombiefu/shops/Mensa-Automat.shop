@@ -1,7 +1,8 @@
 // Erste Zeile ist für ColoredChar:
 ⌂ 0000FF
 // Restliche Zeilen sind Inventar, also Name und Preis eines ConsumableItem
-Kaffee 3
-Mate 2
-MensaEssen 15
-Wurfmesser 3
+Kaffee 0.70
+Mate 1.20
+MensaEssen 2.20
+MensaAktion 4.00
+Wurfmesser 1.50
