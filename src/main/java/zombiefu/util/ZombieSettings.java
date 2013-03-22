@@ -109,7 +109,7 @@ public class ZombieSettings {
         def.setProperty("dir.builders", "builders/");
 
         // Default Debug Einstellung (aus)
-        def.setProperty("debug", "true");
+        def.setProperty("debug", "false");
 
         // Default Playername
         try {
@@ -123,7 +123,7 @@ public class ZombieSettings {
         def.setProperty("player.start.map", "Weltkarte");
         def.setProperty("player.start.x", "15");
         def.setProperty("player.start.y", "53");
-        
+
         // Default Keybindings
         def.setProperty("controls.up", "LATIN SMALL LETTER W");
         def.setProperty("controls.down", "LATIN SMALL LETTER S");
