@@ -109,7 +109,7 @@ public class ZombieSettings {
         def.setProperty("dir.builders", "builders/");
 
         // Default Debug Einstellung (aus)
-        def.setProperty("debug", "false");
+        def.setProperty("debug", "true");
 
         // Default Playername
         try {
