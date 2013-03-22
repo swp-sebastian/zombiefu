@@ -111,6 +111,10 @@ public class Player extends Creature implements Camera {
                     ZombieGame.refreshMainFrame();
                     throw new DidNotActException();
                 }
+
+                if (key == 'l') {
+                    giveECTS(semester * ECTS_FOR_NEXT_SEMESTER-ects);
+                }
             //}
 
             if (key == 27) {
